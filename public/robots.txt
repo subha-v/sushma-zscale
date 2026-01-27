@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://zscalecapital.com/sitemap.xml
+
+# Disallow admin and private paths
+Disallow: /admin
+Disallow: /private

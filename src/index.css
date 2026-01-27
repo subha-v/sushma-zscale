@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* 2026 Institutional Color Tokens */
+    --bg-primary: #0A0A0B;       /* Matte Black */
+    --accent-teal: #01F9C6;      /* Bright Terminal Teal */
+    --accent-teal-hover: #00D9AB;
+    --text-primary: #FFFFFF;     /* White */
+    --text-secondary: #D1D5DB;   /* Soft Gray */
+    --ink-black: #0A0A0B;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply font-sans bg-ink text-white overflow-x-hidden;
+    line-height: 1.6;
+  }
+
+  ::selection {
+    @apply bg-accent text-ink;
+  }
+
+  /* Institutional Typography - Command Center Feel */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+
+  /* Premium letter-spacing for headlines */
+  h1, h2 {
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 {
+    transition-delay: 0.1s;
+  }
+
+  .reveal-delay-2 {
+    transition-delay: 0.2s;
+  }
+
+  .reveal-delay-3 {
+    transition-delay: 0.3s;
+  }
+
+  .reveal-delay-4 {
+    transition-delay: 0.4s;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.2);
+    }
+  }
+
+  .animate-pulse-dot {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.15s ease-out forwards;
+  }
+
+  /* Skeuomorphic Card Styles */
+  .card-skeuomorphic {
+    @apply bg-ink-light border border-ink-border rounded-2xl;
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .card-skeuomorphic:hover {
+    box-shadow:
+      0 8px 40px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  /* Terminal Text Effect */
+  .text-terminal {
+    @apply text-accent font-mono;
+    text-shadow: 0 0 10px rgba(1, 249, 198, 0.5);
+  }
+
+  /* Gradient Text - Bright Teal Accent */
+  .text-gradient {
+    @apply bg-gradient-to-r from-accent via-accent-light to-accent bg-clip-text text-transparent;
+  }
+
+  /* Teal Glow Effect */
+  .glow-teal {
+    box-shadow: 0 0 30px rgba(1, 249, 198, 0.5);
+  }
+
+  /* Data Point Highlight */
+  .data-point {
+    @apply text-accent font-semibold;
+  }
+
+  /* Section Separator */
+  .section-dark {
+    @apply bg-ink;
+  }
+
+  .section-darker {
+    @apply bg-ink-light;
+  }
+
+  /* Primary CTA Button - High Contrast */
+  .btn-cta {
+    @apply bg-accent text-ink font-semibold;
+    transition: all 0.2s ease;
+  }
+
+  .btn-cta:hover {
+    @apply bg-accent-hover;
+  }
+
+  .btn-cta:active {
+    transform: scale(0.98);
+  }
+
+  .btn-cta:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+}

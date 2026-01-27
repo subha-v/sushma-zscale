@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- zScale Z-monogram favicon -->
+  <!-- Optimized for dark backgrounds: White (#FFFFFF) + Teal (#01F9C6) accent -->
+  <!-- Top horizontal bar -->
+  <rect x="4" y="4" width="24" height="5" fill="#FFFFFF"/>
+  <!-- Diagonal connecting stroke -->
+  <polygon points="24,9 8,23 8,28 12,28 28,9 28,4 24,4" fill="#FFFFFF"/>
+  <!-- Teal accent stripe on diagonal -->
+  <polygon points="25,6 9,25 11,27 27,8" fill="#01F9C6"/>
+  <!-- Bottom horizontal bar -->
+  <rect x="4" y="23" width="24" height="5" fill="#FFFFFF"/>
+</svg>
