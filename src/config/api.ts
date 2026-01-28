@@ -4,7 +4,7 @@
 // =============================================================================
 
 // Master API Endpoint - All forms route through this single endpoint
-export const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbya4AvcBU-wJDJ--aECIJPJ2Gkf3wI8tIvll2gmV5_LNsBfgLVvbp7eVbt5ikwvgvgr/exec';
+export const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbys-t56-obfiQwFG6sUa4CbjbUCWleH3mT1NzDP5rieSnKYVXdOigFzdzIxX0bQc0cr/exec';
 
 // Form Type Identifiers - Used for routing in the Apps Script
 export const FORM_TYPES = {
@@ -19,6 +19,7 @@ export const FORM_TYPES = {
   SHADOW_CAPITAL: 'shadow_capital',    // Shadow Capital Report -> Ecosystem_Map tab + special tagging
   LIBRARY_SIGNUP: 'library_signup',    // Library/Briefing signup -> Lead_Source: Venture_Library, Intent: Education
   ASSET_INTERACTION: 'asset_interaction', // Asset click/download tracking -> Asset_Interactions column in Master_Registry
+  VENTURE_BENCHMARKS: 'venture_benchmarks', // Venture Benchmarks PDF -> Venture_Benchmarks tab
 } as const;
 
 // ============================================================================

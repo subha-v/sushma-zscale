@@ -282,9 +282,8 @@ export const IRIModal = ({ isOpen, onClose, source = 'Header_IRI' }: IRIModalPro
   const handleNext = () => {
     if (!validateStep()) return;
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
     if (contentRef.current) {
-      contentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+      contentRef.current.scrollTop = 0;
     }
 
     if (currentStep < TOTAL_STEPS) {
@@ -296,9 +295,8 @@ export const IRIModal = ({ isOpen, onClose, source = 'Header_IRI' }: IRIModalPro
 
   const handleBack = () => {
     if (currentStep > 1) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
       if (contentRef.current) {
-        contentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        contentRef.current.scrollTop = 0;
       }
       setCurrentStep(prev => prev - 1);
       setValidationError('');
@@ -346,7 +344,7 @@ export const IRIModal = ({ isOpen, onClose, source = 'Header_IRI' }: IRIModalPro
 
   return (
     <div
-      className="fixed inset-0 bg-ink/95 backdrop-blur-md z-[10000] flex items-center justify-center p-4 pt-24 animate-fadeIn"
+      className="fixed inset-0 bg-ink/95 backdrop-blur-md z-[1100] flex items-center justify-center p-4 animate-fadeIn"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
@@ -354,35 +352,33 @@ export const IRIModal = ({ isOpen, onClose, source = 'Header_IRI' }: IRIModalPro
     >
       <div
         ref={modalRef}
-        className="bg-[#0A0A0B] border border-ink-border rounded-2xl max-w-4xl w-full max-h-[calc(100vh-120px)] shadow-2xl animate-scaleIn relative flex flex-col"
+        className="bg-[#0A0A0B] border border-ink-border rounded-2xl w-full max-w-2xl max-h-[85vh] shadow-2xl animate-scaleIn relative flex flex-col overflow-hidden"
       >
-        {/* Close button - only show during form */}
-        {viewState === 'form' && (
-          <button
-            onClick={handleClose}
-            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-ink-medium border border-ink-border text-neutral-400 hover:bg-accent hover:border-accent hover:text-ink transition-colors duration-200 z-10"
-            aria-label="Close modal"
+        {/* Close button - always visible */}
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-ink-medium border border-ink-border text-neutral-400 hover:bg-accent hover:border-accent hover:text-ink transition-colors duration-200 z-30"
+          aria-label="Close modal"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="w-5 h-5"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        )}
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
 
         <div
           ref={contentRef}
-          className="p-6 md:p-10 overflow-y-auto flex-1"
+          className="p-6 md:p-8 overflow-y-auto flex-1"
         >
           {viewState === 'calculating' ? (
             <IRICalculatingView onComplete={handleCalculationComplete} />
@@ -409,7 +405,7 @@ export const IRIModal = ({ isOpen, onClose, source = 'Header_IRI' }: IRIModalPro
               <IRIProgress currentStep={currentStep} totalSteps={TOTAL_STEPS} />
 
               {/* Step content */}
-              <div className="min-h-[400px] mt-8">{renderStep()}</div>
+              <div className="mt-6">{renderStep()}</div>
 
               {/* Validation error */}
               {validationError && (

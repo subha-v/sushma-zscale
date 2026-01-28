@@ -283,6 +283,13 @@ export const DiagnosticModal = ({
       advisorNeededExpertise: answers.advisorNeededExpertise,
       advisorEngagementStyle: answers.advisorEngagementStyle,
 
+      // Membership page URL for email template
+      membershipUrl: `${window.location.origin}/membership`,
+
+      // Full email next step text for backend to use
+      emailNextStepText: `NEXT STEP: To unlock warm introductions to these advisors, a zScale Alpha Membership is required to verify your data room readiness. Learn more: ${window.location.origin}/membership`,
+      emailNextStepUrl: `${window.location.origin}/membership`,
+
       timestamp: new Date().toISOString(),
     };
 

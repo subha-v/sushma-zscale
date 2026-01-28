@@ -93,6 +93,7 @@ export const Membership = () => {
         companyName: company,
         iriScore: userProgress.iriScore || '',
         source: 'membership-page',
+        membershipUrl: `${window.location.origin}/membership`,
         timestamp: new Date().toISOString(),
       };
 
@@ -135,8 +136,20 @@ export const Membership = () => {
           <div className="space-y-4">
             <Link
               to="/"
-              className="inline-block px-8 py-4 bg-accent text-ink font-semibold rounded-xl hover:brightness-110 transition-all"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-accent text-ink font-semibold rounded-xl hover:brightness-110 transition-all"
             >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                className="w-5 h-5"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
               Access Your Alpha Dashboard
             </Link>
             <p className="text-sm text-neutral-500">

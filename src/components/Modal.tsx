@@ -107,7 +107,7 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
 
   return (
     <div
-      className="fixed inset-0 bg-ink/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fadeIn"
+      className="fixed inset-0 bg-ink/80 backdrop-blur-md z-[1100] flex items-center justify-center p-4 animate-fadeIn"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
@@ -120,7 +120,7 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-ink-medium border border-ink-border text-neutral-400 hover:bg-accent hover:border-accent hover:text-ink transition-colors duration-200 z-10"
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-ink-medium border border-ink-border text-neutral-400 hover:bg-accent hover:border-accent hover:text-ink transition-colors duration-200 z-20"
           aria-label="Close modal"
         >
           <svg

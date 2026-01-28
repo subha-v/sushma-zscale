@@ -128,7 +128,7 @@ export const EcosystemMap = () => {
 
       <div className="min-h-screen bg-[#0A0A0B]">
         {/* Navigation */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0B]/90 backdrop-blur-xl border-b border-ink-border">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0B]/90 backdrop-blur-xl">
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <Link to="/">
               <Logo size="md" />
@@ -156,10 +156,10 @@ export const EcosystemMap = () => {
                 </div>
                 <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-[#FFFFFF] mb-6" style={{ letterSpacing: '-0.02em' }}>
                   Access the 2026
-                  <span className="text-accent block mt-2">Institutional Intelligence Report</span>
+                  <span className="text-accent block mt-2">Dallas Venture Map</span>
                 </h1>
                 <p className="text-[#FFFFFF]/80 text-lg mb-8">
-                  68 pages of proprietary venture benchmarks and Dallas-specific operational playbooks.
+                  Proprietary venture benchmarks and Dallas-specific operational playbooks.
                 </p>
 
                 <div className="space-y-3">
@@ -435,7 +435,74 @@ export const EcosystemMap = () => {
         </section>
 
         {/* =================================================================
-            SECTION 4: SHADOW CAPITAL (Authority Proof)
+            SECTION 4: INSTITUTIONAL PARTNERS (Authority Proof)
+            ================================================================= */}
+        <section className="py-20 px-6 lg:px-12 border-t border-ink-border">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent/10 border border-accent/20 rounded-full text-xs mb-6">
+                <span className="text-accent font-mono">TIER_1_NETWORK</span>
+              </div>
+              <h2 className="text-3xl lg:text-4xl font-bold text-[#FFFFFF] mb-4" style={{ letterSpacing: '-0.02em' }}>
+                Institutional Partners
+              </h2>
+              <p className="text-[#FFFFFF]/70 max-w-2xl mx-auto">
+                Dallas's most active venture firms. Our ecosystem map includes investment thesis, check sizes, and portfolio company case studies.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {tier1Investors.map((investor, index) => (
+                <div key={index} className="card-skeuomorphic p-6 text-center group hover:border-accent/30 transition-colors">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-ink-medium rounded-2xl flex items-center justify-center border border-ink-border group-hover:border-accent/30 transition-colors">
+                    <span className="text-2xl font-bold text-accent">{investor.logo}</span>
+                  </div>
+                  <h3 className="text-[#FFFFFF] font-semibold mb-1">{investor.name}</h3>
+                  <p className="text-[#FFFFFF]/60 text-sm mb-3">{investor.focus}</p>
+                  <div className="inline-flex items-center gap-1 px-3 py-1 bg-accent/10 rounded-full">
+                    <span className="text-accent text-xs font-medium">{investor.checkSize}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA Button */}
+            <div className="mt-12 text-center">
+              <Link
+                to="/tools/investor-tier-list"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-accent text-[#0A0A0B] font-bold rounded-xl hover:bg-accent-hover transition-all duration-200 shadow-glow"
+              >
+                Tier 1 Partners
+              </Link>
+            </div>
+
+            {/* Venture Standard Badges */}
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-6">
+              <div className="flex items-center gap-2 px-4 py-2 bg-ink-medium rounded-full border border-ink-border">
+                <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="text-sm text-[#FFFFFF]/80">Venture Standard Verified</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-ink-medium rounded-full border border-ink-border">
+                <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" />
+                  <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" />
+                </svg>
+                <span className="text-sm text-[#FFFFFF]/80">Data-Driven Intelligence</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-ink-medium rounded-full border border-ink-border">
+                <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clipRule="evenodd" />
+                </svg>
+                <span className="text-sm text-[#FFFFFF]/80">Dallas-Native Network</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================================
+            SECTION 5: SHADOW CAPITAL (Authority Proof)
             ================================================================= */}
         <section id="shadow-capital" className="py-20 px-6 lg:px-12 bg-ink-light border-t border-b border-ink-border">
           <div className="max-w-7xl mx-auto">
@@ -482,72 +549,15 @@ export const EcosystemMap = () => {
 
               {/* Unlock Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-ink-light via-ink-light/80 to-transparent flex items-end justify-center pb-12">
-                <a
-                  href="#download-form"
+                <Link
+                  to="/membership"
                   className="inline-flex items-center gap-3 px-8 py-4 bg-accent text-[#0A0A0B] font-bold rounded-xl hover:bg-accent-hover transition-all duration-200 shadow-glow"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                   </svg>
-                  Unlock Full Shadow Capital List
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* =================================================================
-            SECTION 5: INSTITUTIONAL PARTNERS (Authority Proof)
-            ================================================================= */}
-        <section className="py-20 px-6 lg:px-12">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent/10 border border-accent/20 rounded-full text-xs mb-6">
-                <span className="text-accent font-mono">TIER_1_NETWORK</span>
-              </div>
-              <h2 className="text-3xl lg:text-4xl font-bold text-[#FFFFFF] mb-4" style={{ letterSpacing: '-0.02em' }}>
-                Institutional Partners
-              </h2>
-              <p className="text-[#FFFFFF]/70 max-w-2xl mx-auto">
-                Dallas's most active venture firms. Our ecosystem map includes investment thesis, check sizes, and portfolio company case studies.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {tier1Investors.map((investor, index) => (
-                <div key={index} className="card-skeuomorphic p-6 text-center group hover:border-accent/30 transition-colors">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-ink-medium rounded-2xl flex items-center justify-center border border-ink-border group-hover:border-accent/30 transition-colors">
-                    <span className="text-2xl font-bold text-accent">{investor.logo}</span>
-                  </div>
-                  <h3 className="text-[#FFFFFF] font-semibold mb-1">{investor.name}</h3>
-                  <p className="text-[#FFFFFF]/60 text-sm mb-3">{investor.focus}</p>
-                  <div className="inline-flex items-center gap-1 px-3 py-1 bg-accent/10 rounded-full">
-                    <span className="text-accent text-xs font-medium">{investor.checkSize}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Venture Standard Badges */}
-            <div className="mt-12 flex flex-wrap items-center justify-center gap-6">
-              <div className="flex items-center gap-2 px-4 py-2 bg-ink-medium rounded-full border border-ink-border">
-                <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span className="text-sm text-[#FFFFFF]/80">Venture Standard Verified</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-ink-medium rounded-full border border-ink-border">
-                <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" />
-                  <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" />
-                </svg>
-                <span className="text-sm text-[#FFFFFF]/80">Data-Driven Intelligence</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-ink-medium rounded-full border border-ink-border">
-                <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clipRule="evenodd" />
-                </svg>
-                <span className="text-sm text-[#FFFFFF]/80">Dallas-Native Network</span>
+                  Unlock via Alpha
+                </Link>
               </div>
             </div>
           </div>

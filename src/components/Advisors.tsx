@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 interface AdvisorsProps {
   onOpenDiagnostic?: () => void;
 }
@@ -87,8 +89,8 @@ export const Advisors = ({ onOpenDiagnostic }: AdvisorsProps) => {
                 ))}
               </div>
 
-              <a
-                href="https://zscalecapital.com/startup-readiness-audit/"
+              <Link
+                to="/membership"
                 className="inline-flex items-center gap-2.5 px-4 py-2.5 bg-accent text-ink text-sm font-semibold rounded-lg no-underline hover:bg-accent-hover transition-colors"
               >
                 <svg
@@ -103,8 +105,8 @@ export const Advisors = ({ onOpenDiagnostic }: AdvisorsProps) => {
                     clipRule="evenodd"
                   />
                 </svg>
-                Unlock via IRI
-              </a>
+                Unlock via zScale Alpha
+              </Link>
             </div>
           ))}
         </div>

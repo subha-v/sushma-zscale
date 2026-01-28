@@ -8,6 +8,7 @@ import { Advisors } from '../components/Advisors';
 import { FAQ } from '../components/FAQ';
 import { ReadinessAssessmentPopup } from '../components/ReadinessAssessmentPopup';
 import { DiagnosticModal } from '../components/Diagnostic';
+import { ShadowCapitalModal } from '../components/ShadowCapitalModal';
 
 const POPUP_STORAGE_KEY = 'hasSeenReadinessPopup';
 const TIME_DELAY = 10000; // 10 seconds
@@ -16,6 +17,7 @@ const SCROLL_THRESHOLD = 0.5; // 50% scroll
 export const HomePage = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [showDiagnosticModal, setShowDiagnosticModal] = useState(false);
+  const [showShadowCapitalModal, setShowShadowCapitalModal] = useState(false);
 
   useEffect(() => {
     // Check if user has already seen the popup
@@ -71,9 +73,17 @@ export const HomePage = () => {
     // Could show a success toast here
   };
 
+  const handleOpenShadowCapital = () => {
+    setShowShadowCapitalModal(true);
+  };
+
+  const handleCloseShadowCapital = () => {
+    setShowShadowCapitalModal(false);
+  };
+
   return (
     <>
-      <Hero />
+      <Hero onOpenShadowCapital={handleOpenShadowCapital} />
       <AlphaBar />
       <FounderTools />
       <DallasExitGap />
@@ -86,6 +96,11 @@ export const HomePage = () => {
         isOpen={showDiagnosticModal}
         onClose={handleCloseDiagnostic}
         onComplete={handleDiagnosticComplete}
+      />
+      <ShadowCapitalModal
+        isOpen={showShadowCapitalModal}
+        onClose={handleCloseShadowCapital}
+        leadSource="Hero_Button"
       />
     </>
   );

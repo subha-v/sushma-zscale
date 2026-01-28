@@ -26,22 +26,6 @@ const APPENDIX_URLS: Record<string, string> = {
   'term-sheet': 'https://drive.google.com/uc?export=download&id=1-2TstJI8cGBvIIkeRYFTe3Zh88Smab4w',
 };
 
-// Alpha-Gated Institutional Resources (Notion/Dashboard links)
-const ALPHA_GATED_RESOURCES: Record<string, { title: string; url: string }> = {
-  'glossary': {
-    title: 'The Complete Glossary Database',
-    url: 'https://notion.so/zscale-glossary-database', // Replace with actual Notion link
-  },
-  'myth-busters': {
-    title: 'Dallas PMF Evidence Templates',
-    url: 'https://notion.so/zscale-pmf-templates', // Replace with actual Notion link
-  },
-  'anti-library': {
-    title: 'The Institutional Rejection Database',
-    url: 'https://notion.so/zscale-rejection-database', // Replace with actual Notion link
-  },
-};
-
 // Featured assets for the main asset cards section
 interface FeaturedAsset {
   id: string;
@@ -351,34 +335,6 @@ export const VentureLibrary = () => {
       setModalMode('form');
       setIsModalOpen(true);
     }
-  };
-
-  // =============================================================================
-  // ALPHA-GATED RESOURCE HANDLERS
-  // =============================================================================
-
-  // Handle alpha-gated appendix button click
-  const handleAlphaGatedClick = (articleId: string) => {
-    const resource = ALPHA_GATED_RESOURCES[articleId];
-    if (!resource) return;
-
-    trackAssetInteraction(`Alpha_${articleId}`, 'click');
-
-    if (isAlphaMember) {
-      // Alpha member - open the resource directly
-      window.open(resource.url, '_blank');
-    } else {
-      // Not an Alpha member - show upgrade modal
-      trackAssetInteraction(`Alpha_${articleId}`, 'blocked');
-      setAlphaGatedResource(resource);
-      setModalMode('alpha-gate');
-      setIsModalOpen(true);
-    }
-  };
-
-  // Check if an article has an alpha-gated appendix
-  const isAlphaGated = (articleId: string): boolean => {
-    return articleId in ALPHA_GATED_RESOURCES;
   };
 
   // =============================================================================
@@ -834,12 +790,24 @@ export const VentureLibrary = () => {
                     </div>
 
                     {/* CTA */}
-                    <button className="relative w-full py-3 px-4 bg-white/[0.05] border border-white/[0.1] text-white font-medium rounded-xl hover:bg-accent hover:text-[#0A0A0B] hover:border-accent transition-all duration-300 flex items-center justify-center gap-2">
-                      <span>Read Article</span>
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </button>
+                    {isAlphaMember ? (
+                      <button className="relative w-full py-3 px-4 bg-white/[0.05] border border-white/[0.1] text-white font-medium rounded-xl hover:bg-accent hover:text-[#0A0A0B] hover:border-accent transition-all duration-300 flex items-center justify-center gap-2">
+                        <span>Read Article</span>
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </button>
+                    ) : (
+                      <Link
+                        to="/membership"
+                        className="relative w-full py-3 px-4 bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium rounded-xl hover:bg-amber-500/20 hover:border-amber-500/50 transition-all duration-300 flex items-center justify-center gap-2 no-underline"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        <span>Join Alpha to Unlock</span>
+                      </Link>
+                    )}
 
                     {/* Featured badge */}
                     {article.isFeatured && (
@@ -892,19 +860,17 @@ export const VentureLibrary = () => {
 
                 {/* Alpha-Gated Appendix Selection */}
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-                  {libraryArticles.slice(0, 3).map((article) => {
-                    const isGated = isAlphaGated(article.id);
+                  {libraryArticles.map((article) => {
+                    const isGated = true; // All appendices are now gated
 
-                    return (
-                      <button
-                        key={article.id}
-                        onClick={() => isGated ? handleAlphaGatedClick(article.id) : handleAppendixAccess(article)}
-                        className={`group relative p-5 backdrop-blur-lg border rounded-xl transition-all duration-300 text-left overflow-hidden ${
-                          isGated && !isAlphaMember
-                            ? 'bg-white/[0.01] border-amber-500/30 hover:border-amber-500/50 hover:bg-white/[0.03]'
-                            : 'bg-white/[0.02] border-white/[0.08] hover:bg-white/[0.05] hover:border-accent/30'
-                        }`}
-                      >
+                    // For gated content, render as Link to membership page
+                    if (isGated && !isAlphaMember) {
+                      return (
+                        <Link
+                          key={article.id}
+                          to="/membership"
+                          className="group relative p-5 backdrop-blur-lg border rounded-xl transition-all duration-300 text-left overflow-hidden no-underline bg-white/[0.01] border-amber-500/30 hover:border-amber-500/50 hover:bg-white/[0.03]"
+                        >
                         {/* Lock/Unlock icon */}
                         <div className="flex items-start justify-between mb-3">
                           <div className={`p-2 rounded-lg ${
@@ -943,12 +909,39 @@ export const VentureLibrary = () => {
                         </div>
 
                         {/* Hover hint */}
-                        <div className={`mt-3 pt-3 border-t text-xs ${
-                          isGated && !isAlphaMember
-                            ? 'border-amber-500/10 text-amber-400/60'
-                            : 'border-white/[0.05] text-accent/60'
-                        }`}>
-                          {isGated && !isAlphaMember ? 'Click to learn about Alpha access' : 'Click to access'}
+                        <div className="mt-3 pt-3 border-t border-amber-500/10 text-xs text-amber-400/60">
+                          Join Alpha to Unlock
+                        </div>
+                      </Link>
+                      );
+                    }
+
+                    // For non-gated or Alpha members, render as button
+                    return (
+                      <button
+                        key={article.id}
+                        onClick={() => handleAppendixAccess(article)}
+                        className="group relative p-5 backdrop-blur-lg border rounded-xl transition-all duration-300 text-left overflow-hidden bg-white/[0.02] border-white/[0.08] hover:bg-white/[0.05] hover:border-accent/30"
+                      >
+                        {/* Lock/Unlock icon */}
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="p-2 rounded-lg bg-accent/10 border border-accent/20">
+                            <svg className="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                        </div>
+
+                        <div className="text-sm font-medium mb-1 transition-colors text-white group-hover:text-accent">
+                          {article.appendixTitle}
+                        </div>
+                        <div className="text-xs text-white/40">
+                          From: {article.title}
+                        </div>
+
+                        {/* Hover hint */}
+                        <div className="mt-3 pt-3 border-t border-white/[0.05] text-xs text-accent/60">
+                          Click to access
                         </div>
                       </button>
                     );

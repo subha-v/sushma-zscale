@@ -2,12 +2,21 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Logo } from './Logo';
 import { IRIModal } from './IRI';
+import { ShadowCapitalModal } from './ShadowCapitalModal';
+import { VentureBenchmarksModal } from './VentureBenchmarksModal';
+import { EcosystemMapDownloadModal } from './EcosystemMapDownloadModal';
+import { ToolLeadCaptureModal } from './ToolLeadCaptureModal';
+import { FORM_TYPES } from '../config/api';
 
 interface DropdownItem {
   label: string;
   href: string;
   description?: string;
   isIRI?: boolean;
+  isShadowCapital?: boolean;
+  isVentureBenchmarks?: boolean;
+  isEcosystemMap?: boolean;
+  isAcceleratorPrep?: boolean;
 }
 
 interface NavItem {
@@ -22,13 +31,13 @@ const navItems: NavItem[] = [
     dropdown: [
       { label: 'Investment Readiness Index', href: '#', description: 'Assess your fundraise readiness', isIRI: true },
       { label: 'Advisor Equity Calculator', href: '/tools/equity-calculator', description: 'Calculate fair advisor equity' },
-      { label: 'Accelerator Prep', href: '/tools/accelerator-checklist', description: 'Get accelerator-ready' },
+      { label: 'Accelerator Prep', href: '/tools/accelerator-checklist', description: 'Get accelerator-ready', isAcceleratorPrep: true },
     ],
   },
   {
     label: 'Investor Network',
     dropdown: [
-      { label: 'Shadow Capital List', href: '/ecosystem-map#shadow-capital', description: '35+ Dallas Family Offices' },
+      { label: 'Shadow Capital List', href: '#', description: '35+ Dallas Family Offices', isShadowCapital: true },
       { label: 'Tier-1 Partners', href: '/tools/investor-tier-list', description: 'DVC, Perot Jain & more' },
       { label: 'Advisor Network', href: '#advisors', description: 'Shadow Network specialists' },
     ],
@@ -38,8 +47,8 @@ const navItems: NavItem[] = [
     dropdown: [
       { label: 'Intelligence Hub', href: '/intelligence', description: 'The 2026 Venture Standards' },
       { label: 'Venture Library', href: '/library', description: 'Frameworks, playbooks & research' },
-      { label: '2026 Ecosystem Map', href: '/ecosystem-map', description: '68-page institutional report' },
-      { label: 'Venture Benchmarks', href: '/tools/valuation', description: 'Valuation & multiplier data' },
+      { label: 'Dallas Venture Map', href: '/ecosystem-map', description: 'Institutional report', isEcosystemMap: true },
+      { label: 'Venture Benchmarks', href: '/tools/valuation', description: 'Valuation & multiplier data', isVentureBenchmarks: true },
     ],
   },
   {
@@ -57,6 +66,10 @@ export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isIRIOpen, setIsIRIOpen] = useState(false);
+  const [isShadowCapitalOpen, setIsShadowCapitalOpen] = useState(false);
+  const [isVentureBenchmarksOpen, setIsVentureBenchmarksOpen] = useState(false);
+  const [isEcosystemMapOpen, setIsEcosystemMapOpen] = useState(false);
+  const [isAcceleratorPrepOpen, setIsAcceleratorPrepOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -147,6 +160,66 @@ export const Header = () => {
                             <div className="text-xs text-neutral-500 mt-0.5">{dropdownItem.description}</div>
                           )}
                         </button>
+                      ) : dropdownItem.isShadowCapital ? (
+                        <button
+                          key={dropdownItem.label}
+                          onClick={() => {
+                            closeMobileMenu();
+                            setActiveDropdown(null);
+                            setIsShadowCapitalOpen(true);
+                          }}
+                          className="block w-full text-left px-4 py-3 hover:bg-ink-medium transition-colors bg-transparent border-none cursor-pointer"
+                        >
+                          <div className="text-sm font-medium text-white">{dropdownItem.label}</div>
+                          {dropdownItem.description && (
+                            <div className="text-xs text-neutral-500 mt-0.5">{dropdownItem.description}</div>
+                          )}
+                        </button>
+                      ) : dropdownItem.isVentureBenchmarks ? (
+                        <button
+                          key={dropdownItem.label}
+                          onClick={() => {
+                            closeMobileMenu();
+                            setActiveDropdown(null);
+                            setIsVentureBenchmarksOpen(true);
+                          }}
+                          className="block w-full text-left px-4 py-3 hover:bg-ink-medium transition-colors bg-transparent border-none cursor-pointer"
+                        >
+                          <div className="text-sm font-medium text-white">{dropdownItem.label}</div>
+                          {dropdownItem.description && (
+                            <div className="text-xs text-neutral-500 mt-0.5">{dropdownItem.description}</div>
+                          )}
+                        </button>
+                      ) : dropdownItem.isEcosystemMap ? (
+                        <button
+                          key={dropdownItem.label}
+                          onClick={() => {
+                            closeMobileMenu();
+                            setActiveDropdown(null);
+                            setIsEcosystemMapOpen(true);
+                          }}
+                          className="block w-full text-left px-4 py-3 hover:bg-ink-medium transition-colors bg-transparent border-none cursor-pointer"
+                        >
+                          <div className="text-sm font-medium text-white">{dropdownItem.label}</div>
+                          {dropdownItem.description && (
+                            <div className="text-xs text-neutral-500 mt-0.5">{dropdownItem.description}</div>
+                          )}
+                        </button>
+                      ) : dropdownItem.isAcceleratorPrep ? (
+                        <button
+                          key={dropdownItem.label}
+                          onClick={() => {
+                            closeMobileMenu();
+                            setActiveDropdown(null);
+                            setIsAcceleratorPrepOpen(true);
+                          }}
+                          className="block w-full text-left px-4 py-3 hover:bg-ink-medium transition-colors bg-transparent border-none cursor-pointer"
+                        >
+                          <div className="text-sm font-medium text-white">{dropdownItem.label}</div>
+                          {dropdownItem.description && (
+                            <div className="text-xs text-neutral-500 mt-0.5">{dropdownItem.description}</div>
+                          )}
+                        </button>
                       ) : dropdownItem.href.startsWith('http') ? (
                         <a
                           key={dropdownItem.label}
@@ -195,19 +268,46 @@ export const Header = () => {
             )}
           </div>
         ))}
-        <button
-          onClick={() => {
-            closeMobileMenu();
-            setIsIRIOpen(true);
-          }}
-          className="ml-4 py-2.5 px-6 bg-accent text-ink rounded-full font-semibold text-sm transition-all hover:bg-accent-hover hover:shadow-glow max-md:ml-0 max-md:mt-4 border-none cursor-pointer"
+        <Link
+          to="/ecosystem-map"
+          onClick={closeMobileMenu}
+          className="ml-4 py-2.5 px-6 bg-accent text-ink rounded-full font-semibold text-sm transition-all hover:bg-accent-hover hover:shadow-glow max-md:ml-0 max-md:mt-4 no-underline inline-block"
         >
-          Run IRI Assessment
-        </button>
+          Dallas Venture Map
+        </Link>
       </nav>
 
       {/* IRI Modal */}
       <IRIModal isOpen={isIRIOpen} onClose={() => setIsIRIOpen(false)} source="Header_IRI" />
+
+      {/* Shadow Capital Modal */}
+      <ShadowCapitalModal
+        isOpen={isShadowCapitalOpen}
+        onClose={() => setIsShadowCapitalOpen(false)}
+        leadSource="Header_Nav"
+      />
+
+      {/* Venture Benchmarks Modal */}
+      <VentureBenchmarksModal
+        isOpen={isVentureBenchmarksOpen}
+        onClose={() => setIsVentureBenchmarksOpen(false)}
+      />
+
+      {/* Ecosystem Map Download Modal */}
+      <EcosystemMapDownloadModal
+        isOpen={isEcosystemMapOpen}
+        onClose={() => setIsEcosystemMapOpen(false)}
+      />
+
+      {/* Accelerator Prep Lead Capture */}
+      <ToolLeadCaptureModal
+        isOpen={isAcceleratorPrepOpen}
+        onClose={() => setIsAcceleratorPrepOpen(false)}
+        toolName="Accelerator Prep"
+        toolPath="/tools/accelerator-checklist"
+        toolDescription="Complete checklist to get accelerator-ready and maximize your acceptance chances."
+        formType={FORM_TYPES.TOOL_ACCESS}
+      />
 
       <button
         onClick={toggleMobileMenu}

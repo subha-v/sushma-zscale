@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IRIModal } from './IRI';
 import { DiagnosticModal } from './Diagnostic/DiagnosticModal';
+import { ToolLeadCaptureModal } from './ToolLeadCaptureModal';
+import { FORM_TYPES } from '../config/api';
 
 interface ToolCardProps {
   title: string;
@@ -123,6 +125,8 @@ const ToolCard = ({
 export const FounderTools = () => {
   const [isIRIOpen, setIsIRIOpen] = useState(false);
   const [isDiagnosticOpen, setIsDiagnosticOpen] = useState(false);
+  const [isValuationLeadCaptureOpen, setIsValuationLeadCaptureOpen] = useState(false);
+  const [isEquityLeadCaptureOpen, setIsEquityLeadCaptureOpen] = useState(false);
 
   // All tools are now freely accessible (Freemium Model)
   const tools = [
@@ -182,9 +186,10 @@ export const FounderTools = () => {
           />
         </svg>
       ),
-      link: '/tools/valuation',
+      link: '#',
       phase: 'Step 3',
       phaseNumber: 3,
+      onClick: () => setIsValuationLeadCaptureOpen(true),
     },
     {
       title: 'Equity Evaluator',
@@ -207,9 +212,10 @@ export const FounderTools = () => {
           />
         </svg>
       ),
-      link: '/tools/equity-calculator',
+      link: '#',
       phase: 'Step 4',
       phaseNumber: 4,
+      onClick: () => setIsEquityLeadCaptureOpen(true),
     },
   ];
 
@@ -268,6 +274,26 @@ export const FounderTools = () => {
 
         {/* Diagnostic Modal (Advisor Match) */}
         <DiagnosticModal isOpen={isDiagnosticOpen} onClose={() => setIsDiagnosticOpen(false)} />
+
+        {/* Valuation Tool Lead Capture */}
+        <ToolLeadCaptureModal
+          isOpen={isValuationLeadCaptureOpen}
+          onClose={() => setIsValuationLeadCaptureOpen(false)}
+          toolName="Valuation Tool"
+          toolPath="/tools/valuation"
+          toolDescription="Understand your startup's worth with Dallas-sector valuation multiples."
+          formType={FORM_TYPES.TOOL_ACCESS}
+        />
+
+        {/* Equity Calculator Lead Capture */}
+        <ToolLeadCaptureModal
+          isOpen={isEquityLeadCaptureOpen}
+          onClose={() => setIsEquityLeadCaptureOpen(false)}
+          toolName="Equity Calculator"
+          toolPath="/tools/equity-calculator"
+          toolDescription="Optimize your cap table with market-rate advisor compensation."
+          formType={FORM_TYPES.TOOL_ACCESS}
+        />
 
         {/* Alpha Membership CTA */}
         <div className="mt-12 text-center reveal">

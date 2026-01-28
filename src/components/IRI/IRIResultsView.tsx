@@ -190,6 +190,7 @@ const GapAnalysisChart = ({ vectors }: { vectors: IRIResult['vectors'] }) => {
 // Workshop Card
 const WorkshopCard = ({ result, contact }: { result: IRIResult; contact: IRIContactInfo }) => {
   const { workshop, penalty } = result;
+  const isPremium = isPremiumMember();
 
   const priorityConfig = {
     critical: {
@@ -259,14 +260,26 @@ const WorkshopCard = ({ result, contact }: { result: IRIResult; contact: IRICont
       </p>
 
       {/* Primary CTA */}
-      <a
-        href={calendarUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block w-full text-center bg-[#01F9C6] text-[#0A0A0B] font-bold text-lg py-4 px-8 rounded-xl hover:brightness-110 transition-all duration-200 hover:shadow-[0_0_30px_rgba(1,249,198,0.4)] no-underline"
-      >
-        Sign Up for Workshop
-      </a>
+      {isPremium ? (
+        <a
+          href={calendarUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full text-center bg-[#01F9C6] text-[#0A0A0B] font-bold text-lg py-4 px-8 rounded-xl hover:brightness-110 transition-all duration-200 hover:shadow-[0_0_30px_rgba(1,249,198,0.4)] no-underline"
+        >
+          Sign Up for Workshop
+        </a>
+      ) : (
+        <Link
+          to="/membership"
+          className="flex items-center justify-center gap-3 w-full text-center bg-amber-500/10 border-2 border-amber-500/30 text-amber-400 font-bold text-lg py-4 px-8 rounded-xl hover:bg-amber-500/20 hover:border-amber-500/50 transition-all duration-200 no-underline"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          Join Alpha to Unlock Workshop
+        </Link>
+      )}
     </div>
   );
 };

@@ -1,56 +1,88 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShadowCapitalModal } from './ShadowCapitalModal';
 
-export const Hero = () => {
-  const [isShadowCapitalOpen, setIsShadowCapitalOpen] = useState(false);
+interface HeroProps {
+  onOpenShadowCapital?: () => void;
+}
 
+export const Hero = ({ onOpenShadowCapital }: HeroProps) => {
   return (
-    <section className="min-h-screen flex flex-col justify-center px-6 pt-32 pb-24 relative overflow-hidden lg:px-12 max-md:pt-24 max-md:pb-16 bg-ink">
-      {/* Grid Pattern Background */}
+    <section
+      className="min-h-screen flex flex-col justify-center relative overflow-hidden"
+      style={{ backgroundColor: '#0A0A0B' }}
+    >
+      {/* Terminal Grid Background */}
       <div className="absolute inset-0 z-0">
         <div
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0"
           style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px'
+            opacity: 0.03,
+            backgroundImage: `
+              linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px)
+            `,
+            backgroundSize: '48px 48px'
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-ink via-ink/95 to-ink" />
+        {/* Subtle vignette */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(ellipse at center, transparent 0%, #0A0A0B 70%)'
+          }}
+        />
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Status Badge */}
-        <div className="reveal flex justify-center mb-12">
-          <Link
-            to="/ecosystem-map"
-            className="inline-flex items-center gap-3 py-2 px-5 bg-accent/10 border border-accent/20 rounded-full text-sm font-medium text-accent hover:bg-accent/20 transition-colors no-underline"
+      {/* Main Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 py-32 md:py-40 text-center">
+        {/* Technical Label */}
+        <div className="reveal mb-8 flex justify-center">
+          <span
+            className="inline-flex items-center gap-3 font-mono text-xs tracking-widest uppercase"
+            style={{ color: '#D1D5DB' }}
           >
-            <span className="w-2 h-2 bg-accent rounded-full animate-pulse-dot" />
-            <span className="text-accent font-mono text-xs">LIVE</span>
-            <span className="text-[#D1D5DB]">2026 Dallas Venture Map Available</span>
-          </Link>
+            <span
+              className="w-2 h-2 rounded-full animate-pulse"
+              style={{ backgroundColor: '#01F9C6' }}
+            />
+            Venture Operating System
+          </span>
         </div>
 
         {/* Main Headline - Centered */}
-        <div className="text-center max-w-5xl mx-auto">
-          <h1 className="reveal reveal-delay-1 text-h1 text-white mb-8 max-md:text-4xl max-md:leading-tight">
-            Dallas Grit.<br />
-            <span className="text-gradient">Institutional Standards.</span>
+        <div className="max-w-4xl mx-auto">
+          <h1
+            className="reveal reveal-delay-1 font-serif text-5xl md:text-6xl lg:text-7xl font-medium mb-8 leading-[1.1] tracking-tight"
+            style={{ color: '#FFFFFF' }}
+          >
+            Built to Bridge the{' '}
+            <em className="italic" style={{ color: '#01F9C6' }}>Exit Gap.</em>
           </h1>
 
-          <p className="reveal reveal-delay-2 text-body-lg text-[#D1D5DB] max-w-3xl mx-auto mb-12 leading-relaxed">
-            The Venture Operating System for North Texas. We bridge the Exit Gap by moving
-            Dallas founders from <span className="text-white font-medium">Bootstrap Mindset</span> to{' '}
-            <span className="text-accent font-medium">Institutional-Ready</span>.
+          <p
+            className="reveal reveal-delay-2 font-sans text-lg md:text-xl max-w-2xl mx-auto mb-14 leading-relaxed"
+            style={{ color: '#D1D5DB' }}
+          >
+            Intelligence and infrastructure to move Dallas founders from bootstrap to institutional-ready.
           </p>
 
-          {/* CTAs */}
-          <div className="reveal reveal-delay-3 flex gap-4 flex-wrap justify-center mb-16">
+          {/* CTAs - Minimalist High-Status Buttons */}
+          <div className="reveal reveal-delay-3 flex flex-col sm:flex-row gap-4 justify-center">
+            {/* Solid Teal Button */}
             <button
-              onClick={() => setIsShadowCapitalOpen(true)}
-              className="group inline-flex items-center gap-3 py-4 px-8 text-button no-underline rounded-full transition-all duration-300 cursor-pointer border-none bg-accent text-ink hover:bg-accent-hover hover:shadow-glow"
+              onClick={onOpenShadowCapital}
+              className="group inline-flex items-center justify-center gap-3 py-4 px-8 font-sans text-sm font-semibold tracking-wide transition-all duration-300 no-underline rounded-full cursor-pointer border-none"
+              style={{
+                backgroundColor: '#01F9C6',
+                color: '#0A0A0B',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#00D9AB';
+                e.currentTarget.style.boxShadow = '0 0 24px rgba(1, 249, 198, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#01F9C6';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
             >
               Access Shadow Capital Map
               <svg
@@ -58,7 +90,7 @@ export const Hero = () => {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                className="w-5 h-5 transition-transform group-hover:translate-x-1"
+                className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
               >
                 <path
                   strokeLinecap="round"
@@ -68,35 +100,53 @@ export const Hero = () => {
                 />
               </svg>
             </button>
+
+            {/* Ghost/Outline Button */}
             <Link
               to="/library"
-              className="inline-flex items-center gap-3 py-4 px-8 text-button no-underline rounded-full transition-all duration-300 cursor-pointer bg-transparent text-white border border-ink-border hover:border-accent hover:text-accent"
+              className="group inline-flex items-center justify-center gap-3 py-4 px-8 bg-transparent font-sans text-sm font-medium tracking-wide transition-all duration-300 no-underline rounded-full"
+              style={{
+                color: '#D1D5DB',
+                border: '1px solid #1F2937'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#01F9C6';
+                e.currentTarget.style.color = '#01F9C6';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#1F2937';
+                e.currentTarget.style.color = '#D1D5DB';
+              }}
             >
               Explore the Library
             </Link>
           </div>
+        </div>
 
-          {/* Terminal-Style Data Display */}
-          <div className="reveal reveal-delay-4 inline-flex items-center gap-2 py-3 px-6 bg-ink-card border border-ink-border rounded-full">
-            <span className="text-accent font-mono text-sm">$</span>
-            <span className="text-neutral-500 font-mono text-sm">zscale</span>
-            <span className="text-white font-mono text-sm">--status</span>
-            <span className="text-accent font-mono text-sm animate-pulse">|</span>
-            <span className="text-[#D1D5DB] font-mono text-xs ml-2">
-              45+ investors · 12 sectors · $150M+ mapped
-            </span>
+        {/* Terminal Status Bar */}
+        <div className="reveal reveal-delay-4 mt-24 md:mt-32 flex justify-center">
+          <div
+            className="inline-flex items-center gap-2 py-3 px-5 rounded-full"
+            style={{
+              backgroundColor: '#1F2937',
+              border: '1px solid rgba(255, 255, 255, 0.05)'
+            }}
+          >
+            <span style={{ color: '#01F9C6' }} className="font-mono text-sm">$</span>
+            <span style={{ color: '#D1D5DB' }} className="font-mono text-sm">zscale</span>
+            <span style={{ color: '#FFFFFF' }} className="font-mono text-sm">--status</span>
+            <span style={{ color: '#01F9C6' }} className="font-mono text-sm">|</span>
+            <span style={{ color: '#D1D5DB' }} className="font-mono text-sm">45+ investors · 12 sectors · $150M+ mapped</span>
           </div>
         </div>
       </div>
 
-      {/* Gradient Fade to Next Section */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-ink-light to-transparent z-0" />
-
-      {/* Shadow Capital Modal */}
-      <ShadowCapitalModal
-        isOpen={isShadowCapitalOpen}
-        onClose={() => setIsShadowCapitalOpen(false)}
-        leadSource="Hero_Button"
+      {/* Bottom Gradient Fade */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-32 z-0"
+        style={{
+          background: 'linear-gradient(to top, #0A0A0B, transparent)'
+        }}
       />
     </section>
   );

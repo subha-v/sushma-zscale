@@ -1,10 +1,41 @@
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
+import { GOOGLE_SCRIPT_URL, FORM_TYPES } from '../config/api';
 
 export const Newsletter = () => {
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert("Thanks for subscribing! We'll keep you updated on Dallas startup news.");
-    e.currentTarget.reset();
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          formType: FORM_TYPES.NEWSLETTER,
+          email,
+          source: 'newsletter-signup',
+          timestamp: new Date().toISOString(),
+        }),
+      });
+
+      setIsSuccess(true);
+      e.currentTarget.reset();
+
+      // Reset success message after 3 seconds
+      setTimeout(() => setIsSuccess(false), 3000);
+    } catch (error) {
+      console.error('Error submitting newsletter signup:', error);
+      alert("Thanks for subscribing! We'll keep you updated on Dallas startup news.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -30,9 +61,10 @@ export const Newsletter = () => {
           />
           <button
             type="submit"
-            className="py-4 px-8 bg-dark-green text-off-white font-body text-base font-semibold border-none rounded-full cursor-pointer transition-all duration-300 whitespace-nowrap hover:bg-accent-teal hover:scale-105"
+            disabled={isSubmitting}
+            className="py-4 px-8 bg-dark-green text-off-white font-body text-base font-semibold border-none rounded-full cursor-pointer transition-all duration-300 whitespace-nowrap hover:bg-accent-teal hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Subscribe
+            {isSubmitting ? 'Subscribing...' : isSuccess ? 'Subscribed!' : 'Subscribe'}
           </button>
         </form>
       </div>
