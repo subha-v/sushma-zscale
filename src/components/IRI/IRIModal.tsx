@@ -62,12 +62,17 @@ export const IRIModal = ({ isOpen, onClose, source = 'Header_IRI' }: IRIModalPro
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
+      // Lock body scroll properly
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     };
   }, [isOpen, viewState]);
 
@@ -343,21 +348,34 @@ export const IRIModal = ({ isOpen, onClose, source = 'Header_IRI' }: IRIModalPro
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 bg-ink/95 backdrop-blur-md z-[1100] flex items-center justify-center p-4 animate-fadeIn"
-      onClick={handleBackdropClick}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="iri-title"
-    >
+    <>
+      {/* Full-screen overlay backdrop */}
+      <div
+        className="fixed inset-0 bg-black/80 backdrop-blur-md animate-fadeIn"
+        style={{ zIndex: 9998 }}
+        onClick={handleBackdropClick}
+        aria-hidden="true"
+      />
+
+      {/* Centered modal container */}
       <div
         ref={modalRef}
-        className="bg-[#0A0A0B] border border-ink-border rounded-2xl w-full max-w-2xl max-h-[85vh] shadow-2xl animate-scaleIn relative flex flex-col overflow-hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="iri-title"
+        className="fixed w-full max-w-2xl max-h-[85vh] bg-[#0A0A0B] border border-ink-border rounded-2xl shadow-2xl animate-scaleIn flex flex-col overflow-hidden"
+        style={{
+          zIndex: 9999,
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }}
       >
         {/* Close button - always visible */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-ink-medium border border-ink-border text-neutral-400 hover:bg-accent hover:border-accent hover:text-ink transition-colors duration-200 z-30"
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-ink-medium border border-ink-border text-neutral-400 hover:bg-accent hover:border-accent hover:text-ink transition-colors duration-200"
+          style={{ zIndex: 10000 }}
           aria-label="Close modal"
         >
           <svg
@@ -468,6 +486,6 @@ export const IRIModal = ({ isOpen, onClose, source = 'Header_IRI' }: IRIModalPro
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };

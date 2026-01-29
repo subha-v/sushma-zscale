@@ -35,18 +35,22 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
       // Store current focus and prevent body scroll
       previousFocusRef.current = document.activeElement as HTMLElement;
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
       // Only restore focus when modal is actually closing
       if (!isOpenRef.current && previousFocusRef.current) {
         previousFocusRef.current.focus();
         previousFocusRef.current = null;
       }
     };
-  }, [isOpen]); // Only depend on isOpen, not onClose
+  }, [isOpen]);
 
   // Handle click outside modal
   const handleBackdropClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -106,21 +110,34 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 bg-ink/80 backdrop-blur-md z-[1100] flex items-center justify-center p-4 animate-fadeIn"
-      onClick={handleBackdropClick}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-    >
+    <>
+      {/* Full-screen overlay backdrop */}
+      <div
+        className="fixed inset-0 bg-black/80 backdrop-blur-md animate-fadeIn"
+        style={{ zIndex: 9998 }}
+        onClick={handleBackdropClick}
+        aria-hidden="true"
+      />
+
+      {/* Centered modal container */}
       <div
         ref={modalRef}
-        className="card-skeuomorphic max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-scaleIn relative"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        className="fixed w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-[#0A0A0B] border border-ink-border rounded-2xl shadow-2xl animate-scaleIn"
+        style={{
+          zIndex: 9999,
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }}
       >
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-ink-medium border border-ink-border text-neutral-400 hover:bg-accent hover:border-accent hover:text-ink transition-colors duration-200 z-20"
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-ink-medium border border-ink-border text-neutral-400 hover:bg-accent hover:border-accent hover:text-ink transition-colors duration-200"
+          style={{ zIndex: 10000 }}
           aria-label="Close modal"
         >
           <svg
@@ -144,6 +161,6 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
           {children}
         </div>
       </div>
-    </div>
+    </>
   );
 };
