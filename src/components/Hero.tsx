@@ -124,19 +124,21 @@ export const Hero = ({ onOpenShadowCapital }: HeroProps) => {
         </div>
 
         {/* Terminal Status Bar */}
-        <div className="reveal reveal-delay-4 mt-24 md:mt-32 flex justify-center">
+        <div className="reveal reveal-delay-4 mt-24 md:mt-32 flex justify-center px-4 md:px-0">
           <div
-            className="inline-flex items-center gap-2 py-3 px-5 rounded-full"
+            className="inline-flex flex-wrap md:flex-nowrap items-center justify-center gap-1 md:gap-2 py-2 px-3 md:py-3 md:px-5 rounded-2xl md:rounded-full"
             style={{
               backgroundColor: '#1F2937',
               border: '1px solid rgba(255, 255, 255, 0.05)'
             }}
           >
-            <span style={{ color: '#01F9C6' }} className="font-mono text-sm">$</span>
-            <span style={{ color: '#D1D5DB' }} className="font-mono text-sm">zscale</span>
-            <span style={{ color: '#FFFFFF' }} className="font-mono text-sm">--status</span>
-            <span style={{ color: '#01F9C6' }} className="font-mono text-sm">|</span>
-            <span style={{ color: '#D1D5DB' }} className="font-mono text-sm">45+ investors · 12 sectors · $150M+ mapped</span>
+            <span className="flex items-center gap-1">
+              <span style={{ color: '#01F9C6' }} className="font-mono text-xs md:text-sm">$</span>
+              <span style={{ color: '#D1D5DB' }} className="font-mono text-xs md:text-sm">zscale</span>
+              <span style={{ color: '#FFFFFF' }} className="font-mono text-xs md:text-sm">--status</span>
+              <span style={{ color: '#01F9C6' }} className="font-mono text-xs md:text-sm">|</span>
+            </span>
+            <span style={{ color: '#D1D5DB' }} className="font-mono text-xs md:text-sm text-center">45+ investors · 12 sectors · $150M+ mapped</span>
           </div>
         </div>
       </div>
