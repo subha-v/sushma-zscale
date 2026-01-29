@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Logo } from './Logo';
 import { IRIModal } from './IRI';
 import { ShadowCapitalModal } from './ShadowCapitalModal';
@@ -39,7 +39,7 @@ const navItems: NavItem[] = [
     dropdown: [
       { label: 'Shadow Capital List', href: '#', description: '35+ Dallas Family Offices', isShadowCapital: true },
       { label: 'Tier-1 Partners', href: '/tools/investor-tier-list', description: 'DVC, Perot Jain & more' },
-      { label: 'Advisor Network', href: '#advisors', description: 'Shadow Network specialists' },
+      { label: 'Advisor Network', href: '/#advisors', description: 'Shadow Network specialists' },
     ],
   },
   {
@@ -53,7 +53,7 @@ const navItems: NavItem[] = [
   },
   {
     label: 'Advisors',
-    href: '#advisors',
+    href: '/#advisors',
   },
   {
     label: 'Team',
@@ -71,6 +71,34 @@ export const Header = () => {
   const [isEcosystemMapOpen, setIsEcosystemMapOpen] = useState(false);
   const [isAcceleratorPrepOpen, setIsAcceleratorPrepOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Handle navigation to hash links (e.g., /#advisors)
+  const handleHashNavigation = (href: string) => {
+    closeMobileMenu();
+    setActiveDropdown(null);
+
+    if (href.startsWith('/#')) {
+      const hash = href.substring(1); // Get "#advisors" from "/#advisors"
+      if (location.pathname === '/') {
+        // Already on homepage, just scroll to the section
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        // Navigate to homepage first, then scroll
+        navigate('/');
+        setTimeout(() => {
+          const element = document.querySelector(hash);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      }
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -220,6 +248,17 @@ export const Header = () => {
                             <div className="text-xs text-neutral-500 mt-0.5">{dropdownItem.description}</div>
                           )}
                         </button>
+                      ) : dropdownItem.href.startsWith('/#') ? (
+                        <button
+                          key={dropdownItem.label}
+                          onClick={() => handleHashNavigation(dropdownItem.href)}
+                          className="block w-full text-left px-4 py-3 hover:bg-ink-medium transition-colors bg-transparent border-none cursor-pointer"
+                        >
+                          <div className="text-sm font-medium text-white">{dropdownItem.label}</div>
+                          {dropdownItem.description && (
+                            <div className="text-xs text-neutral-500 mt-0.5">{dropdownItem.description}</div>
+                          )}
+                        </button>
                       ) : dropdownItem.href.startsWith('http') ? (
                         <a
                           key={dropdownItem.label}
@@ -249,6 +288,13 @@ export const Header = () => {
                   </div>
                 )}
               </>
+            ) : item.href?.startsWith('/#') ? (
+              <button
+                onClick={() => handleHashNavigation(item.href!)}
+                className="px-4 py-2 text-sm font-medium text-neutral-300 no-underline hover:text-white transition-colors max-md:text-xl bg-transparent border-none cursor-pointer"
+              >
+                {item.label}
+              </button>
             ) : item.href?.startsWith('/') ? (
               <Link
                 to={item.href}
