@@ -7,7 +7,7 @@ interface HeroProps {
 export const Hero = ({ onOpenShadowCapital }: HeroProps) => {
   return (
     <section
-      className="min-h-screen flex flex-col justify-center relative overflow-hidden"
+      className="min-h-[calc(100vh-100px)] flex flex-col justify-center relative overflow-hidden"
       style={{ backgroundColor: '#0A0A0B' }}
     >
       {/* Terminal Grid Background */}
@@ -33,7 +33,7 @@ export const Hero = ({ onOpenShadowCapital }: HeroProps) => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 py-32 md:py-40 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 py-20 md:py-24 text-center">
         {/* Technical Label */}
         <div className="reveal mb-8 flex justify-center">
           <span
