@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ModalProps {
   isOpen: boolean;
@@ -109,7 +110,7 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <>
       {/* Full-screen overlay backdrop */}
       <div
@@ -161,6 +162,7 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
           {children}
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 };

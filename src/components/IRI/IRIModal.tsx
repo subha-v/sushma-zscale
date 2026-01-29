@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { IRIContactInfo, IRIAnswers, IRIResult, IRIViewState, VectorScore } from './types';
 import { vectors, UNIT_ECONOMICS_PENALTY, UNIT_ECONOMICS_TRIGGER_VALUE, getWorkshopRecommendation } from './scoringData';
 import { GOOGLE_SCRIPT_URL, FORM_TYPES, saveUserProgress } from '../../config/api';
@@ -347,7 +348,7 @@ export const IRIModal = ({ isOpen, onClose, source = 'Header_IRI' }: IRIModalPro
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <>
       {/* Full-screen overlay backdrop */}
       <div
@@ -491,6 +492,7 @@ export const IRIModal = ({ isOpen, onClose, source = 'Header_IRI' }: IRIModalPro
           </>
         )}
       </div>
-    </>
+    </>,
+    document.body
   );
 };

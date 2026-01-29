@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { ContactInfo, DiagnosticAnswers, PrefilledLeadData } from './types';
 import { DiagnosticProgress } from './DiagnosticProgress';
 import { ContactInfoStep } from './steps/ContactInfoStep';
@@ -355,7 +356,7 @@ export const DiagnosticModal = ({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <>
       {/* Full-screen overlay backdrop */}
       <div
@@ -494,6 +495,7 @@ export const DiagnosticModal = ({
           </>
         )}
       </div>
-    </>
+    </>,
+    document.body
   );
 };
