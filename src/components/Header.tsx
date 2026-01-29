@@ -148,12 +148,12 @@ export const Header = () => {
 
       <nav
         ref={dropdownRef}
-        className={`flex items-center gap-1 max-md:fixed max-md:top-0 max-md:w-full max-md:h-screen max-md:bg-ink max-md:flex-col max-md:justify-center max-md:gap-6 max-md:transition-all max-md:duration-300 ${
+        className={`flex items-center gap-1 max-md:fixed max-md:top-0 max-md:w-full max-md:h-screen max-md:bg-ink max-md:flex-col max-md:justify-start max-md:pt-20 max-md:gap-4 max-md:transition-all max-md:duration-300 max-md:overflow-y-auto ${
           isMobileMenuOpen ? 'max-md:right-0' : 'max-md:-right-full'
         }`}
       >
         {navItems.map((item) => (
-          <div key={item.label} className="relative">
+          <div key={item.label} className="relative max-md:static">
             {item.dropdown ? (
               <>
                 <button
@@ -171,7 +171,7 @@ export const Header = () => {
                   </svg>
                 </button>
                 {activeDropdown === item.label && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-ink-light border border-ink-border rounded-xl shadow-card overflow-hidden animate-fade-in max-md:relative max-md:w-full max-md:mt-2">
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-ink-light border border-ink-border rounded-xl shadow-card overflow-hidden animate-fade-in max-md:relative max-md:top-auto max-md:left-0 max-md:translate-x-0 max-md:w-full max-md:mt-2 max-md:animate-none max-md:z-50 max-md:bg-[#0A0A0B]">
                     {item.dropdown.map((dropdownItem) => (
                       dropdownItem.isIRI ? (
                         <button
