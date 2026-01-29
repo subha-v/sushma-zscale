@@ -394,21 +394,22 @@ export const IRIModal = ({ isOpen, onClose, source = 'Header_IRI' }: IRIModalPro
           </svg>
         </button>
 
-        <div
-          ref={contentRef}
-          className="p-6 md:p-8 overflow-y-auto flex-1"
-        >
-          {viewState === 'calculating' ? (
+        {viewState === 'calculating' ? (
+          <div className="p-6 md:p-8">
             <IRICalculatingView onComplete={handleCalculationComplete} />
-          ) : viewState === 'results' && result ? (
+          </div>
+        ) : viewState === 'results' && result ? (
+          <div className="p-6 md:p-8 overflow-y-auto flex-1">
             <IRIResultsView
               result={result}
               contact={contact}
               onClose={handleClose}
             />
-          ) : (
-            <>
-              {/* Header */}
+          </div>
+        ) : (
+          <>
+            {/* Fixed Header */}
+            <div className="p-6 md:p-8 pb-0">
               <div className="text-center mb-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent/10 border border-accent/20 rounded-full text-xs mb-4">
                   <span className="text-[#01F9C6] font-mono">IRI</span>
@@ -418,22 +419,26 @@ export const IRIModal = ({ isOpen, onClose, source = 'Header_IRI' }: IRIModalPro
                   {getStepTitle()}
                 </h2>
               </div>
-
-              {/* Progress */}
               <IRIProgress currentStep={currentStep} totalSteps={TOTAL_STEPS} />
+            </div>
 
-              {/* Step content */}
-              <div className="mt-6">{renderStep()}</div>
+            {/* Scrollable Content */}
+            <div
+              ref={contentRef}
+              className="px-6 md:px-8 py-4 overflow-y-auto flex-1"
+            >
+              {renderStep()}
 
-              {/* Validation error */}
               {validationError && (
                 <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
                   {validationError}
                 </div>
               )}
+            </div>
 
-              {/* Navigation */}
-              <div className="flex items-center justify-between mt-8 pt-6 border-t border-ink-border">
+            {/* Fixed Navigation Footer */}
+            <div className="p-6 md:p-8 pt-4 border-t border-ink-border bg-[#0A0A0B]">
+              <div className="flex items-center justify-between">
                 <button
                   onClick={handleBack}
                   disabled={currentStep === 1}
@@ -482,9 +487,9 @@ export const IRIModal = ({ isOpen, onClose, source = 'Header_IRI' }: IRIModalPro
                   </svg>
                 </button>
               </div>
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

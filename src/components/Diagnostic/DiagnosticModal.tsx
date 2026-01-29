@@ -402,39 +402,46 @@ export const DiagnosticModal = ({
           </svg>
         </button>
 
-        <div
-          ref={contentRef}
-          className="p-6 md:p-10 overflow-y-auto flex-1"
-        >
-          {viewState === 'searching' ? (
+        {viewState === 'searching' ? (
+          <div className="p-6 md:p-10">
             <SearchingAnimation onComplete={handleSearchComplete} />
-          ) : viewState === 'success' ? (
+          </div>
+        ) : viewState === 'success' ? (
+          <div className="p-6 md:p-10 overflow-y-auto flex-1">
             <DiagnosticSuccessView
               firstName={contact.firstName}
               sector={contact.sector}
               companyName={contact.companyName}
               onClose={handleSuccessClose}
             />
-          ) : (
-            <>
-              {/* Progress */}
+          </div>
+        ) : (
+          <>
+            {/* Fixed Header - Progress */}
+            <div className="p-6 md:p-10 pb-4">
               <DiagnosticProgress
                 currentStep={currentStep}
                 totalSteps={TOTAL_STEPS}
               />
+            </div>
 
-              {/* Step content */}
-              <div className="min-h-[400px]">{renderStep()}</div>
+            {/* Scrollable Content */}
+            <div
+              ref={contentRef}
+              className="px-6 md:px-10 overflow-y-auto flex-1"
+            >
+              {renderStep()}
 
-              {/* Validation error */}
               {validationError && (
                 <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
                   {validationError}
                 </div>
               )}
+            </div>
 
-              {/* Navigation */}
-              <div className="flex items-center justify-between mt-8 pt-6 border-t border-ink-border">
+            {/* Fixed Navigation Footer */}
+            <div className="p-6 md:p-10 pt-4 border-t border-ink-border bg-[#0A0A0B]">
+              <div className="flex items-center justify-between">
                 <button
                   onClick={handleBack}
                   disabled={currentStep === 1}
@@ -483,9 +490,9 @@ export const DiagnosticModal = ({
                   </svg>
                 </button>
               </div>
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );
