@@ -20,6 +20,7 @@ export const FORM_TYPES = {
   LIBRARY_SIGNUP: 'library_signup',    // Library/Briefing signup -> Lead_Source: Venture_Library, Intent: Education
   ASSET_INTERACTION: 'asset_interaction', // Asset click/download tracking -> Asset_Interactions column in Master_Registry
   VENTURE_BENCHMARKS: 'venture_benchmarks', // Venture Benchmarks PDF -> Venture_Benchmarks tab
+  BUILD_APPLICATION: 'build_application', // Build with zScale application -> Build_Applications tab
 } as const;
 
 // ============================================================================

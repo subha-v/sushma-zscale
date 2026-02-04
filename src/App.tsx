@@ -13,6 +13,8 @@ import { AcceleratorChecklist } from './pages/tools/AcceleratorChecklist';
 import { ValuationTool } from './pages/tools/ValuationTool';
 import { Membership } from './pages/Membership';
 import { Team } from './pages/Team';
+import { Studio } from './pages/Studio';
+import { Apply } from './pages/Apply';
 
 // Inner component that uses hooks requiring Router context
 function AppContent() {
@@ -34,6 +36,8 @@ function AppContent() {
           <Route path="/tools/valuation" element={<ValuationTool />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/team" element={<Team />} />
+          <Route path="/studio" element={<Studio />} />
+          <Route path="/apply" element={<Apply />} />
         </Routes>
       </main>
       <Footer />
