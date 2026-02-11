@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Modal } from './Modal';
 
 interface ReadinessAssessmentPopupProps {
@@ -6,9 +7,11 @@ interface ReadinessAssessmentPopupProps {
 }
 
 export const ReadinessAssessmentPopup = ({ isOpen, onClose }: ReadinessAssessmentPopupProps) => {
+  const navigate = useNavigate();
+
   const handleSignup = () => {
-    window.open('https://docs.google.com/forms/d/e/1FAIpQLSeOkrgPlESpmmDavnJwthxQDdKg0U-saa-in0zMZtKq-zveLA/viewform?usp=sharing', '_blank');
     onClose();
+    navigate('/iri');
   };
 
   return (

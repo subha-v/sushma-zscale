@@ -31,7 +31,7 @@ const navItems: NavItem[] = [
     dropdown: [
       { label: 'Venture Studio', href: '/studio', description: 'AI-powered startup services' },
       { label: 'Apply to Build', href: '/apply', description: 'Partner with zScale' },
-      { label: 'Investment Readiness Index', href: '#', description: 'Assess your fundraise readiness', isIRI: true },
+      { label: 'Investment Readiness Index', href: '/iri', description: 'Assess your fundraise readiness' },
       { label: 'Advisor Equity Calculator', href: '/tools/equity-calculator', description: 'Calculate fair advisor equity' },
       { label: 'Accelerator Prep', href: '/tools/accelerator-checklist', description: 'Get accelerator-ready', isAcceleratorPrep: true },
     ],

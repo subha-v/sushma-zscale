@@ -15,6 +15,7 @@ import { Membership } from './pages/Membership';
 import { Team } from './pages/Team';
 import { Studio } from './pages/Studio';
 import { Apply } from './pages/Apply';
+import { IRI } from './pages/IRI';
 
 // Inner component that uses hooks requiring Router context
 function AppContent() {
@@ -38,6 +39,7 @@ function AppContent() {
           <Route path="/team" element={<Team />} />
           <Route path="/studio" element={<Studio />} />
           <Route path="/apply" element={<Apply />} />
+          <Route path="/iri" element={<IRI />} />
         </Routes>
       </main>
       <Footer />
