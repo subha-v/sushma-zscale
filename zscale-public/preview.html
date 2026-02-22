@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore zScale's free preview - search 50 sample Texas businesses. No signup required. See what market intelligence looks like.">
+    <title>Free Preview | zScale - Texas Market Intelligence Platform</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- ==================== HEADER ==================== -->
+    <header class="header" id="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="images/zscale-capital-logo.png" alt="zScale Capital" class="logo-img">
+            </a>
+
+            <nav class="nav-desktop">
+                <a href="solutions.html" class="nav-link">Solutions</a>
+                <a href="index.html#how-it-works" class="nav-link">How It Works</a>
+                <a href="preview.html" class="nav-link active">Free Preview</a>
+                <a href="about.html" class="nav-link">About</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="#login" class="login-link">Login</a>
+                <a href="demo.html" class="btn btn-primary btn-sm">Request Demo</a>
+            </div>
+
+            <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <a href="solutions.html" class="mobile-nav-link">Solutions</a>
+        <a href="index.html#how-it-works" class="mobile-nav-link">How It Works</a>
+        <a href="preview.html" class="mobile-nav-link">Free Preview</a>
+        <a href="about.html" class="mobile-nav-link">About</a>
+        <div class="mobile-nav-divider"></div>
+        <a href="#login" class="mobile-nav-link">Login</a>
+        <a href="demo.html" class="btn btn-primary btn-full">Request Demo</a>
+    </nav>
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="preview-hero">
+        <div class="container">
+            <div class="preview-hero-content">
+                <span class="preview-badge">Free Preview</span>
+                <h1 class="preview-headline">Explore Texas Business Data</h1>
+                <p class="preview-subheadline">Search 50 sample businesses from our database. No signup required. See what real market intelligence looks like.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== WHAT YOU'RE SEEING ==================== -->
+    <section class="preview-info-section">
+        <div class="container">
+            <div class="preview-info-grid">
+                <div class="preview-info-card">
+                    <span class="preview-info-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </span>
+                    <h3 class="preview-info-title">50 Sample Businesses</h3>
+                    <p class="preview-info-text">Real data from our database, not fake placeholder content.</p>
+                </div>
+
+                <div class="preview-info-card">
+                    <span class="preview-info-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </span>
+                    <h3 class="preview-info-title">Limited Preview</h3>
+                    <p class="preview-info-text">Full platform has 47,312 businesses across 254 counties.</p>
+                </div>
+
+                <div class="preview-info-card">
+                    <span class="preview-info-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </span>
+                    <h3 class="preview-info-title">No Signup Required</h3>
+                    <p class="preview-info-text">Explore freely. Request a demo when you're ready.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SEARCH INTERFACE ==================== -->
+    <section class="preview-search-section" id="search">
+        <div class="container">
+            <!-- Search Controls -->
+            <div class="search-controls">
+                <div class="search-bar">
+                    <span class="search-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </span>
+                    <input type="text" id="search-input" class="search-input" placeholder="Search by business name or industry...">
+                </div>
+
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label class="filter-label">Industry</label>
+                        <select id="filter-industry" class="filter-select">
+                            <option value="">All Industries</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="logistics">Logistics & Distribution</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">County</label>
+                        <select id="filter-county" class="filter-select">
+                            <option value="">All Counties</option>
+                            <option value="Travis">Travis</option>
+                            <option value="Williamson">Williamson</option>
+                            <option value="Dallas">Dallas</option>
+                            <option value="Harris">Harris</option>
+                            <option value="Bexar">Bexar</option>
+                            <option value="Tarrant">Tarrant</option>
+                            <option value="Hays">Hays</option>
+                        </select>
+                    </div>
+
+                    <button id="clear-filters" class="clear-filters-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                        Clear Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Info -->
+            <div class="results-info">
+                <div class="results-count">
+                    Showing <span id="results-showing">10</span> of <span id="results-total">50</span> sample businesses
+                </div>
+                <div class="results-warning">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    Preview limited to 50 businesses
+                </div>
+            </div>
+
+            <!-- Business Cards Grid -->
+            <div class="business-grid" id="business-grid">
+                <!-- Cards will be inserted by JavaScript -->
+            </div>
+
+            <!-- No Results Message -->
+            <div class="no-results" id="no-results" style="display: none;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+                <h3>No businesses found</h3>
+                <p>Try adjusting your search or filters</p>
+                <button id="reset-search" class="btn btn-outline">Reset Search</button>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <button id="prev-page" class="pagination-btn" disabled>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                    Previous
+                </button>
+                <span class="pagination-info">Page <span id="current-page">1</span> of <span id="total-pages">5</span></span>
+                <button id="next-page" class="pagination-btn">
+                    Next
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== MID-PAGE CTA ==================== -->
+    <section class="preview-cta-mid">
+        <div class="container">
+            <div class="preview-cta-content">
+                <h2 class="preview-cta-title">Want to see all 47,312 Texas businesses?</h2>
+                <p class="preview-cta-text">This preview shows just 50 sample records. The full platform includes comprehensive data on every tracked business in Texas.</p>
+                <div class="preview-cta-buttons">
+                    <a href="demo.html" class="btn btn-dark btn-lg">Request Demo</a>
+                    <a href="solutions.html" class="btn btn-outline-light btn-lg">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FINAL CTA ==================== -->
+    <section class="final-cta" id="demo">
+        <div class="container">
+            <div class="cta-card">
+                <h2 class="cta-title">Ready for the Full Platform?</h2>
+                <p class="cta-description">Schedule a personalized demo and see the complete Texas business database with all 47,312 businesses.</p>
+                <div class="cta-buttons cta-centered">
+                    <a href="demo.html" class="btn btn-primary btn-glow btn-lg">Request Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+
+                <!-- LEFT SIDE: Logo + Tagline -->
+                <div class="footer-left">
+                    <div class="footer-logo">
+                        <a href="index.html">
+                            <img src="images/zscale-capital-logo.png" alt="zScale Capital" class="footer-logo-img">
+                        </a>
+                    </div>
+                    <p class="footer-tagline">
+                        Texas Market Intelligence Platform for<br>
+                        Economic Development Professionals
+                    </p>
+                </div>
+
+                <!-- RIGHT SIDE: Navigation Columns -->
+                <div class="footer-right">
+
+                    <div class="footer-column">
+                        <h4>Platform</h4>
+                        <ul>
+                            <li><a href="preview.html">Free Preview</a></li>
+                            <li><a href="demo.html">Request Demo</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Solutions</h4>
+                        <ul>
+                            <li><a href="solutions.html#edc">Economic Development</a></li>
+                            <li><a href="solutions.html#college">Community Colleges</a></li>
+                            <li><a href="solutions.html#consultant">Site Consultants</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="mailto:info@zscalecapital.com">Contact</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FOOTER BOTTOM: Copyright + LinkedIn -->
+            <div class="footer-bottom">
+                <p>&copy; 2025 zScale Capital. All rights reserved.</p>
+                <a href="https://www.linkedin.com/in/sushma-vad" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                </a>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>

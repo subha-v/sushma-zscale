@@ -1,0 +1,14 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Black background - no white border -->
+  <rect width="40" height="40" fill="black"/>
+
+  <!-- Z shape - white strokes -->
+  <path d="M8 8 L32 8" stroke="white" stroke-width="3" stroke-linecap="square"/>
+  <path d="M32 8 L8 32" stroke="white" stroke-width="3" stroke-linecap="square"/>
+  <path d="M8 32 L32 32" stroke="white" stroke-width="3" stroke-linecap="square"/>
+  <path d="M8 8 L8 14" stroke="white" stroke-width="3" stroke-linecap="square"/>
+  <path d="M32 26 L32 32" stroke="white" stroke-width="3" stroke-linecap="square"/>
+
+  <!-- Teal diagonal stripe -->
+  <path d="M26 12 L14 28" stroke="#01F9C6" stroke-width="4" stroke-linecap="round"/>
+</svg>

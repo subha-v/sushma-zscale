@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="zScale Solutions - Market intelligence tailored for Economic Development Corporations, Community Colleges, and Site Selection Consultants.">
+    <title>Solutions | zScale - Texas Market Intelligence Platform</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- ==================== HEADER ==================== -->
+    <header class="header" id="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="images/zscale-capital-logo.png" alt="zScale Capital" class="logo-img">
+            </a>
+
+            <nav class="nav-desktop">
+                <a href="solutions.html" class="nav-link active">Solutions</a>
+                <a href="index.html#how-it-works" class="nav-link">How It Works</a>
+                <a href="preview.html" class="nav-link">Free Preview</a>
+                <a href="about.html" class="nav-link">About</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="#login" class="login-link">Login</a>
+                <a href="demo.html" class="btn btn-primary btn-sm">Request Demo</a>
+            </div>
+
+            <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <a href="solutions.html" class="mobile-nav-link">Solutions</a>
+        <a href="index.html#how-it-works" class="mobile-nav-link">How It Works</a>
+        <a href="preview.html" class="mobile-nav-link">Free Preview</a>
+        <a href="about.html" class="mobile-nav-link">About</a>
+        <div class="mobile-nav-divider"></div>
+        <a href="#login" class="mobile-nav-link">Login</a>
+        <a href="demo.html" class="btn btn-primary btn-full">Request Demo</a>
+    </nav>
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="solutions-hero">
+        <div class="container">
+            <div class="solutions-hero-content">
+                <h1 class="solutions-headline">Solutions Built for Your Mission</h1>
+                <p class="solutions-subheadline">Purpose-built market intelligence for Texas economic development professionals. Choose your path below.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TABBED INTERFACE ==================== -->
+    <section class="solutions-tabs-section">
+        <div class="container">
+            <!-- Tab Buttons -->
+            <div class="tabs-nav">
+                <button class="tab-btn active" data-tab="edc">
+                    <span class="tab-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
+                        </svg>
+                    </span>
+                    Economic Development
+                </button>
+                <button class="tab-btn" data-tab="colleges">
+                    <span class="tab-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z M6 12v5c3 3 9 3 12 0v-5"/>
+                        </svg>
+                    </span>
+                    Community Colleges
+                </button>
+                <button class="tab-btn" data-tab="consultants">
+                    <span class="tab-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8"/>
+                        </svg>
+                    </span>
+                    Site Consultants
+                </button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tabs-content">
+                <!-- ========== TAB 1: ECONOMIC DEVELOPMENT ========== -->
+                <div class="tab-panel active" id="tab-edc">
+                    <div class="tab-intro">
+                        <h2 class="tab-title">For Economic Development Corporations</h2>
+                        <p class="tab-lead">Stop spending days compiling business lists for RFPs. Get data-backed answers in minutes. Track retention risks before businesses close.</p>
+                    </div>
+
+                    <!-- Use Cases -->
+                    <div class="use-cases-section">
+                        <h3 class="section-label">Use Cases</h3>
+                        <div class="use-cases-grid">
+                            <div class="use-case-card">
+                                <span class="use-case-number">01</span>
+                                <div class="use-case-content">
+                                    <p class="use-case-challenge">"We need labor market data for an RFP response due in 48 hours."</p>
+                                    <p class="use-case-solution">Pull industry-specific employment, wage data, and competitor analysis for any Texas county in under 10 minutes.</p>
+                                    <p class="use-case-outcome">Win more projects with faster, data-backed proposals</p>
+                                </div>
+                            </div>
+
+                            <div class="use-case-card">
+                                <span class="use-case-number">02</span>
+                                <div class="use-case-content">
+                                    <p class="use-case-challenge">"A major employer is considering leaving. We had no warning signs."</p>
+                                    <p class="use-case-solution">Monitor hiring freezes, layoff signals, and expansion indicators across your top 50 employers automatically.</p>
+                                    <p class="use-case-outcome">Prevent 2-3 business closures per year through early intervention</p>
+                                </div>
+                            </div>
+
+                            <div class="use-case-card">
+                                <span class="use-case-number">03</span>
+                                <div class="use-case-content">
+                                    <p class="use-case-challenge">"Board members want monthly updates but I'm spending 20+ hours on reports."</p>
+                                    <p class="use-case-solution">Generate board-ready reports in minutes with pre-built templates covering jobs, wages, and industry trends.</p>
+                                    <p class="use-case-outcome">Save 100+ hours annually on reporting</p>
+                                </div>
+                            </div>
+
+                            <div class="use-case-card">
+                                <span class="use-case-number">04</span>
+                                <div class="use-case-content">
+                                    <p class="use-case-challenge">"We want to target aerospace suppliers but don't know where to start."</p>
+                                    <p class="use-case-solution">Identify supply chain gaps, track competitor counties, and build targeted prospect lists by NAICS code.</p>
+                                    <p class="use-case-outcome">Build data-driven industry targeting strategies</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Features -->
+                    <div class="tab-features">
+                        <h3 class="section-label">Key Features</h3>
+                        <div class="features-list">
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+                                    </svg>
+                                </span>
+                                <span>County-level dashboard with employment trends</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                    </svg>
+                                </span>
+                                <span>Business retention early warning system</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>
+                                    </svg>
+                                </span>
+                                <span>Board report templates (PDF, PowerPoint)</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
+                                    </svg>
+                                </span>
+                                <span>Industry cluster analysis and targeting</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                </span>
+                                <span>Multi-county regional comparisons</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ROI Section -->
+                    <div class="tab-roi">
+                        <h3 class="section-label">Your ROI</h3>
+                        <div class="roi-grid">
+                            <div class="roi-card">
+                                <span class="roi-number">100+</span>
+                                <span class="roi-label">Hours saved annually on reporting</span>
+                            </div>
+                            <div class="roi-card">
+                                <span class="roi-number">5x</span>
+                                <span class="roi-label">More RFPs responded to per year</span>
+                            </div>
+                            <div class="roi-card">
+                                <span class="roi-number">2-3</span>
+                                <span class="roi-label">Business closures prevented</span>
+                            </div>
+                            <div class="roi-card">
+                                <span class="roi-number">10X</span>
+                                <span class="roi-label">Return on investment</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ========== TAB 2: COMMUNITY COLLEGES ========== -->
+                <div class="tab-panel" id="tab-colleges">
+                    <div class="tab-intro">
+                        <h2 class="tab-title">For Community Colleges</h2>
+                        <p class="tab-lead">Align training programs with real employer demand. Track 50,000+ job openings. Show advisory boards what skills are actually needed in your service region.</p>
+                    </div>
+
+                    <!-- Use Cases -->
+                    <div class="use-cases-section">
+                        <h3 class="section-label">Use Cases</h3>
+                        <div class="use-cases-grid">
+                            <div class="use-case-card">
+                                <span class="use-case-number">01</span>
+                                <div class="use-case-content">
+                                    <p class="use-case-challenge">"We're launching a new welding program but don't know actual employer demand."</p>
+                                    <p class="use-case-solution">See real-time job postings, wage ranges, and employer counts for any occupation in your service area.</p>
+                                    <p class="use-case-outcome">Launch programs with proven employment demand</p>
+                                </div>
+                            </div>
+
+                            <div class="use-case-card">
+                                <span class="use-case-number">02</span>
+                                <div class="use-case-content">
+                                    <p class="use-case-challenge">"Advisory board members want data on industry trends, not just our opinions."</p>
+                                    <p class="use-case-solution">Generate employer-specific reports showing hiring trends, skill requirements, and wage growth by industry.</p>
+                                    <p class="use-case-outcome">Build 50+ employer partnerships with data-backed outreach</p>
+                                </div>
+                            </div>
+
+                            <div class="use-case-card">
+                                <span class="use-case-number">03</span>
+                                <div class="use-case-content">
+                                    <p class="use-case-challenge">"HB 8 requires us to demonstrate workforce alignment. We need proof."</p>
+                                    <p class="use-case-solution">Track graduate placement rates against actual job openings. Map program outcomes to employer needs.</p>
+                                    <p class="use-case-outcome">Secure $8M-$12M in Tier 1 performance funding</p>
+                                </div>
+                            </div>
+
+                            <div class="use-case-card">
+                                <span class="use-case-number">04</span>
+                                <div class="use-case-content">
+                                    <p class="use-case-challenge">"Should we expand our healthcare programs or pivot to manufacturing?"</p>
+                                    <p class="use-case-solution">Compare job growth trajectories, wage premiums, and employer concentration across industries.</p>
+                                    <p class="use-case-outcome">Make data-backed program expansion decisions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Features -->
+                    <div class="tab-features">
+                        <h3 class="section-label">Key Features</h3>
+                        <div class="features-list">
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+                                    </svg>
+                                </span>
+                                <span>Skills gap dashboard by occupation</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                </span>
+                                <span>Employer contact lists by industry</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                    </svg>
+                                </span>
+                                <span>Program-to-job alignment scoring</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                                    </svg>
+                                </span>
+                                <span>Advisory board report templates</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
+                                </span>
+                                <span>Graduate placement tracking</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ROI Section -->
+                    <div class="tab-roi">
+                        <h3 class="section-label">Your ROI</h3>
+                        <div class="roi-grid">
+                            <div class="roi-card">
+                                <span class="roi-number">15-25%</span>
+                                <span class="roi-label">Increase in job placement rates</span>
+                            </div>
+                            <div class="roi-card">
+                                <span class="roi-number">$8-12M</span>
+                                <span class="roi-label">Potential Tier 1 funding secured</span>
+                            </div>
+                            <div class="roi-card">
+                                <span class="roi-number">50+</span>
+                                <span class="roi-label">Employer partnerships built</span>
+                            </div>
+                            <div class="roi-card">
+                                <span class="roi-number">100%</span>
+                                <span class="roi-label">Data-backed program decisions</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ========== TAB 3: SITE CONSULTANTS ========== -->
+                <div class="tab-panel" id="tab-consultants">
+                    <div class="tab-intro">
+                        <h2 class="tab-title">For Site Selection Consultants</h2>
+                        <p class="tab-lead">Respond to client RFPs faster. Compare labor markets across 254 Texas counties. Export professional white-label reports in seconds.</p>
+                    </div>
+
+                    <!-- Use Cases -->
+                    <div class="use-cases-section">
+                        <h3 class="section-label">Use Cases</h3>
+                        <div class="use-cases-grid">
+                            <div class="use-case-card">
+                                <span class="use-case-number">01</span>
+                                <div class="use-case-content">
+                                    <p class="use-case-challenge">"Client wants labor analysis for 5 Texas markets by Friday. It's Wednesday."</p>
+                                    <p class="use-case-solution">Generate comparative labor market reports for multiple counties in under 30 minutes with standardized metrics.</p>
+                                    <p class="use-case-outcome">Deliver client reports 20 hours faster per project</p>
+                                </div>
+                            </div>
+
+                            <div class="use-case-card">
+                                <span class="use-case-number">02</span>
+                                <div class="use-case-content">
+                                    <p class="use-case-challenge">"We need to verify labor availability claims from competing EDCs."</p>
+                                    <p class="use-case-solution">Access verified state employment data, commute patterns, and occupation concentrations independent of EDC marketing.</p>
+                                    <p class="use-case-outcome">Provide clients with unbiased, third-party data</p>
+                                </div>
+                            </div>
+
+                            <div class="use-case-card">
+                                <span class="use-case-number">03</span>
+                                <div class="use-case-content">
+                                    <p class="use-case-challenge">"Each client project requires rebuilding the same analysis from scratch."</p>
+                                    <p class="use-case-solution">Save project templates, comparison frameworks, and custom metrics. Reuse across similar engagements.</p>
+                                    <p class="use-case-outcome">Save 400+ hours annually across all projects</p>
+                                </div>
+                            </div>
+
+                            <div class="use-case-card">
+                                <span class="use-case-number">04</span>
+                                <div class="use-case-content">
+                                    <p class="use-case-challenge">"Clients want reports with our branding, not a third-party platform watermark."</p>
+                                    <p class="use-case-solution">Export white-label PDF and PowerPoint reports with your firm's logo, colors, and formatting.</p>
+                                    <p class="use-case-outcome">Deliver premium client deliverables instantly</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Features -->
+                    <div class="tab-features">
+                        <h3 class="section-label">Key Features</h3>
+                        <div class="features-list">
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+                                    </svg>
+                                </span>
+                                <span>Statewide access to all 254 Texas counties</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+                                    </svg>
+                                </span>
+                                <span>Side-by-side market comparison tool</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                </span>
+                                <span>White-label PDF and PowerPoint exports</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                                    </svg>
+                                </span>
+                                <span>API access for custom integrations</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </span>
+                                <span>Project management and saved templates</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ROI Section -->
+                    <div class="tab-roi">
+                        <h3 class="section-label">Your ROI</h3>
+                        <div class="roi-grid">
+                            <div class="roi-card">
+                                <span class="roi-number">20 hrs</span>
+                                <span class="roi-label">Saved per client project</span>
+                            </div>
+                            <div class="roi-card">
+                                <span class="roi-number">400 hrs</span>
+                                <span class="roi-label">Saved annually (20 projects)</span>
+                            </div>
+                            <div class="roi-card">
+                                <span class="roi-number">$80K+</span>
+                                <span class="roi-label">Value of time savings</span>
+                            </div>
+                            <div class="roi-card">
+                                <span class="roi-number">2X</span>
+                                <span class="roi-label">Faster project turnaround</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== COMMON FEATURES ==================== -->
+    <section class="common-features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">What's Included in Every Plan</h2>
+                <p class="section-subtitle">Core capabilities available across all zScale licenses</p>
+            </div>
+
+            <div class="common-features-grid">
+                <div class="common-feature-card">
+                    <span class="common-feature-number">47,312</span>
+                    <span class="common-feature-label">Texas Businesses</span>
+                    <p class="common-feature-desc">Complete directory updated quarterly with state employment data</p>
+                </div>
+
+                <div class="common-feature-card">
+                    <span class="common-feature-number">50K+</span>
+                    <span class="common-feature-label">Active Job Postings</span>
+                    <p class="common-feature-desc">Real-time hiring activity tracked across all industries</p>
+                </div>
+
+                <div class="common-feature-card">
+                    <span class="common-feature-number">Quarterly</span>
+                    <span class="common-feature-label">Trend Updates</span>
+                    <p class="common-feature-desc">Historical analysis and growth projections by county</p>
+                </div>
+
+                <div class="common-feature-card">
+                    <span class="common-feature-number">Unlimited</span>
+                    <span class="common-feature-label">Report Exports</span>
+                    <p class="common-feature-desc">PDF, Excel, and PowerPoint downloads included</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FINAL CTA ==================== -->
+    <section class="final-cta" id="demo">
+        <div class="container">
+            <div class="cta-card">
+                <h2 class="cta-title">Ready to See zScale in Action?</h2>
+                <p class="cta-description">Schedule a personalized demo and see how zScale can transform your workflow.</p>
+                <div class="cta-buttons cta-centered">
+                    <a href="demo.html" class="btn btn-primary btn-glow btn-lg">Request Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+
+                <!-- LEFT SIDE: Logo + Tagline -->
+                <div class="footer-left">
+                    <div class="footer-logo">
+                        <a href="index.html">
+                            <img src="images/zscale-capital-logo.png" alt="zScale Capital" class="footer-logo-img">
+                        </a>
+                    </div>
+                    <p class="footer-tagline">
+                        Texas Market Intelligence Platform for<br>
+                        Economic Development Professionals
+                    </p>
+                </div>
+
+                <!-- RIGHT SIDE: Navigation Columns -->
+                <div class="footer-right">
+
+                    <div class="footer-column">
+                        <h4>Platform</h4>
+                        <ul>
+                            <li><a href="preview.html">Free Preview</a></li>
+                            <li><a href="demo.html">Request Demo</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Solutions</h4>
+                        <ul>
+                            <li><a href="solutions.html#edc">Economic Development</a></li>
+                            <li><a href="solutions.html#college">Community Colleges</a></li>
+                            <li><a href="solutions.html#consultant">Site Consultants</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="mailto:info@zscalecapital.com">Contact</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FOOTER BOTTOM: Copyright + LinkedIn -->
+            <div class="footer-bottom">
+                <p>&copy; 2025 zScale Capital. All rights reserved.</p>
+                <a href="https://www.linkedin.com/in/sushma-vad" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                </a>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>

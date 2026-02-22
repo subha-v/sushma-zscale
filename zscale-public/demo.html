@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Request a personalized demo of zScale. See your region's data and discover how market intelligence can transform your economic development work.">
+    <title>Request Demo | zScale - Texas Market Intelligence Platform</title>
+
+    <!--
+    FORMSPREE SETUP:
+    1. Sign up at https://formspree.io/ (free)
+    2. Create new form "zScale Demo Requests"
+    3. Copy your form endpoint URL
+    4. Replace YOUR_FORM_ID in form action below
+    Example: https://formspree.io/f/xyzabc123
+    -->
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- ==================== HEADER ==================== -->
+    <header class="header" id="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="images/zscale-capital-logo.png" alt="zScale Capital" class="logo-img">
+            </a>
+
+            <nav class="nav-desktop">
+                <a href="solutions.html" class="nav-link">Solutions</a>
+                <a href="index.html#how-it-works" class="nav-link">How It Works</a>
+                <a href="preview.html" class="nav-link">Free Preview</a>
+                <a href="about.html" class="nav-link">About</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="#login" class="login-link">Login</a>
+                <a href="demo.html" class="btn btn-primary btn-sm">Request Demo</a>
+            </div>
+
+            <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <a href="solutions.html" class="mobile-nav-link">Solutions</a>
+        <a href="index.html#how-it-works" class="mobile-nav-link">How It Works</a>
+        <a href="preview.html" class="mobile-nav-link">Free Preview</a>
+        <a href="about.html" class="mobile-nav-link">About</a>
+        <div class="mobile-nav-divider"></div>
+        <a href="#login" class="mobile-nav-link">Login</a>
+        <a href="demo.html" class="btn btn-primary btn-full">Request Demo</a>
+    </nav>
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="demo-hero">
+        <div class="container">
+            <div class="demo-hero-content">
+                <h1 class="demo-headline">Request a Personalized Demo</h1>
+                <p class="demo-subheadline">See your region's data in action. Our team will walk you through the platform and answer your questions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== DEMO FORM SECTION ==================== -->
+    <section class="demo-form-section">
+        <div class="container">
+            <div class="demo-layout">
+                <!-- Left Column: Form -->
+                <div class="demo-form-container">
+                    <!-- Demo Form -->
+                    <form id="demo-form" class="demo-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                        <!-- Hidden subject field -->
+                        <input type="hidden" name="_subject" value="New Demo Request - zScale">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name" class="form-label">Full Name <span class="required">*</span></label>
+                                <input type="text" id="name" name="name" class="form-input" required placeholder="John Smith">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email Address <span class="required">*</span></label>
+                                <input type="email" id="email" name="email" class="form-input" required placeholder="john@organization.com">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="organization" class="form-label">Organization <span class="required">*</span></label>
+                                <input type="text" id="organization" name="organization" class="form-input" required placeholder="Travis County EDC">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="org-type" class="form-label">Organization Type <span class="required">*</span></label>
+                                <select id="org-type" name="organization_type" class="form-select" required>
+                                    <option value="">Select type...</option>
+                                    <option value="Economic Development Corporation">Economic Development Corporation</option>
+                                    <option value="Community College">Community College</option>
+                                    <option value="Site Selection Consultant">Site Selection Consultant</option>
+                                    <option value="Workforce Board">Workforce Board</option>
+                                    <option value="Chamber of Commerce">Chamber of Commerce</option>
+                                    <option value="Regional Planning Council">Regional Planning Council</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="region" class="form-label">County or Region</label>
+                                <input type="text" id="region" name="region" class="form-input" placeholder="e.g., Travis County, Central Texas">
+                                <span class="form-hint">We'll customize your demo to show data from your area</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" class="form-input" placeholder="(512) 555-0123">
+                                <span class="form-hint">Optional - for scheduling purposes</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-group-full">
+                            <label for="goals" class="form-label">What are you trying to accomplish?</label>
+                            <textarea id="goals" name="goals" class="form-textarea" rows="4" placeholder="Tell us about your goals, challenges, or what you're hoping to learn from the demo..."></textarea>
+                            <span class="form-hint">Optional - helps us prepare a more relevant demo</span>
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="btn btn-primary btn-glow btn-lg btn-full">
+                            <span class="btn-text">Request Demo</span>
+                            <span class="btn-loading" style="display: none;">
+                                <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+                                    <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/>
+                                </svg>
+                                Sending...
+                            </span>
+                        </button>
+
+                        <p class="form-disclaimer">By submitting, you agree to our <a href="#privacy">Privacy Policy</a>. We'll never share your information.</p>
+                    </form>
+
+                    <!-- Success Message -->
+                    <div id="form-success" class="form-success" style="display: none;">
+                        <div class="success-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                        </div>
+                        <h2 class="success-headline">Demo Request Received!</h2>
+                        <p class="success-text">Thank you for your interest in zScale. A member of our team will reach out within 24 hours to schedule your personalized demo.</p>
+                        <p class="success-text-small">Check your inbox for a confirmation email.</p>
+                        <a href="index.html" class="btn btn-outline btn-lg">Back to Homepage</a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Sidebar -->
+                <div class="demo-sidebar">
+                    <!-- What to Expect -->
+                    <div class="sidebar-card">
+                        <h3 class="sidebar-title">What to Expect</h3>
+                        <div class="expect-steps">
+                            <div class="expect-step">
+                                <span class="expect-number">1</span>
+                                <div class="expect-content">
+                                    <h4>We'll Email You</h4>
+                                    <p>Within 24 hours to schedule a time that works for you.</p>
+                                </div>
+                            </div>
+                            <div class="expect-step">
+                                <span class="expect-number">2</span>
+                                <div class="expect-content">
+                                    <h4>30-Minute Live Demo</h4>
+                                    <p>See your region's actual data in the platform.</p>
+                                </div>
+                            </div>
+                            <div class="expect-step">
+                                <span class="expect-number">3</span>
+                                <div class="expect-content">
+                                    <h4>Q&A Session</h4>
+                                    <p>Ask questions and explore features relevant to your work.</p>
+                                </div>
+                            </div>
+                            <div class="expect-step">
+                                <span class="expect-number">4</span>
+                                <div class="expect-content">
+                                    <h4>Get Trial Access</h4>
+                                    <p>Qualifying organizations receive 2-week trial access.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Questions Card -->
+                    <div class="sidebar-card sidebar-card-contact">
+                        <h3 class="sidebar-title">Questions?</h3>
+                        <p class="contact-email">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            <a href="mailto:info@zscalecapital.com">info@zscalecapital.com</a>
+                        </p>
+                        <p class="contact-note">We typically respond within a few hours during business days.</p>
+                    </div>
+
+                    <!-- Testimonial Card -->
+                    <div class="sidebar-card sidebar-card-testimonial">
+                        <span class="testimonial-quote">"</span>
+                        <p class="testimonial-text">The demo showed us exactly how zScale could streamline our RFP responses. We went from days of research to minutes.</p>
+                        <p class="testimonial-author">— Economic Development Director<br><span>Texas EDC</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== WHY REQUEST DEMO ==================== -->
+    <section class="why-demo-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Why Request a Demo?</h2>
+                <p class="section-subtitle">See how zScale can transform your workflow</p>
+            </div>
+
+            <div class="why-demo-grid">
+                <div class="why-demo-card">
+                    <span class="why-demo-icon">🎯</span>
+                    <h3 class="why-demo-title">See Your Region's Data</h3>
+                    <p class="why-demo-text">We'll pull up your county or region during the demo so you can see exactly what you'll be working with.</p>
+                </div>
+
+                <div class="why-demo-card">
+                    <span class="why-demo-icon">⚡</span>
+                    <h3 class="why-demo-title">No Pressure</h3>
+                    <p class="why-demo-text">This is an informational session. No hard sales tactics. Just a straightforward look at the platform.</p>
+                </div>
+
+                <div class="why-demo-card">
+                    <span class="why-demo-icon">🔍</span>
+                    <h3 class="why-demo-title">Customized to Your Needs</h3>
+                    <p class="why-demo-text">Tell us your challenges and we'll focus on the features most relevant to your organization.</p>
+                </div>
+
+                <div class="why-demo-card">
+                    <span class="why-demo-icon">✅</span>
+                    <h3 class="why-demo-title">Get Trial Access</h3>
+                    <p class="why-demo-text">Qualifying organizations receive a 2-week trial to explore the full platform on their own.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+
+                <!-- LEFT SIDE: Logo + Tagline -->
+                <div class="footer-left">
+                    <div class="footer-logo">
+                        <a href="index.html">
+                            <img src="images/zscale-capital-logo.png" alt="zScale Capital" class="footer-logo-img">
+                        </a>
+                    </div>
+                    <p class="footer-tagline">
+                        Texas Market Intelligence Platform for<br>
+                        Economic Development Professionals
+                    </p>
+                </div>
+
+                <!-- RIGHT SIDE: Navigation Columns -->
+                <div class="footer-right">
+
+                    <div class="footer-column">
+                        <h4>Platform</h4>
+                        <ul>
+                            <li><a href="preview.html">Free Preview</a></li>
+                            <li><a href="demo.html">Request Demo</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Solutions</h4>
+                        <ul>
+                            <li><a href="solutions.html#edc">Economic Development</a></li>
+                            <li><a href="solutions.html#college">Community Colleges</a></li>
+                            <li><a href="solutions.html#consultant">Site Consultants</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="mailto:info@zscalecapital.com">Contact</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FOOTER BOTTOM: Copyright + LinkedIn -->
+            <div class="footer-bottom">
+                <p>&copy; 2025 zScale Capital. All rights reserved.</p>
+                <a href="https://www.linkedin.com/in/sushma-vad" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                </a>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
