@@ -96,7 +96,7 @@ export default {
         fadeIn: 'fadeIn 0.2s ease-out',
         scaleIn: 'scaleIn 0.2s ease-out',
         'pulse-dot': 'pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        marquee: 'marquee 30s linear infinite',
+        marquee: 'marquee 40s linear infinite',
         slideInRight: 'slideInRight 0.3s ease-out',
         slideInLeft: 'slideInLeft 0.3s ease-out',
       },
