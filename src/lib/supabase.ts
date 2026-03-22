@@ -51,49 +51,161 @@ export interface CareerPathway {
 // DEMO LOGIN
 // ============================================================================
 
-export async function demoLogin(demoToken: string): Promise<{ user: User }> {
-  // Find demo user by token
-  const { data: user, error } = await supabase
-    .from('users')
-    .select(`
-      *,
-      texas_counties!primary_county_fips (
-        county_name,
-        region
-      )
-    `)
-    .eq('demo_token', demoToken)
-    .eq('is_demo_account', true)
-    .single()
+// Fallback demo accounts when Supabase doesn't have demo user records
+const DEMO_USERS: Record<string, User> = {
+  'DEMO-COLLEGE-DEAN-2024': {
+    id: 'demo-college-dean',
+    email: 'dean@demo.zscale.com',
+    firstName: 'Dr. Sarah',
+    lastName: 'Mitchell',
+    role: 'college',
+    subRole: 'Dean',
+    countyFips: '48113',
+    countyName: 'Dallas',
+    region: 'North Texas'
+  },
+  'DEMO-COLLEGE-FACULTY-2024': {
+    id: 'demo-college-faculty',
+    email: 'faculty@demo.zscale.com',
+    firstName: 'Prof. James',
+    lastName: 'Chen',
+    role: 'college',
+    subRole: 'Faculty',
+    countyFips: '48085',
+    countyName: 'Collin',
+    region: 'North Texas'
+  },
+  'DEMO-COLLEGE-REGISTRAR-2024': {
+    id: 'demo-college-registrar',
+    email: 'registrar@demo.zscale.com',
+    firstName: 'Maria',
+    lastName: 'Rodriguez',
+    role: 'college',
+    subRole: 'Registrar',
+    countyFips: '48439',
+    countyName: 'Tarrant',
+    region: 'North Texas'
+  },
+  'DEMO-EDC-DIRECTOR-2024': {
+    id: 'demo-edc-director',
+    email: 'director@demo.zscale.com',
+    firstName: 'Michael',
+    lastName: 'Thompson',
+    role: 'edc',
+    subRole: 'Director',
+    countyFips: '48113',
+    countyName: 'Dallas',
+    region: 'North Texas'
+  },
+  'DEMO-EDC-ANALYST-2024': {
+    id: 'demo-edc-analyst',
+    email: 'analyst@demo.zscale.com',
+    firstName: 'Emily',
+    lastName: 'Park',
+    role: 'edc',
+    subRole: 'Analyst',
+    countyFips: '48085',
+    countyName: 'Collin',
+    region: 'North Texas'
+  },
+  'DEMO-STUDENT-COUNSELOR-2024': {
+    id: 'demo-student-counselor',
+    email: 'counselor@demo.zscale.com',
+    firstName: 'Lisa',
+    lastName: 'Washington',
+    role: 'student',
+    subRole: 'Counselor',
+    countyFips: '48121',
+    countyName: 'Denton',
+    region: 'North Texas'
+  },
+  'DEMO-STUDENT-STUDENT-2024': {
+    id: 'demo-student-student',
+    email: 'student@demo.zscale.com',
+    firstName: 'Alex',
+    lastName: 'Rivera',
+    role: 'student',
+    subRole: 'Student',
+    countyFips: '48113',
+    countyName: 'Dallas',
+    region: 'North Texas'
+  },
+  'DEMO-TWC-OWNER-2024': {
+    id: 'demo-twc-owner',
+    email: 'owner@demo.zscale.com',
+    firstName: 'Robert',
+    lastName: 'Hayes',
+    role: 'twc',
+    subRole: 'Business Owner',
+    countyFips: '48439',
+    countyName: 'Tarrant',
+    region: 'North Texas'
+  },
+  'DEMO-TWC-HR-2024': {
+    id: 'demo-twc-hr',
+    email: 'hr@demo.zscale.com',
+    firstName: 'Jennifer',
+    lastName: 'Kumar',
+    role: 'twc',
+    subRole: 'HR Director',
+    countyFips: '48113',
+    countyName: 'Dallas',
+    region: 'North Texas'
+  }
+}
 
-  if (error || !user) {
-    console.error('Demo login error:', error)
+export async function demoLogin(demoToken: string): Promise<{ user: User }> {
+  // Try Supabase first
+  try {
+    const { data: user, error } = await supabase
+      .from('users')
+      .select(`
+        *,
+        texas_counties!primary_county_fips (
+          county_name,
+          region
+        )
+      `)
+      .eq('demo_token', demoToken)
+      .eq('is_demo_account', true)
+      .single()
+
+    if (!error && user) {
+      // Update access tracking
+      await supabase
+        .from('users')
+        .update({
+          demo_access_count: (user.demo_access_count || 0) + 1,
+          demo_last_accessed_at: new Date().toISOString(),
+          last_login_at: new Date().toISOString()
+        })
+        .eq('id', user.id)
+
+      return {
+        user: {
+          id: user.id,
+          email: user.email,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          role: user.role,
+          subRole: user.sub_role || '',
+          countyFips: user.primary_county_fips || '',
+          countyName: user.texas_counties?.county_name || '',
+          region: user.texas_counties?.region || ''
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Supabase demo login query failed, using local fallback:', err)
+  }
+
+  // Fallback to local demo accounts
+  const fallbackUser = DEMO_USERS[demoToken]
+  if (!fallbackUser) {
     throw new Error('Invalid demo token')
   }
 
-  // Update access tracking
-  await supabase
-    .from('users')
-    .update({
-      demo_access_count: (user.demo_access_count || 0) + 1,
-      demo_last_accessed_at: new Date().toISOString(),
-      last_login_at: new Date().toISOString()
-    })
-    .eq('id', user.id)
-
-  return {
-    user: {
-      id: user.id,
-      email: user.email,
-      firstName: user.first_name,
-      lastName: user.last_name,
-      role: user.role,
-      subRole: user.sub_role || '',
-      countyFips: user.primary_county_fips || '',
-      countyName: user.texas_counties?.county_name || '',
-      region: user.texas_counties?.region || ''
-    }
-  }
+  return { user: fallbackUser }
 }
 
 // ============================================================================
@@ -122,7 +234,7 @@ export async function getCareerPathways(countyFips: string): Promise<CareerPathw
   return data || []
 }
 
-export async function getAcademicPrograms(countyFips?: string) {
+export async function getAcademicPrograms(_countyFips?: string) {
   const { data, error } = await supabase
     .from('academic_programs')
     .select('*, institutions(name, county_fips)')
