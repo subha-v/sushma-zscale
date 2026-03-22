@@ -1,0 +1,74 @@
+{
+  "lastUpdated": "2024-12-15T00:00:00Z",
+  "dataVersion": "2.1.0",
+  "metrics": {
+    "businessesIndexed": {
+      "value": 2547,
+      "label": "Businesses Indexed",
+      "source": "zScale Capital Business Intelligence Platform",
+      "lastVerified": "2024-12-01"
+    },
+    "edcsTracked": {
+      "value": 725,
+      "label": "Texas EDCs",
+      "source": "Texas Economic Development Council",
+      "lastVerified": "2024-11-15"
+    },
+    "tsbciAvailable": {
+      "value": 472000000,
+      "formatted": "$472M",
+      "label": "TSBCI Available",
+      "source": "Texas State Bank Capital Initiative, 2024 Report",
+      "lastVerified": "2024-10-01"
+    },
+    "capitalUndeployed": {
+      "value": 82,
+      "label": "Capital Undeployed",
+      "unit": "%",
+      "source": "Texas Economic Development Corporation Analysis",
+      "lastVerified": "2024-10-01"
+    },
+    "texasManufacturers": {
+      "value": 47312,
+      "label": "Texas Manufacturers",
+      "source": "U.S. Census Bureau, County Business Patterns 2023",
+      "lastVerified": "2024-09-01"
+    },
+    "texasExports": {
+      "value": 379000000000,
+      "formatted": "$379B",
+      "label": "Texas Annual Exports",
+      "source": "U.S. Census Bureau, Foreign Trade Statistics 2023",
+      "lastVerified": "2024-08-01"
+    },
+    "texasGdpGrowth": {
+      "value": 4.7,
+      "label": "Texas GDP Growth",
+      "unit": "%",
+      "source": "Bureau of Economic Analysis, Q3 2024",
+      "lastVerified": "2024-11-01"
+    }
+  },
+  "sources": [
+    {
+      "name": "U.S. Census Bureau",
+      "url": "https://www.census.gov",
+      "datasets": ["County Business Patterns", "Foreign Trade Statistics"]
+    },
+    {
+      "name": "Bureau of Economic Analysis",
+      "url": "https://www.bea.gov",
+      "datasets": ["Regional GDP", "State Economic Accounts"]
+    },
+    {
+      "name": "Texas Economic Development Council",
+      "url": "https://texasedc.org",
+      "datasets": ["EDC Directory", "Incentive Programs"]
+    },
+    {
+      "name": "Texas Comptroller",
+      "url": "https://comptroller.texas.gov",
+      "datasets": ["Economic Indicators", "Tax Revenue Data"]
+    }
+  ]
+}

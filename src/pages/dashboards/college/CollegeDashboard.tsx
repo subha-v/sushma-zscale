@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import DashboardLayout from '../../../components/dashboard/DashboardLayout'
 import { getStoredUser, supabase } from '../../../lib/supabase'
-import { MOCK_PROGRAMS } from '../../../lib/mockData'
 
 const NAV_ITEMS = [
   // HB8 Funding Category
@@ -47,7 +46,7 @@ export default function CollegeDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, _setError] = useState<string | null>(null)
 
-  // Fetch programs from Supabase with fallback to mock data
+  // Fetch programs from Supabase (live data only)
   useEffect(() => {
     async function fetchPrograms() {
       try {
@@ -72,15 +71,16 @@ export default function CollegeDashboard() {
           .eq('is_active', true)
           .order('roi_years', { ascending: true })
 
-        if (error || !data || data.length === 0) {
-          console.warn('Supabase academic_programs unavailable, using demo data')
-          setPrograms(MOCK_PROGRAMS as Program[])
-        } else {
-          setPrograms(data)
+        if (error) {
+          console.error('Supabase academic_programs query failed:', error)
+          _setError('Failed to load academic programs from database.')
+          return
         }
+
+        setPrograms(data || [])
       } catch (err) {
-        console.warn('Supabase query failed, using demo data:', err)
-        setPrograms(MOCK_PROGRAMS as Program[])
+        console.error('Supabase query failed:', err)
+        _setError('Unable to connect to database. Please try again later.')
       } finally {
         setLoading(false)
       }

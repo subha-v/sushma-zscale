@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import DashboardLayout from '../../../components/dashboard/DashboardLayout'
 import { getStoredUser, supabase } from '../../../lib/supabase'
-import { MOCK_CAREER_PATHWAYS } from '../../../lib/mockData'
 
 const NAV_ITEMS = [
   { label: 'Career Card', path: '/dashboard/student', icon: '🎯', category: 'Career GPS' },
@@ -81,7 +80,7 @@ export default function StudentDashboard() {
 
   const livingWage = getLivingWage(user?.countyFips || 'default')
 
-  // Fetch career pathways from Supabase with fallback to mock data
+  // Fetch career pathways from Supabase (live data only)
   useEffect(() => {
     async function fetchPathways() {
       try {
@@ -99,18 +98,16 @@ export default function StudentDashboard() {
 
         const { data, error } = await query.limit(20)
 
-        if (error || !data || data.length === 0) {
-          console.warn('Supabase career_pathways unavailable, using demo data')
-          const filtered = user?.countyFips
-            ? MOCK_CAREER_PATHWAYS.filter(p => p.county_fips === user.countyFips)
-            : MOCK_CAREER_PATHWAYS
-          setPathways(filtered)
-        } else {
-          setPathways(data)
+        if (error) {
+          console.error('Supabase career_pathways query failed:', error)
+          _setError('Failed to load career pathways from database.')
+          return
         }
+
+        setPathways(data || [])
       } catch (err) {
-        console.warn('Supabase query failed, using demo data:', err)
-        setPathways(MOCK_CAREER_PATHWAYS)
+        console.error('Supabase query failed:', err)
+        _setError('Unable to connect to database. Please try again later.')
       } finally {
         setLoading(false)
       }

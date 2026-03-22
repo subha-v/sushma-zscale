@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import DashboardLayout from '../../../components/dashboard/DashboardLayout'
 import { getStoredUser, supabase } from '../../../lib/supabase'
-import { MOCK_CAREER_PATHWAYS, MOCK_INSTITUTIONS } from '../../../lib/mockData'
 
 const NAV_ITEMS = [
   { label: 'Overview', path: '/dashboard/twc', icon: '📊', category: 'Sponsorship Suite' },
@@ -86,7 +85,7 @@ export default function TWCDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, _setError] = useState<string | null>(null)
 
-  // Fetch data from Supabase with fallback to mock data
+  // Fetch data from Supabase (live data only)
   useEffect(() => {
     async function fetchData() {
       try {
@@ -116,30 +115,20 @@ export default function TWCDashboard() {
 
         const { data: institutionsData, error: institutionsError } = await institutionsQuery.limit(10)
 
-        // Use Supabase data or fall back to mock data
-        if (pathwaysError || !pathwaysData || pathwaysData.length === 0) {
-          console.warn('Supabase career_pathways unavailable, using demo data')
-          const filtered = user?.countyFips
-            ? MOCK_CAREER_PATHWAYS.filter(p => p.county_fips === user.countyFips)
-            : MOCK_CAREER_PATHWAYS
-          setPathways(filtered.slice(0, 10))
-        } else {
-          setPathways(pathwaysData)
+        if (pathwaysError) {
+          console.error('Supabase career_pathways query failed:', pathwaysError)
+          _setError('Failed to load career pathways from database.')
+          return
         }
+        setPathways(pathwaysData || [])
 
-        if (institutionsError || !institutionsData || institutionsData.length === 0) {
-          console.warn('Supabase institutions unavailable, using demo data')
-          const filtered = user?.countyFips
-            ? MOCK_INSTITUTIONS.filter(i => i.county_fips === user.countyFips)
-            : MOCK_INSTITUTIONS
-          setInstitutions(filtered.slice(0, 10))
-        } else {
-          setInstitutions(institutionsData)
+        if (institutionsError) {
+          console.error('Supabase institutions query failed:', institutionsError)
         }
+        setInstitutions(institutionsData || [])
       } catch (err) {
-        console.warn('Supabase query failed, using demo data:', err)
-        setPathways(MOCK_CAREER_PATHWAYS.slice(0, 10))
-        setInstitutions(MOCK_INSTITUTIONS)
+        console.error('Supabase query failed:', err)
+        _setError('Unable to connect to database. Please try again later.')
       } finally {
         setLoading(false)
       }

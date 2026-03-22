@@ -51,7 +51,7 @@ export interface CareerPathway {
 // DEMO LOGIN
 // ============================================================================
 
-// Fallback demo accounts when Supabase doesn't have demo user records
+// Demo user accounts for login identity (required for dashboard navigation)
 const DEMO_USERS: Record<string, User> = {
   'DEMO-COLLEGE-DEAN-2024': {
     id: 'demo-college-dean',
@@ -155,7 +155,7 @@ const DEMO_USERS: Record<string, User> = {
 }
 
 export async function demoLogin(demoToken: string): Promise<{ user: User }> {
-  // Try Supabase first
+  // Try Supabase first for live user records
   try {
     const { data: user, error } = await supabase
       .from('users')
@@ -196,16 +196,16 @@ export async function demoLogin(demoToken: string): Promise<{ user: User }> {
       }
     }
   } catch (err) {
-    console.warn('Supabase demo login query failed, using local fallback:', err)
+    console.warn('Supabase demo login unavailable, using local identity:', err)
   }
 
-  // Fallback to local demo accounts
-  const fallbackUser = DEMO_USERS[demoToken]
-  if (!fallbackUser) {
+  // Use local demo identity for login navigation
+  const localUser = DEMO_USERS[demoToken]
+  if (!localUser) {
     throw new Error('Invalid demo token')
   }
 
-  return { user: fallbackUser }
+  return { user: localUser }
 }
 
 // ============================================================================
