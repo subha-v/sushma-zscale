@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import DashboardLayout from '../../../components/dashboard/DashboardLayout'
 import { getStoredUser, supabase } from '../../../lib/supabase'
+import { MOCK_CAREER_PATHWAYS, MOCK_INSTITUTIONS } from '../../../lib/mockData'
 
 const NAV_ITEMS = [
   { label: 'Overview', path: '/dashboard/twc', icon: '📊', category: 'Sponsorship Suite' },
@@ -83,9 +84,9 @@ export default function TWCDashboard() {
   const [pathways, setPathways] = useState<CareerPathway[]>([])
   const [institutions, setInstitutions] = useState<Institution[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [error, _setError] = useState<string | null>(null)
 
-  // Fetch data from Supabase
+  // Fetch data from Supabase with fallback to mock data
   useEffect(() => {
     async function fetchData() {
       try {
@@ -102,7 +103,6 @@ export default function TWCDashboard() {
         }
 
         const { data: pathwaysData, error: pathwaysError } = await pathwaysQuery.limit(10)
-        if (pathwaysError) throw pathwaysError
 
         // Fetch local institutions for RTI matching
         let institutionsQuery = supabase
@@ -115,13 +115,31 @@ export default function TWCDashboard() {
         }
 
         const { data: institutionsData, error: institutionsError } = await institutionsQuery.limit(10)
-        if (institutionsError) throw institutionsError
 
-        setPathways(pathwaysData || [])
-        setInstitutions(institutionsData || [])
+        // Use Supabase data or fall back to mock data
+        if (pathwaysError || !pathwaysData || pathwaysData.length === 0) {
+          console.warn('Supabase career_pathways unavailable, using demo data')
+          const filtered = user?.countyFips
+            ? MOCK_CAREER_PATHWAYS.filter(p => p.county_fips === user.countyFips)
+            : MOCK_CAREER_PATHWAYS
+          setPathways(filtered.slice(0, 10))
+        } else {
+          setPathways(pathwaysData)
+        }
+
+        if (institutionsError || !institutionsData || institutionsData.length === 0) {
+          console.warn('Supabase institutions unavailable, using demo data')
+          const filtered = user?.countyFips
+            ? MOCK_INSTITUTIONS.filter(i => i.county_fips === user.countyFips)
+            : MOCK_INSTITUTIONS
+          setInstitutions(filtered.slice(0, 10))
+        } else {
+          setInstitutions(institutionsData)
+        }
       } catch (err) {
-        console.error('Error fetching data:', err)
-        setError(err instanceof Error ? err.message : 'Failed to load data')
+        console.warn('Supabase query failed, using demo data:', err)
+        setPathways(MOCK_CAREER_PATHWAYS.slice(0, 10))
+        setInstitutions(MOCK_INSTITUTIONS)
       } finally {
         setLoading(false)
       }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import DashboardLayout from '../../../components/dashboard/DashboardLayout'
 import { getStoredUser, supabase } from '../../../lib/supabase'
+import { MOCK_BUSINESSES } from '../../../lib/mockData'
 
 const NAV_ITEMS = [
   { label: 'Sectoral Health', path: '/dashboard/edc', icon: '📊', category: 'Sectoral Health' },
@@ -73,10 +74,10 @@ export default function EDCDashboard() {
   const user = getStoredUser()
   const [businesses, setBusinesses] = useState<Business[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [selectedSector, setSelectedSector] = useState<string | null>(null)
+  const [error, _setError] = useState<string | null>(null)
+  const [, setSelectedSector] = useState<string | null>(null)
 
-  // Fetch businesses from Supabase
+  // Fetch businesses from Supabase with fallback to mock data
   useEffect(() => {
     async function fetchBusinesses() {
       try {
@@ -96,12 +97,18 @@ export default function EDCDashboard() {
 
         const { data, error } = await query
 
-        if (error) throw error
-
-        setBusinesses(data || [])
+        if (error || !data || data.length === 0) {
+          console.warn('Supabase businesses unavailable, using demo data')
+          const filtered = user?.countyFips
+            ? MOCK_BUSINESSES.filter(b => b.county_fips === user.countyFips)
+            : MOCK_BUSINESSES
+          setBusinesses(filtered)
+        } else {
+          setBusinesses(data)
+        }
       } catch (err) {
-        console.error('Error fetching businesses:', err)
-        setError(err instanceof Error ? err.message : 'Failed to load businesses')
+        console.warn('Supabase query failed, using demo data:', err)
+        setBusinesses(MOCK_BUSINESSES)
       } finally {
         setLoading(false)
       }

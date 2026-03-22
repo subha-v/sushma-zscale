@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import DashboardLayout from '../../../components/dashboard/DashboardLayout'
 import { getStoredUser, supabase } from '../../../lib/supabase'
+import { MOCK_PROGRAMS } from '../../../lib/mockData'
 
 const NAV_ITEMS = [
   // HB8 Funding Category
@@ -28,7 +29,7 @@ interface Program {
   institutions?: {
     name: string
     county_fips: string
-  }
+  }[]
 }
 
 type QuadrantFilter = 'all' | 'star' | 'watch' | 'danger'
@@ -40,13 +41,13 @@ function getQuadrant(roiYears: number): 'star' | 'watch' | 'danger' {
 }
 
 export default function CollegeDashboard() {
-  const user = getStoredUser()
+  getStoredUser()
   const [activeTab, setActiveTab] = useState<QuadrantFilter>('all')
   const [programs, setPrograms] = useState<Program[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [error, _setError] = useState<string | null>(null)
 
-  // Fetch programs from Supabase
+  // Fetch programs from Supabase with fallback to mock data
   useEffect(() => {
     async function fetchPrograms() {
       try {
@@ -71,12 +72,15 @@ export default function CollegeDashboard() {
           .eq('is_active', true)
           .order('roi_years', { ascending: true })
 
-        if (error) throw error
-
-        setPrograms(data || [])
+        if (error || !data || data.length === 0) {
+          console.warn('Supabase academic_programs unavailable, using demo data')
+          setPrograms(MOCK_PROGRAMS as Program[])
+        } else {
+          setPrograms(data)
+        }
       } catch (err) {
-        console.error('Error fetching programs:', err)
-        setError(err instanceof Error ? err.message : 'Failed to load programs')
+        console.warn('Supabase query failed, using demo data:', err)
+        setPrograms(MOCK_PROGRAMS as Program[])
       } finally {
         setLoading(false)
       }
@@ -231,7 +235,7 @@ export default function CollegeDashboard() {
                       </td>
                       <td className="p-4">
                         <p className="text-neutral-400 text-sm">
-                          {program.institutions?.name || 'N/A'}
+                          {program.institutions?.[0]?.name || 'N/A'}
                         </p>
                       </td>
                       <td className="p-4">
