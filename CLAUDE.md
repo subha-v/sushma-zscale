@@ -33,7 +33,7 @@ Build outputs to `dist/`. For Hostinger deployment:
 - React 18 + TypeScript + Vite 5
 - Tailwind CSS 3 with custom dark institutional theme (teal accent #01F9C6)
 - React Router DOM v7 for client-side routing
-- Supabase for backend data (users, businesses, career pathways, programs, reports)
+- Supabase for backend data (users, businesses, career pathways, programs, reports, UTA workforce intelligence)
 - Google Apps Script endpoint for form submissions
 - react-helmet-async for meta tag management
 
@@ -48,6 +48,9 @@ Build outputs to `dist/`. For Hostinger deployment:
 - `src/config/api.ts` - API endpoint, form type constants, localStorage helpers
 - `src/lib/supabase.ts` - Supabase client, types, and data fetching functions
 - `src/lib/mockData.ts` - Fallback demo data when Supabase tables are empty
+- `src/lib/uta-queries.ts` - UTA workforce intelligence query functions and TypeScript interfaces
+- `src/lib/uta-mock-data.ts` - Fallback demo data for UTA workforce tables
+- `sql/uta-workforce/` - SQL files (01-12) for UTA workforce dataset schema and data
 - `src/hooks/` - Custom React hooks (scroll reveal)
 - `src/data/` - Static data (investors, checklist questions, equity benchmarks)
 - `zscale-public/` - Standalone static HTML/CSS/JS version for B2G production
@@ -93,7 +96,7 @@ All forms submit to a single Google Apps Script endpoint defined in `src/config/
 ### Data Persistence
 - **localStorage** - User progress (IRI score, contact info, premium status) via `STORAGE_KEYS` in `src/config/api.ts`
 - **sessionStorage** - Auth state (`zscale_authenticated`)
-- **Supabase** - Backend data (users, businesses, career pathways, academic programs, reports)
+- **Supabase** - Backend data (users, businesses, career pathways, academic programs, reports) + UTA workforce intelligence (see below)
 
 ### Progression System
 - IRI score >= 50 unlocks Advisor Match
@@ -250,3 +253,51 @@ Custom colors defined in `tailwind.config.js`:
 7. **SPA Architecture** - Client-side routing with `.htaccess` rewrite rules for Hostinger deployment
 
 8. **Demo Login with Fallback** - `demoLogin()` tries Supabase first, falls back to local `DEMO_USERS` tokens for offline/demo scenarios
+
+## UTA Workforce Intelligence Dataset
+
+A comprehensive Supabase dataset for a personalized AI agent serving UT Arlington's career center and workforce staff. Populated with real research data about UTA programs, Arlington employers, labor market statistics, and skills alignment.
+
+### Supabase Tables (10 new tables)
+
+| Table | Purpose | Records |
+|-------|---------|---------|
+| `uta_colleges` | UTA's 10 colleges/schools with enrollment, deans, URLs | ~10 |
+| `uta_programs` | All academic programs (BS, BA, MS, PhD, etc.) across all colleges | ~180 |
+| `uta_program_outcomes` | Graduation rates, starting salaries, employment rates, top employers per program | ~30 |
+| `arlington_employers` | Arlington/DFW area employers with industry, size, UTA hiring flag | ~55 |
+| `arlington_job_openings` | Representative job postings with salaries, skills, education requirements | ~80 |
+| `arlington_development` | Economic development projects (Globe Life Field, GM plant, E-Space HQ, etc.) | ~15 |
+| `arlington_industries` | Industry sectors with employment counts, wages, growth rates | ~18 |
+| `uta_employer_partnerships` | Program-to-employer links (internships, co-ops, hiring pipelines, advisory boards) | ~50 |
+| `uta_skills_alignment` | Skills gap analysis mapping program curricula to industry demands | ~90 |
+| `arlington_labor_stats` | BLS/TWC labor market metrics (employment, wages, education, demographics) | ~60 |
+
+### Key Data Points
+- **UTA Facts:** 44,956 students, 9 colleges, 180+ programs, 54% 6-yr graduation rate, 75%+ employment within 6 months
+- **Starting Salaries:** Nursing BSN $70,300, CS BS $68,300, SE BS $67,500, CompE BS $66,700, AeroE BS $66,000
+- **Top Employers:** GM Assembly (5,200), Texas Health Resources (29,000 DFW), Lockheed Martin (18,000), Arlington ISD (8,400), Bell Textron (7,500), D.R. Horton (Fortune 500 HQ)
+- **Labor Market:** Fort Worth-Arlington employment 1,212,800 (May 2025), Tarrant County avg weekly wages $1,501
+
+### TypeScript Integration
+
+Query functions in `src/lib/uta-queries.ts`:
+```typescript
+getUTAColleges()                          // All 10 colleges
+getUTAPrograms(collegeId?)                // Programs, optionally filtered by college
+getUTAProgramOutcomes(programId?)         // Salary/employment data per program
+getArlingtonEmployers(industry?)          // Employers, optionally filtered by industry
+getArlingtonJobOpenings(employerId?)      // Job postings with skills and salary ranges
+getArlingtonDevelopment()                 // Economic development projects
+getArlingtonIndustries()                  // Industry sectors with employment data
+getUTAEmployerPartnerships(programId?)    // Program-employer partnership links
+getUTASkillsAlignment(programId?)         // Skills gap analysis
+getArlingtonLaborStats(category?)         // Labor market statistics by category
+getUTADashboardSummary()                  // Aggregated summary across all tables
+```
+
+Fallback mock data in `src/lib/uta-mock-data.ts` (5-10 records per table) for dev/demo when Supabase is unavailable.
+
+### SQL Files
+
+SQL files in `sql/uta-workforce/` are designed to be copy-pasted into Supabase SQL Editor in numbered order (01-12). All INSERTs use `ON CONFLICT DO NOTHING` for safe re-runs. Foreign keys use subquery references by name (not hardcoded UUIDs). RLS is enabled with public read policies on all tables.
