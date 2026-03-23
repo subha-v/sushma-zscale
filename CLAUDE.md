@@ -34,6 +34,8 @@ Build outputs to `dist/`. For Hostinger deployment:
 - Tailwind CSS 3 with custom dark institutional theme (teal accent #01F9C6)
 - React Router DOM v7 for client-side routing
 - Supabase for backend data (users, businesses, career pathways, programs, reports, UTA workforce intelligence)
+- Supabase Edge Functions (Deno) for AI agent backend
+- Anthropic Claude API (claude-sonnet-4-6) for conversational AI agent
 - Google Apps Script endpoint for form submissions
 - react-helmet-async for meta tag management
 
@@ -50,9 +52,13 @@ Build outputs to `dist/`. For Hostinger deployment:
 - `src/lib/mockData.ts` - Fallback demo data when Supabase tables are empty
 - `src/lib/uta-queries.ts` - UTA workforce intelligence query functions and TypeScript interfaces
 - `src/lib/uta-mock-data.ts` - Fallback demo data for UTA workforce tables
+- `src/lib/agent-api.ts` - SSE client for AI agent Edge Function
 - `sql/uta-workforce/` - SQL files (01-12) for UTA workforce dataset schema and data
-- `src/hooks/` - Custom React hooks (scroll reveal)
+- `src/hooks/` - Custom React hooks (scroll reveal, useChat)
+- `src/hooks/useChat.ts` - Chat state management hook (messages, streaming, tool activity)
+- `src/components/agent/` - AI agent chat UI components
 - `src/data/` - Static data (investors, checklist questions, equity benchmarks)
+- `supabase/functions/chat-agent/` - Supabase Edge Function for AI agent (Deno)
 - `zscale-public/` - Standalone static HTML/CSS/JS version for B2G production
 - `email-templates/` - Google Apps Script email templates
 
@@ -67,14 +73,15 @@ Build outputs to `dist/`. For Hostinger deployment:
 
 # Auth & Dashboards (no Header/Footer)
 /login                 - LoginPage (demo/zscale credentials)
-/demo-login            - DemoLogin (multi-role demo account selector)
+/demo-login            - DemoLogin (multi-role demo account selector + AI Agent card)
 /dashboard/college/*   - CollegeDashboard (HB8 funding & curriculum)
 /dashboard/edc/*       - EDCDashboard (sectoral health & talent)
 /dashboard/student/*   - StudentDashboard (career GPS & hidden market)
 /dashboard/twc/*       - TWCDashboard (apprenticeship & workforce)
+/agent                 - AgentChat (AI-powered workforce intelligence chat)
 ```
 
-Header and Footer are conditionally hidden on `/dashboard/*`, `/demo-login`, and `/login` routes.
+Header and Footer are conditionally hidden on `/dashboard/*`, `/demo-login`, `/login`, and `/agent` routes.
 
 ### Dashboard System
 Four role-based dashboards with shared `DashboardLayout` component (sidebar + header). Each dashboard:
@@ -82,7 +89,40 @@ Four role-based dashboards with shared `DashboardLayout` component (sidebar + he
 - Falls back to mock data from `src/lib/mockData.ts` when Supabase is empty
 - Has its own `NAV_ITEMS` configuration for sidebar navigation
 
-Demo login provides 8 test accounts (2 per role) stored in `DEMO_USERS` within `src/lib/supabase.ts`. Login falls back to local tokens when Supabase is unavailable.
+Demo login provides 8 test accounts (2 per role) stored in `DEMO_USERS` within `src/lib/supabase.ts`. Login falls back to local tokens when Supabase is unavailable. The demo login page also features an AI Agent card that links to `/agent`.
+
+### AI Agent Chat System
+A conversational AI interface at `/agent` powered by Claude Sonnet 4.6 via a Supabase Edge Function. Architecture:
+
+```
+Browser (React SPA) → POST /functions/v1/chat-agent (SSE stream)
+  → Supabase Edge Function (Deno)
+    ├── Calls Anthropic Messages API with 10 tool definitions
+    ├── Executes Supabase queries when Claude uses tools
+    └── Streams text deltas back as Server-Sent Events
+```
+
+**Backend** (`supabase/functions/chat-agent/`):
+- `index.ts` - Main handler: CORS, SSE streaming, tool use loop (up to 8 rounds)
+- `tools.ts` - 10 tool definitions (JSON schema) + executor map
+- `queries.ts` - Deno-compatible Supabase query functions (port of `uta-queries.ts`) with mock data fallback
+- `system-prompt.ts` - UTA Workforce Intelligence Agent persona and instructions
+
+**Frontend**:
+- `src/lib/agent-api.ts` - SSE client: POST to Edge Function, parse stream events
+- `src/hooks/useChat.ts` - Chat state: messages, streaming, tool activity, abort controller
+- `src/components/agent/ChatMessage.tsx` - Message bubbles with markdown rendering (bold, lists, tables, code)
+- `src/components/agent/ChatInput.tsx` - Auto-resizing textarea with send/stop buttons
+- `src/components/agent/SuggestedQuestions.tsx` - 4 categories of clickable question prompts
+- `src/components/agent/ToolActivityIndicator.tsx` - Animated tool activity pills
+
+**Deployment** (Supabase Edge Function):
+```bash
+supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
+supabase functions deploy chat-agent --no-verify-jwt
+```
+
+Required Supabase secrets: `ANTHROPIC_API_KEY`. `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are auto-available in Edge Functions.
 
 ### Modal Pattern
 All modals use `createPortal` to render to `document.body` to avoid positioning issues when modals are triggered from within positioned containers (like the Header). Key modal components:
@@ -146,6 +186,7 @@ Custom colors defined in `tailwind.config.js`:
 │  │  │  /dashboard/edc/*     → EDCDashboard                                │    │ │
 │  │  │  /dashboard/student/* → StudentDashboard                            │    │ │
 │  │  │  /dashboard/twc/*     → TWCDashboard                                │    │ │
+│  │  │  /agent              → AgentChat (AI workforce intelligence)        │    │ │
 │  │  │                                                                     │    │ │
 │  │  │  All use shared DashboardLayout (sidebar + header + user info)      │    │ │
 │  │  └─────────────────────────────────────────────────────────────────────┘    │ │
@@ -229,6 +270,7 @@ Custom colors defined in `tailwind.config.js`:
 │  Build:           Vite 5 + ESBuild                                              │
 │  Linting:         ESLint + TypeScript ESLint                                    │
 │  Backend:         Supabase (data) + Google Apps Script (forms)                  │
+│  AI Agent:        Claude Sonnet 4.6 via Supabase Edge Function (Deno)           │
 │  Meta Tags:       react-helmet-async                                            │
 │  Hosting:         Hostinger (static files + .htaccess for SPA)                  │
 │  Persistence:     localStorage + sessionStorage + Supabase                      │
@@ -253,6 +295,8 @@ Custom colors defined in `tailwind.config.js`:
 7. **SPA Architecture** - Client-side routing with `.htaccess` rewrite rules for Hostinger deployment
 
 8. **Demo Login with Fallback** - `demoLogin()` tries Supabase first, falls back to local `DEMO_USERS` tokens for offline/demo scenarios
+
+9. **AI Agent via Supabase Edge Function** - Conversational AI chat uses a Supabase Edge Function (Deno) that calls the Anthropic Claude API with 10 tool definitions mapped to UTA workforce Supabase queries. SSE streaming sends text deltas and tool activity events to the React frontend. Deployed with `--no-verify-jwt` for public access. Mock data fallback ensures the agent works even when Supabase tables are empty.
 
 ## UTA Workforce Intelligence Dataset
 

@@ -177,6 +177,38 @@ export default function DemoLogin() {
           ))}
         </div>
 
+        {/* AI Agent Card */}
+        <div className="mt-6">
+          <div className="card-skeuomorphic rounded-2xl p-6 border border-accent/20 bg-gradient-to-r from-accent/5 to-transparent">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-accent/10 border border-accent/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                  </svg>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h2 className="text-h3 text-white">AI Agent</h2>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-accent/20 text-accent border border-accent/30 uppercase tracking-wider">
+                      New
+                    </span>
+                  </div>
+                  <p className="text-caption text-neutral-400">
+                    Ask anything about UTA programs, Arlington jobs, employer partnerships, or career outcomes
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => navigate('/agent')}
+                className="flex-shrink-0 px-6 py-3 bg-accent hover:bg-accent-hover text-ink-DEFAULT font-semibold rounded-xl transition-colors text-sm"
+              >
+                Launch AI Agent
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Footer */}
         <div className="mt-12 text-center space-y-3">
           <p className="text-caption text-neutral-600">

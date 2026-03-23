@@ -13,10 +13,11 @@ import CollegeDashboard from './pages/dashboards/college/CollegeDashboard';
 import EDCDashboard from './pages/dashboards/edc/EDCDashboard';
 import StudentDashboard from './pages/dashboards/student/StudentDashboard';
 import TWCDashboard from './pages/dashboards/twc/TWCDashboard';
+import AgentChat from './pages/AgentChat';
 
 function AppContent() {
   const location = useLocation();
-  const isDashboard = location.pathname.startsWith('/dashboard') || location.pathname === '/demo-login' || location.pathname === '/login';
+  const isDashboard = location.pathname.startsWith('/dashboard') || location.pathname === '/demo-login' || location.pathname === '/login' || location.pathname === '/agent';
 
   return (
     <>
@@ -38,6 +39,7 @@ function AppContent() {
           <Route path="/dashboard/edc/*" element={<EDCDashboard />} />
           <Route path="/dashboard/student/*" element={<StudentDashboard />} />
           <Route path="/dashboard/twc/*" element={<TWCDashboard />} />
+          <Route path="/agent" element={<AgentChat />} />
         </Routes>
       </main>
       {!isDashboard && <Footer />}
