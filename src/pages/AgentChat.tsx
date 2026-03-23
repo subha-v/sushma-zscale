@@ -40,9 +40,7 @@ export default function AgentChat() {
       >
         <div className="p-4 border-b border-ink-border">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-              <span className="text-ink font-bold text-sm">Z</span>
-            </div>
+            <img src="/zscale-logo.svg?v=2.1" alt="zScale Capital" className="h-8 w-auto" />
             <span className="text-lg font-display font-bold text-white">zScale</span>
           </Link>
         </div>

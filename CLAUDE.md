@@ -54,13 +54,15 @@ Build outputs to `dist/`. For Hostinger deployment:
 - `src/lib/uta-queries.ts` - UTA workforce intelligence query functions and TypeScript interfaces
 - `src/lib/uta-mock-data.ts` - Fallback demo data for UTA workforce tables
 - `src/lib/agent-api.ts` - SSE client for AI agent Edge Function
-- `sql/uta-workforce/` - SQL files (01-12) for UTA workforce dataset schema and data
+- `sql/uta-workforce/` - SQL files (01-18) for UTA workforce dataset schema, data, and predictive analytics
 - `src/hooks/` - Custom React hooks (scroll reveal, useChat)
 - `src/hooks/useChat.ts` - Chat state management hook (messages, streaming, tool activity, visualizations)
 - `src/components/agent/` - AI agent chat UI components
 - `src/components/agent/charts/` - Recharts-based chart components (bar, horizontal bar, pie, donut, line)
 - `src/data/` - Static data (investors, checklist questions, equity benchmarks)
 - `supabase/functions/chat-agent/` - Supabase Edge Function for AI agent (Deno)
+- `scripts/` - Python data pipeline scripts (job scraping, skill trends, predictions)
+- `.github/workflows/` - GitHub Actions CI/CD (weekly data pipeline, monthly predictions)
 - `zscale-public/` - Standalone static HTML/CSS/JS version for B2G production
 - `email-templates/` - Google Apps Script email templates
 
@@ -99,7 +101,7 @@ A conversational AI interface at `/agent` powered by Claude Sonnet 4.6 via a Sup
 ```
 Browser (React SPA) → POST /functions/v1/chat-agent (SSE stream)
   → Supabase Edge Function (Deno)
-    ├── Calls Anthropic Messages API with 11 tool definitions
+    ├── Calls Anthropic Messages API with 18 tool definitions
     ├── Executes Supabase queries when Claude uses tools
     ├── Emits visualization SSE events when Claude calls generate_visualization
     └── Streams text deltas back as Server-Sent Events
@@ -113,7 +115,7 @@ User toggles "Visualize" → message sent with [VISUALIZE] hint
 
 **Backend** (`supabase/functions/chat-agent/`):
 - `index.ts` - Main handler: CORS, SSE streaming, tool use loop (up to 8 rounds), visualization SSE events
-- `tools.ts` - 11 tool definitions (JSON schema) + executor map (includes `generate_visualization`)
+- `tools.ts` - 18 tool definitions (JSON schema) + executor map (includes `generate_visualization`)
 - `queries.ts` - Deno-compatible Supabase query functions (port of `uta-queries.ts`) with mock data fallback
 - `system-prompt.ts` - UTA Workforce Intelligence Agent persona, instructions, and visualization guidelines
 
@@ -313,7 +315,7 @@ Custom colors defined in `tailwind.config.js`:
 
 8. **Demo Login with Fallback** - `demoLogin()` tries Supabase first, falls back to local `DEMO_USERS` tokens for offline/demo scenarios
 
-9. **AI Agent via Supabase Edge Function** - Conversational AI chat uses a Supabase Edge Function (Deno) that calls the Anthropic Claude API with 11 tool definitions mapped to UTA workforce Supabase queries. SSE streaming sends text deltas, tool activity, and visualization events to the React frontend. Deployed with `--no-verify-jwt` for public access. Mock data fallback ensures the agent works even when Supabase tables are empty.
+9. **AI Agent via Supabase Edge Function** - Conversational AI chat uses a Supabase Edge Function (Deno) that calls the Anthropic Claude API with 18 tool definitions mapped to UTA workforce Supabase queries. SSE streaming sends text deltas, tool activity, and visualization events to the React frontend. Deployed with `--no-verify-jwt` for public access. Mock data fallback ensures the agent works even when Supabase tables are empty.
 
 10. **Dynamic Chart Visualizations** - The AI agent can generate charts via the `generate_visualization` tool. Charts render using recharts in a fullscreen modal (via `createPortal`). Supports bar, horizontal bar, pie, donut, and line charts with a distinct 10-color palette. The "Visualize data" toggle in ChatInput prepends a `[VISUALIZE]` hint to messages. Data is normalized client-side (`normalizeChartData`) to handle string-formatted numbers. `ResponsiveContainer` uses fixed pixel height (350px) — percentage heights don't work in flex/portal modal layouts.
 
@@ -321,7 +323,7 @@ Custom colors defined in `tailwind.config.js`:
 
 A comprehensive Supabase dataset for a personalized AI agent serving UT Arlington's career center and workforce staff. Populated with real research data about UTA programs, Arlington employers, labor market statistics, and skills alignment.
 
-### Supabase Tables (10 new tables)
+### Supabase Tables (18 tables)
 
 | Table | Purpose | Records |
 |-------|---------|---------|
@@ -335,6 +337,14 @@ A comprehensive Supabase dataset for a personalized AI agent serving UT Arlingto
 | `uta_employer_partnerships` | Program-to-employer links (internships, co-ops, hiring pipelines, advisory boards) | ~50 |
 | `uta_skills_alignment` | Skills gap analysis mapping program curricula to industry demands | ~90 |
 | `arlington_labor_stats` | BLS/TWC labor market metrics (employment, wages, education, demographics) | ~60 |
+| `cip_soc_crosswalk` | Maps CIP codes (programs) to SOC codes (BLS occupations) | ~45 |
+| `bls_occupation_projections` | BLS 10-year employment projections (2022-2032) | ~35 |
+| `skills_catalog` | Normalized skill dictionary with emerging/declining flags | ~30 |
+| `skills_trend_snapshots` | Weekly snapshots of skill demand from job postings | ~40+ |
+| `program_predictions` | Composite program success scores (0-100) with sub-scores | ~9 |
+| `employer_predictions` | Employer hiring outlook forecasts with factors | ~6 |
+| `salary_predictions` | Salary trajectory forecasts (1/3/5/10 year projections) | ~9 |
+| `prediction_accuracy_log` | Tracks prediction vs actual outcomes for calibration | 0 |
 
 ### Key Data Points
 - **UTA Facts:** 44,956 students, 9 colleges, 180+ programs, 54% 6-yr graduation rate, 75%+ employment within 6 months
@@ -363,4 +373,29 @@ Fallback mock data in `src/lib/uta-mock-data.ts` (5-10 records per table) for de
 
 ### SQL Files
 
-SQL files in `sql/uta-workforce/` are designed to be copy-pasted into Supabase SQL Editor in numbered order (01-12). All INSERTs use `ON CONFLICT DO NOTHING` for safe re-runs. Foreign keys use subquery references by name (not hardcoded UUIDs). RLS is enabled with public read policies on all tables.
+SQL files in `sql/uta-workforce/` are designed to be copy-pasted into Supabase SQL Editor in numbered order (01-18). Files 01-12 create the core workforce dataset. Files 13-18 add predictive analytics (schema, views, crosswalk data, BLS projections, seed predictions, verification). All INSERTs use `ON CONFLICT DO NOTHING` for safe re-runs. Foreign keys use subquery references by name (not hardcoded UUIDs). RLS is enabled with public read policies on all tables.
+
+### Predictive Analytics Pipeline
+
+Python scripts in `scripts/` compute and refresh predictions:
+
+| Script | Schedule | Purpose |
+|--------|----------|---------|
+| `scrape_jobs.py` | Weekly (Mon 6am UTC) | Scrapes DFW job postings via JobSpy, extracts skills, upserts into `skills_trend_snapshots` |
+| `compute_skills_trends.py` | Weekly (after scrape) | Analyzes 12-week skill trends, flags emerging/declining skills via linear regression |
+| `predict_program_success.py` | Monthly (1st, 8am UTC) | Computes program success scores and salary trajectories using BLS + outcomes data |
+| `predict_employer_hiring.py` | Monthly (after program) | Classifies employer hiring outlook based on openings, industry growth, and dev projects |
+
+GitHub Actions in `.github/workflows/`: `weekly-data-pipeline.yml` and `monthly-predictions.yml`. Requires `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` as repository secrets.
+
+### AI Agent Prediction Tools (7 new)
+
+| Tool | Purpose |
+|------|---------|
+| `get_program_prediction` | Program success scores & outlook (0-100 composite) |
+| `get_emerging_skills` | Skills growing in DFW job market demand |
+| `get_declining_skills` | Skills losing market demand |
+| `get_employer_outlook` | Employer hiring predictions (declining/stable/growing/rapidly_growing) |
+| `get_salary_forecast` | Salary trajectory projections (1/3/5/10 year) |
+| `get_predictive_skills_gap` | Future-aware skills gap analysis with emerging/declining context |
+| `compare_programs` | Side-by-side program comparison (2-5 programs) |

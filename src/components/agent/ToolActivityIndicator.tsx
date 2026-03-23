@@ -12,6 +12,13 @@ const TOOL_LABELS: Record<string, string> = {
   get_skills_alignment: 'Analyzing skills alignment',
   get_labor_stats: 'Pulling labor statistics',
   generate_visualization: 'Creating visualization',
+  get_program_prediction: 'Analyzing program outlook',
+  get_emerging_skills: 'Finding emerging skills',
+  get_declining_skills: 'Checking declining skills',
+  get_employer_outlook: 'Forecasting employer hiring',
+  get_salary_forecast: 'Projecting salary growth',
+  get_predictive_skills_gap: 'Analyzing future skills gaps',
+  compare_programs: 'Comparing programs',
 }
 
 export function ToolActivityIndicator({ activities }: { activities: ToolActivity[] }) {
