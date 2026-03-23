@@ -11,6 +11,7 @@ const TOOL_LABELS: Record<string, string> = {
   get_partnerships: 'Looking up partnerships',
   get_skills_alignment: 'Analyzing skills alignment',
   get_labor_stats: 'Pulling labor statistics',
+  generate_visualization: 'Creating visualization',
 }
 
 export function ToolActivityIndicator({ activities }: { activities: ToolActivity[] }) {

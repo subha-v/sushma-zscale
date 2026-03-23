@@ -137,6 +137,50 @@ export const TOOL_DEFINITIONS = [
       required: [],
     },
   },
+  {
+    name: "generate_visualization",
+    description: "Generate a chart visualization. Build a CLEAN data array with short string labels (x_key) and raw numeric values (y_key). Do NOT pass raw database results — reshape them into simple objects first. Limit to 5-8 data items.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        chart_type: {
+          type: "string",
+          enum: ["bar", "horizontal_bar", "pie", "donut", "line"],
+          description: "Chart type. Use bar/horizontal_bar for comparisons, pie/donut for proportions, line for trends over time.",
+        },
+        title: {
+          type: "string",
+          description: "Chart title (e.g. 'Top 5 Starting Salaries by Program')",
+        },
+        data: {
+          type: "array",
+          items: { type: "object" },
+          description: "Array of simple objects with ONLY the fields needed. x_key field must be a short string label (max ~20 chars). y_key field must be a raw number (e.g. 70300, NOT '$70,300'). Example: [{\"program\": \"Nursing BSN\", \"salary\": 70300}]",
+        },
+        x_key: {
+          type: "string",
+          description: "Key for the LABEL/category field in each data object (the text labels, e.g. 'program'). This goes on the x-axis for bar charts.",
+        },
+        y_key: {
+          type: "string",
+          description: "Key for the NUMERIC VALUE field in each data object (the numbers to plot, e.g. 'salary'). This goes on the y-axis for bar charts. Must be a number, not a string.",
+        },
+        x_label: {
+          type: "string",
+          description: "Optional axis label for x-axis",
+        },
+        y_label: {
+          type: "string",
+          description: "Optional axis label for y-axis",
+        },
+        insight: {
+          type: "string",
+          description: "One-sentence insight about the data shown in the chart",
+        },
+      },
+      required: ["chart_type", "title", "data", "x_key", "y_key"],
+    },
+  },
 ];
 
 // deno-lint-ignore no-explicit-any
@@ -153,4 +197,6 @@ export const TOOL_EXECUTORS: Record<string, ToolExecutor> = {
   get_partnerships: (args) => queryPartnerships(args),
   get_skills_alignment: (args) => querySkillsAlignment(args),
   get_labor_stats: (args) => queryLaborStats(args),
+  generate_visualization: (args) =>
+    Promise.resolve({ displayed: true, chart_type: args.chart_type, title: args.title }),
 };

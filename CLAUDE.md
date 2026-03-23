@@ -36,6 +36,7 @@ Build outputs to `dist/`. For Hostinger deployment:
 - Supabase for backend data (users, businesses, career pathways, programs, reports, UTA workforce intelligence)
 - Supabase Edge Functions (Deno) for AI agent backend
 - Anthropic Claude API (claude-sonnet-4-6) for conversational AI agent
+- Recharts for dynamic chart visualizations in agent chat
 - Google Apps Script endpoint for form submissions
 - react-helmet-async for meta tag management
 
@@ -55,8 +56,9 @@ Build outputs to `dist/`. For Hostinger deployment:
 - `src/lib/agent-api.ts` - SSE client for AI agent Edge Function
 - `sql/uta-workforce/` - SQL files (01-12) for UTA workforce dataset schema and data
 - `src/hooks/` - Custom React hooks (scroll reveal, useChat)
-- `src/hooks/useChat.ts` - Chat state management hook (messages, streaming, tool activity)
+- `src/hooks/useChat.ts` - Chat state management hook (messages, streaming, tool activity, visualizations)
 - `src/components/agent/` - AI agent chat UI components
+- `src/components/agent/charts/` - Recharts-based chart components (bar, horizontal bar, pie, donut, line)
 - `src/data/` - Static data (investors, checklist questions, equity benchmarks)
 - `supabase/functions/chat-agent/` - Supabase Edge Function for AI agent (Deno)
 - `zscale-public/` - Standalone static HTML/CSS/JS version for B2G production
@@ -97,24 +99,38 @@ A conversational AI interface at `/agent` powered by Claude Sonnet 4.6 via a Sup
 ```
 Browser (React SPA) → POST /functions/v1/chat-agent (SSE stream)
   → Supabase Edge Function (Deno)
-    ├── Calls Anthropic Messages API with 10 tool definitions
+    ├── Calls Anthropic Messages API with 11 tool definitions
     ├── Executes Supabase queries when Claude uses tools
+    ├── Emits visualization SSE events when Claude calls generate_visualization
     └── Streams text deltas back as Server-Sent Events
+
+User toggles "Visualize" → message sent with [VISUALIZE] hint
+  → Claude calls generate_visualization tool with chart data
+    → Backend emits visualization SSE event to frontend
+    → Frontend renders clickable chart link in message
+    → User clicks link → fullscreen modal with recharts chart
 ```
 
 **Backend** (`supabase/functions/chat-agent/`):
-- `index.ts` - Main handler: CORS, SSE streaming, tool use loop (up to 8 rounds)
-- `tools.ts` - 10 tool definitions (JSON schema) + executor map
+- `index.ts` - Main handler: CORS, SSE streaming, tool use loop (up to 8 rounds), visualization SSE events
+- `tools.ts` - 11 tool definitions (JSON schema) + executor map (includes `generate_visualization`)
 - `queries.ts` - Deno-compatible Supabase query functions (port of `uta-queries.ts`) with mock data fallback
-- `system-prompt.ts` - UTA Workforce Intelligence Agent persona and instructions
+- `system-prompt.ts` - UTA Workforce Intelligence Agent persona, instructions, and visualization guidelines
 
 **Frontend**:
-- `src/lib/agent-api.ts` - SSE client: POST to Edge Function, parse stream events
-- `src/hooks/useChat.ts` - Chat state: messages, streaming, tool activity, abort controller
-- `src/components/agent/ChatMessage.tsx` - Message bubbles with markdown rendering (bold, lists, tables, code)
-- `src/components/agent/ChatInput.tsx` - Auto-resizing textarea with send/stop buttons
+- `src/lib/agent-api.ts` - SSE client: POST to Edge Function, parse stream events (including `visualization` events), `VisualizationData` type
+- `src/hooks/useChat.ts` - Chat state: messages, streaming, tool activity, visualizations, abort controller
+- `src/components/agent/ChatMessage.tsx` - Message bubbles with markdown rendering (bold, lists, tables, code) + chart link buttons
+- `src/components/agent/ChatInput.tsx` - Auto-resizing textarea with send/stop buttons + "Visualize data" toggle
 - `src/components/agent/SuggestedQuestions.tsx` - 4 categories of clickable question prompts
 - `src/components/agent/ToolActivityIndicator.tsx` - Animated tool activity pills
+- `src/components/agent/charts/ChartCard.tsx` - Clickable chart link that opens fullscreen modal (via `createPortal`)
+- `src/components/agent/charts/ChartRenderer.tsx` - Chart type router, shared theme constants, `normalizeChartData` utility
+- `src/components/agent/charts/BarChartViz.tsx` - Vertical bar chart (recharts)
+- `src/components/agent/charts/HorizontalBarChartViz.tsx` - Horizontal bar chart for long labels
+- `src/components/agent/charts/PieChartViz.tsx` - Pie chart with percentage labels
+- `src/components/agent/charts/DonutChartViz.tsx` - Donut chart with inner radius
+- `src/components/agent/charts/LineChartViz.tsx` - Line chart with dot markers
 
 **Deployment** (Supabase Edge Function):
 ```bash
@@ -271,6 +287,7 @@ Custom colors defined in `tailwind.config.js`:
 │  Linting:         ESLint + TypeScript ESLint                                    │
 │  Backend:         Supabase (data) + Google Apps Script (forms)                  │
 │  AI Agent:        Claude Sonnet 4.6 via Supabase Edge Function (Deno)           │
+│  Charts:          Recharts (bar, pie, donut, line) in agent chat modals        │
 │  Meta Tags:       react-helmet-async                                            │
 │  Hosting:         Hostinger (static files + .htaccess for SPA)                  │
 │  Persistence:     localStorage + sessionStorage + Supabase                      │
@@ -296,7 +313,9 @@ Custom colors defined in `tailwind.config.js`:
 
 8. **Demo Login with Fallback** - `demoLogin()` tries Supabase first, falls back to local `DEMO_USERS` tokens for offline/demo scenarios
 
-9. **AI Agent via Supabase Edge Function** - Conversational AI chat uses a Supabase Edge Function (Deno) that calls the Anthropic Claude API with 10 tool definitions mapped to UTA workforce Supabase queries. SSE streaming sends text deltas and tool activity events to the React frontend. Deployed with `--no-verify-jwt` for public access. Mock data fallback ensures the agent works even when Supabase tables are empty.
+9. **AI Agent via Supabase Edge Function** - Conversational AI chat uses a Supabase Edge Function (Deno) that calls the Anthropic Claude API with 11 tool definitions mapped to UTA workforce Supabase queries. SSE streaming sends text deltas, tool activity, and visualization events to the React frontend. Deployed with `--no-verify-jwt` for public access. Mock data fallback ensures the agent works even when Supabase tables are empty.
+
+10. **Dynamic Chart Visualizations** - The AI agent can generate charts via the `generate_visualization` tool. Charts render using recharts in a fullscreen modal (via `createPortal`). Supports bar, horizontal bar, pie, donut, and line charts with a distinct 10-color palette. The "Visualize data" toggle in ChatInput prepends a `[VISUALIZE]` hint to messages. Data is normalized client-side (`normalizeChartData`) to handle string-formatted numbers. `ResponsiveContainer` uses fixed pixel height (350px) — percentage heights don't work in flex/portal modal layouts.
 
 ## UTA Workforce Intelligence Dataset
 

@@ -1,5 +1,6 @@
 import type { ChatMessage as ChatMessageType } from '../../hooks/useChat'
 import { ToolActivityIndicator } from './ToolActivityIndicator'
+import { ChartCard } from './charts/ChartCard'
 
 function renderMarkdown(text: string) {
   if (!text) return null
@@ -194,6 +195,15 @@ export function ChatMessage({ message }: { message: ChatMessageType }) {
             {message.isStreaming && (
               <span className="inline-block w-1.5 h-4 bg-accent animate-pulse ml-0.5 align-middle" />
             )}
+          </div>
+        )}
+
+        {/* Visualization links */}
+        {!isUser && message.visualizations?.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {message.visualizations.map((viz, i) => (
+              <ChartCard key={i} visualization={viz} />
+            ))}
           </div>
         )}
       </div>

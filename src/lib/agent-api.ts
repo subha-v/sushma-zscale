@@ -1,4 +1,15 @@
-export type StreamEventType = 'text_delta' | 'tool_start' | 'tool_end' | 'done' | 'error'
+export type StreamEventType = 'text_delta' | 'tool_start' | 'tool_end' | 'visualization' | 'done' | 'error'
+
+export interface VisualizationData {
+  chart_type: 'bar' | 'horizontal_bar' | 'pie' | 'donut' | 'line'
+  title: string
+  data: Record<string, unknown>[]
+  x_key: string
+  y_key: string
+  x_label?: string
+  y_label?: string
+  insight?: string
+}
 
 export interface StreamEvent {
   type: StreamEventType
@@ -9,6 +20,11 @@ export interface StreamEvent {
     success?: boolean
     error?: string
     message?: string
+    // Visualization fields
+    chart_type?: string
+    title?: string
+    // deno-lint-ignore no-explicit-any
+    [key: string]: any
   }
 }
 

@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from 'react'
-import { streamChat, type ChatApiMessage, type StreamEvent } from '../lib/agent-api'
+import { streamChat, type ChatApiMessage, type StreamEvent, type VisualizationData } from '../lib/agent-api'
 
 export interface ToolActivity {
   tool: string
@@ -13,6 +13,7 @@ export interface ChatMessage {
   timestamp: number
   isStreaming: boolean
   toolActivity: ToolActivity[]
+  visualizations: VisualizationData[]
 }
 
 export function useChat() {
@@ -34,6 +35,7 @@ export function useChat() {
       timestamp: Date.now(),
       isStreaming: false,
       toolActivity: [],
+      visualizations: [],
     }
 
     const assistantId = `assistant-${Date.now()}`
@@ -44,6 +46,7 @@ export function useChat() {
       timestamp: Date.now(),
       isStreaming: true,
       toolActivity: [],
+      visualizations: [],
     }
 
     setMessages(prev => [...prev, userMsg, assistantMsg])
@@ -102,6 +105,31 @@ export function useChat() {
                         ? { ...t, status: event.data.success ? 'done' as const : 'error' as const }
                         : t
                     ),
+                  }
+                : m
+            )
+          )
+          break
+
+        case 'visualization':
+          setMessages(prev =>
+            prev.map(m =>
+              m.id === assistantId
+                ? {
+                    ...m,
+                    visualizations: [
+                      ...m.visualizations,
+                      {
+                        chart_type: event.data.chart_type,
+                        title: event.data.title,
+                        data: event.data.data,
+                        x_key: event.data.x_key,
+                        y_key: event.data.y_key,
+                        x_label: event.data.x_label,
+                        y_label: event.data.y_label,
+                        insight: event.data.insight,
+                      } as VisualizationData,
+                    ],
                   }
                 : m
             )

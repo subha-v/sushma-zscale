@@ -84,24 +84,44 @@ Deno.serve(async (req) => {
 
                 sendEvent("tool_start", { tool: toolName, args: toolArgs });
 
-                try {
-                  const executor = TOOL_EXECUTORS[toolName];
-                  if (!executor) throw new Error(`Unknown tool: ${toolName}`);
-                  const result = await executor(toolArgs);
+                if (toolName === "generate_visualization") {
+                  // Emit chart data directly to frontend as a visualization event
+                  sendEvent("visualization", {
+                    chart_type: toolArgs.chart_type,
+                    title: toolArgs.title,
+                    data: toolArgs.data,
+                    x_key: toolArgs.x_key,
+                    y_key: toolArgs.y_key,
+                    x_label: toolArgs.x_label,
+                    y_label: toolArgs.y_label,
+                    insight: toolArgs.insight,
+                  });
                   toolResults.push({
                     type: "tool_result",
                     tool_use_id: block.id,
-                    content: JSON.stringify(result),
+                    content: JSON.stringify({ displayed: true }),
                   });
                   sendEvent("tool_end", { tool: toolName, success: true });
-                } catch (toolErr) {
-                  const errMsg = toolErr instanceof Error ? toolErr.message : "Tool execution failed";
-                  toolResults.push({
-                    type: "tool_result",
-                    tool_use_id: block.id,
-                    content: JSON.stringify({ error: errMsg }),
-                  });
-                  sendEvent("tool_end", { tool: toolName, success: false, error: errMsg });
+                } else {
+                  try {
+                    const executor = TOOL_EXECUTORS[toolName];
+                    if (!executor) throw new Error(`Unknown tool: ${toolName}`);
+                    const result = await executor(toolArgs);
+                    toolResults.push({
+                      type: "tool_result",
+                      tool_use_id: block.id,
+                      content: JSON.stringify(result),
+                    });
+                    sendEvent("tool_end", { tool: toolName, success: true });
+                  } catch (toolErr) {
+                    const errMsg = toolErr instanceof Error ? toolErr.message : "Tool execution failed";
+                    toolResults.push({
+                      type: "tool_result",
+                      tool_use_id: block.id,
+                      content: JSON.stringify({ error: errMsg }),
+                    });
+                    sendEvent("tool_end", { tool: toolName, success: false, error: errMsg });
+                  }
                 }
               }
             }
