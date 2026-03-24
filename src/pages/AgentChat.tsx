@@ -4,9 +4,12 @@ import { useChat } from '../hooks/useChat'
 import { ChatMessage } from '../components/agent/ChatMessage'
 import { ChatInput } from '../components/agent/ChatInput'
 import { SuggestedQuestions } from '../components/agent/SuggestedQuestions'
+import { getStoredUser } from '../lib/supabase'
 
 export default function AgentChat() {
-  const { messages, isLoading, error, sendMessage, stopStreaming, clearMessages } = useChat()
+  const user = getStoredUser()
+  const userRole = user?.role as 'college' | 'edc' | 'student' | 'twc' | undefined
+  const { messages, isLoading, error, sendMessage, stopStreaming, clearMessages } = useChat(userRole)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -45,7 +48,7 @@ export default function AgentChat() {
           </Link>
         </div>
         <div className="flex-1 overflow-y-auto p-4">
-          <SuggestedQuestions onSelect={handleQuestionSelect} isLoading={isLoading} />
+          <SuggestedQuestions onSelect={handleQuestionSelect} isLoading={isLoading} role={userRole} />
         </div>
       </aside>
 
@@ -80,7 +83,7 @@ export default function AgentChat() {
               </button>
             )}
             <Link
-              to="/demo-login"
+              to={user ? `/dashboard/${user.role}` : '/demo-login'}
               className="px-3 py-1.5 rounded-lg text-xs text-neutral-400 hover:text-white hover:bg-ink-light border border-ink-border transition-colors"
             >
               Back

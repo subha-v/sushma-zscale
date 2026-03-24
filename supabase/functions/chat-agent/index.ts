@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages, role } = await req.json();
     if (!messages || !Array.isArray(messages)) {
       return new Response(JSON.stringify({ error: "messages array required" }), {
         status: 400,
@@ -61,7 +61,9 @@ Deno.serve(async (req) => {
             const response = await client.messages.create({
               model: "claude-sonnet-4-6",
               max_tokens: 4096,
-              system: SYSTEM_PROMPT,
+              system: role
+                ? `${SYSTEM_PROMPT}\n\nThe user is logged in as a **${role}** user. Adapt responses to this role.`
+                : SYSTEM_PROMPT,
               tools: TOOL_DEFINITIONS,
               messages: loopMessages,
             });

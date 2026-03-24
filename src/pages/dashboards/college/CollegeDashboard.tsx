@@ -1,19 +1,18 @@
 import { useState, useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import DashboardLayout from '../../../components/dashboard/DashboardLayout'
 import { getStoredUser, supabase } from '../../../lib/supabase'
+import { MOCK_PROGRAMS } from '../../../lib/mockData'
+import ProgramScorecards from './ProgramScorecards'
+import ComplianceReportsPage from './ComplianceReportsPage'
+import ComingSoonPage from '../../../components/dashboard/ComingSoonPage'
+import WelcomeBanner from '../../../components/dashboard/WelcomeBanner'
+import { useAskAgent } from '../../../components/dashboard/DashboardLayout'
 
 const NAV_ITEMS = [
-  // HB8 Funding Category
-  { label: 'ROI Heatmap', path: '/dashboard/college', icon: '📊', category: 'HB8 Funding' },
-  { label: 'Funding Multiplier', path: '/dashboard/college/funding', icon: '💰', category: 'HB8 Funding' },
-  { label: 'Dual Credit Pipeline', path: '/dashboard/college/dual-credit', icon: '🎓', category: 'HB8 Funding' },
-  { label: 'ICLC vs Technical', path: '/dashboard/college/iclc', icon: '📋', category: 'HB8 Funding' },
-  // Curriculum Category
-  { label: 'Curriculum Blueprint', path: '/dashboard/college/curriculum', icon: '📐', category: 'Curriculum' },
-  { label: 'Skill-to-Dollar', path: '/dashboard/college/skills', icon: '🎯', category: 'Curriculum' },
-  { label: 'Completion Funnel', path: '/dashboard/college/completion', icon: '📈', category: 'Curriculum' },
-  { label: 'Employer Catchment', path: '/dashboard/college/employers', icon: '🗺️', category: 'Curriculum' },
-  { label: 'Compliance Matrix', path: '/dashboard/college/compliance', icon: '✅', category: 'Curriculum' },
+  { label: 'ROI Heatmap', path: '/dashboard/college', icon: '', category: 'Analysis' },
+  { label: 'Program Scorecards', path: '/dashboard/college/scorecards', icon: '', category: 'Analysis' },
+  { label: 'Compliance Reports', path: '/dashboard/college/compliance-reports', icon: '', category: 'Analysis' },
 ]
 
 interface Program {
@@ -40,13 +39,15 @@ function getQuadrant(roiYears: number): 'star' | 'watch' | 'danger' {
 }
 
 export default function CollegeDashboard() {
-  getStoredUser()
+  const user = getStoredUser()
+  const askAgent = useAskAgent()
   const [activeTab, setActiveTab] = useState<QuadrantFilter>('all')
   const [programs, setPrograms] = useState<Program[]>([])
   const [loading, setLoading] = useState(true)
   const [error, _setError] = useState<string | null>(null)
+  const [dataSource, setDataSource] = useState<'live' | 'fallback'>('fallback')
 
-  // Fetch programs from Supabase (live data only)
+  // Fetch programs from Supabase with fallback to mock data
   useEffect(() => {
     async function fetchPrograms() {
       try {
@@ -71,16 +72,18 @@ export default function CollegeDashboard() {
           .eq('is_active', true)
           .order('roi_years', { ascending: true })
 
-        if (error) {
-          console.error('Supabase academic_programs query failed:', error)
-          _setError('Failed to load academic programs from database.')
-          return
+        if (error || !data || data.length === 0) {
+          console.warn('Supabase academic_programs unavailable, using fallback data')
+          setPrograms(MOCK_PROGRAMS as Program[])
+          setDataSource('fallback')
+        } else {
+          setPrograms(data)
+          setDataSource('live')
         }
-
-        setPrograms(data || [])
       } catch (err) {
-        console.error('Supabase query failed:', err)
-        _setError('Unable to connect to database. Please try again later.')
+        console.warn('Supabase query failed, using fallback data:', err)
+        setPrograms(MOCK_PROGRAMS as Program[])
+        setDataSource('fallback')
       } finally {
         setLoading(false)
       }
@@ -118,6 +121,7 @@ export default function CollegeDashboard() {
         title="Credential ROI Heatmap"
         subtitle="HB8 Funding Analysis"
         navItems={NAV_ITEMS}
+        role="college"
       >
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
@@ -135,6 +139,7 @@ export default function CollegeDashboard() {
         title="Credential ROI Heatmap"
         subtitle="HB8 Funding Analysis"
         navItems={NAV_ITEMS}
+        role="college"
       >
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
@@ -146,36 +151,41 @@ export default function CollegeDashboard() {
     )
   }
 
-  return (
-    <DashboardLayout
-      title="Credential ROI Heatmap"
-      subtitle="HB8 Funding Analysis"
-      navItems={NAV_ITEMS}
-    >
-      {/* Stats Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-        <div className="card-skeuomorphic rounded-xl p-5">
-          <p className="text-neutral-500 text-sm mb-1">Total Programs</p>
-          <p className="text-3xl font-display font-bold text-white">{stats.total}</p>
-        </div>
-        <div className="card-skeuomorphic rounded-xl p-5">
-          <p className="text-neutral-500 text-sm mb-1">Credentials of Value</p>
-          <p className="text-3xl font-display font-bold text-accent">{stats.credentialOfValue}</p>
-        </div>
-        <div className="card-skeuomorphic rounded-xl p-5 border-l-4 border-l-green-500">
-          <p className="text-neutral-500 text-sm mb-1">Star Performers</p>
-          <p className="text-3xl font-display font-bold text-green-400">{stats.star}</p>
-          <p className="text-xs text-neutral-600 mt-1">ROI ≤ 3 yrs</p>
-        </div>
-        <div className="card-skeuomorphic rounded-xl p-5 border-l-4 border-l-yellow-500">
-          <p className="text-neutral-500 text-sm mb-1">Watch List</p>
-          <p className="text-3xl font-display font-bold text-yellow-400">{stats.watch}</p>
-          <p className="text-xs text-neutral-600 mt-1">ROI 3-5 yrs</p>
-        </div>
-        <div className="card-skeuomorphic rounded-xl p-5 border-l-4 border-l-red-500">
-          <p className="text-neutral-500 text-sm mb-1">At Risk</p>
-          <p className="text-3xl font-display font-bold text-red-400">{stats.danger}</p>
-          <p className="text-xs text-neutral-600 mt-1">ROI &gt; 5 yrs</p>
+  const defaultContent = (
+    <>
+      <WelcomeBanner
+        userName={user?.firstName || 'Dean'}
+        roleName="College Dashboard"
+        countyName={user?.countyName}
+        stats={[
+          { label: 'star programs', value: String(stats.star), color: 'text-green-400' },
+          { label: 'at risk', value: String(stats.danger), color: 'text-red-400' },
+          { label: 'credentials of value', value: String(stats.credentialOfValue), color: 'text-accent' },
+        ]}
+        primaryAction={askAgent ? { label: 'Ask AI Agent', onClick: () => askAgent('') } : undefined}
+        secondaryAction={{ label: 'View Scorecards', onClick: () => window.location.hash = '' }}
+        storageKey="college-welcome-dismissed"
+      />
+
+      {/* Compact Metrics Bar */}
+      <div className="card-skeuomorphic rounded-xl px-5 py-3 mb-8">
+        <div className="flex items-center gap-6 flex-wrap text-sm">
+          <span className="text-neutral-400">{stats.total} programs</span>
+          <span className="text-neutral-600">|</span>
+          <span className="text-accent">{stats.credentialOfValue} Credentials of Value</span>
+          <span className="text-neutral-600">|</span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-green-400" />
+            <span className="text-neutral-300">{stats.star} star</span>
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-yellow-400" />
+            <span className="text-neutral-300">{stats.watch} watch</span>
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-red-400" />
+            <span className="text-neutral-300">{stats.danger} at risk</span>
+          </span>
         </div>
       </div>
 
@@ -192,8 +202,8 @@ export default function CollegeDashboard() {
             }`}
           >
             {tab === 'all' ? `All Programs (${stats.total})` :
-             tab === 'star' ? `⭐ Stars (${stats.star})` :
-             tab === 'watch' ? `👁 Watch (${stats.watch})` : `⚠️ At Risk (${stats.danger})`}
+             tab === 'star' ? `Stars (${stats.star})` :
+             tab === 'watch' ? `Watch (${stats.watch})` : `At Risk (${stats.danger})`}
           </button>
         ))}
       </div>
@@ -283,8 +293,8 @@ export default function CollegeDashboard() {
       <div className="mt-6 flex items-center justify-between text-xs text-neutral-600 flex-wrap gap-4">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse-dot" />
-            Live data from Supabase
+            <span className={`w-1.5 h-1.5 rounded-full ${dataSource === 'live' ? 'bg-accent animate-pulse-dot' : 'bg-yellow-400'}`} />
+            {dataSource === 'live' ? 'Live data from Supabase' : 'Fallback demo data'}
           </span>
           <span>Source: THECB, IPEDS</span>
         </div>
@@ -293,6 +303,22 @@ export default function CollegeDashboard() {
           <span>→</span>
         </button>
       </div>
+    </>
+  )
+
+  return (
+    <DashboardLayout
+      title="Credential ROI Heatmap"
+      subtitle="HB8 Funding Analysis"
+      navItems={NAV_ITEMS}
+      role="college"
+    >
+      <Routes>
+        <Route index element={defaultContent} />
+        <Route path="scorecards" element={<ProgramScorecards />} />
+        <Route path="compliance-reports" element={<ComplianceReportsPage />} />
+        <Route path="*" element={<ComingSoonPage />} />
+      </Routes>
     </DashboardLayout>
   )
 }

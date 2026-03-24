@@ -390,6 +390,415 @@ export async function queryPredictiveSkillsGap(args: { program_id?: string }) {
   return truncateResults(results, "predictive skills gap records");
 }
 
+// ============================================================================
+// EXECUTIVE SUITE MOCK DATA
+// ============================================================================
+
+const MOCK_PROGRAM_SCORECARDS = [
+  { program_name: "Computer Science", degree_type: "BS", college_name: "College of Engineering", overall_score: 88.5, health_status: "healthy", employment_rate: 82.0, median_salary: 68300, employer_demand_score: 90.0, skills_alignment_pct: 78.0, graduation_rate: 52.0, credential_of_value: true, hb8_compliant: true, trend_direction: "improving", ai_recommendation: "Strong program with excellent employer demand. Consider adding cloud computing and GenAI coursework to close emerging skills gaps." },
+  { program_name: "Nursing", degree_type: "BSN", college_name: "College of Nursing and Health Innovation", overall_score: 85.8, health_status: "healthy", employment_rate: 93.0, median_salary: 70300, employer_demand_score: 92.0, skills_alignment_pct: 95.0, graduation_rate: 72.0, credential_of_value: true, hb8_compliant: true, trend_direction: "stable", ai_recommendation: "Top-performing program with highest employment rate. Telehealth curriculum addition recommended." },
+  { program_name: "Software Engineering", degree_type: "BS", college_name: "College of Engineering", overall_score: 86.2, health_status: "healthy", employment_rate: 84.0, median_salary: 67500, employer_demand_score: 88.0, skills_alignment_pct: 80.0, graduation_rate: 50.0, credential_of_value: true, hb8_compliant: true, trend_direction: "improving", ai_recommendation: "Growing demand from tech employers. DevOps and cloud-native development modules would strengthen outcomes." },
+  { program_name: "Data Science", degree_type: "BS", college_name: "College of Science", overall_score: 84.5, health_status: "healthy", employment_rate: 85.0, median_salary: 65000, employer_demand_score: 80.0, skills_alignment_pct: 72.0, graduation_rate: 55.0, credential_of_value: true, hb8_compliant: true, trend_direction: "improving", ai_recommendation: "Fastest-growing employer demand. MLOps and data engineering skills gap needs attention." },
+  { program_name: "Aerospace Engineering", degree_type: "BS", college_name: "College of Engineering", overall_score: 79.3, health_status: "watch", employment_rate: 81.0, median_salary: 66000, employer_demand_score: 85.0, skills_alignment_pct: 75.0, graduation_rate: 46.0, credential_of_value: true, hb8_compliant: true, trend_direction: "stable", ai_recommendation: "Strong local employer base but graduation rate needs improvement." },
+  { program_name: "Accounting", degree_type: "BBA", college_name: "College of Business", overall_score: 65.2, health_status: "at_risk", employment_rate: 78.0, median_salary: 56000, employer_demand_score: 70.0, skills_alignment_pct: 68.0, graduation_rate: 58.0, credential_of_value: false, hb8_compliant: false, trend_direction: "declining", ai_recommendation: "Below HB8 wage threshold. Data analytics and forensic accounting modules needed." },
+  { program_name: "Biology", degree_type: "BS", college_name: "College of Science", overall_score: 58.0, health_status: "at_risk", employment_rate: 62.0, median_salary: 42000, employer_demand_score: 55.0, skills_alignment_pct: 60.0, graduation_rate: 45.0, credential_of_value: false, hb8_compliant: false, trend_direction: "declining", ai_recommendation: "Low employment rate and below living wage. Biotech partnerships could improve outcomes." },
+  { program_name: "Finance", degree_type: "BBA", college_name: "College of Business", overall_score: 71.5, health_status: "watch", employment_rate: 78.0, median_salary: 56000, employer_demand_score: 72.0, skills_alignment_pct: 65.0, graduation_rate: 58.0, credential_of_value: false, hb8_compliant: true, trend_direction: "stable", ai_recommendation: "Fintech and data analytics integration needed. CFA prep partnership could boost salary outcomes." },
+];
+
+const MOCK_COMPLIANCE_REPORTS = [
+  { id: "cr-1", report_type: "hb8", program_name: "Computer Science BS", title: "HB8 Compliance Report - Computer Science BS (2024)", status: "approved", credential_value_pass: true, wage_threshold_pass: true, employment_threshold_pass: true, key_findings: ["Median starting salary $68,300 exceeds HB8 wage threshold", "Employment rate 82% above required 70%"], recommendations: ["Add cloud computing coursework"], created_at: "2024-12-01" },
+  { id: "cr-2", report_type: "hb8", program_name: "Nursing BSN", title: "HB8 Compliance Report - Nursing BSN (2024)", status: "approved", credential_value_pass: true, wage_threshold_pass: true, employment_threshold_pass: true, key_findings: ["Highest employment rate at 93%", "Median salary $70,300 well above threshold"], recommendations: ["Explore telehealth certification"], created_at: "2024-12-01" },
+  { id: "cr-3", report_type: "hb8", program_name: "Accounting BBA", title: "HB8 Compliance Report - Accounting BBA (2024)", status: "pending_review", credential_value_pass: false, wage_threshold_pass: false, employment_threshold_pass: true, key_findings: ["Median salary $56,000 below threshold", "CPA pass rate declining"], recommendations: ["Integrate data analytics", "Forensic accounting specialization"], created_at: "2024-11-15" },
+  { id: "cr-4", report_type: "board_report", program_name: null, title: "Q4 2024 Board of Regents Report", status: "submitted", credential_value_pass: null, wage_threshold_pass: null, employment_threshold_pass: null, key_findings: ["4 of 9 programs meet credential-of-value standards", "2 programs flagged as at-risk"], recommendations: ["Allocate resources to at-risk programs"], created_at: "2024-12-15" },
+  { id: "cr-5", report_type: "hb8", program_name: "Biology BS", title: "HB8 Compliance Report - Biology BS (2024)", status: "draft", credential_value_pass: false, wage_threshold_pass: false, employment_threshold_pass: false, key_findings: ["Employment rate 62% below threshold", "Median salary $42,000 significantly below threshold"], recommendations: ["Develop biotech partnerships", "Create BS-to-MS pathway"], created_at: "2024-11-01" },
+];
+
+const MOCK_SITE_SELECTION_PACKAGES = [
+  { id: "ssp-1", company_name: "TechCorp Industries", industry: "Technology & Software", target_roles: ["Software Engineer", "Data Scientist", "Cloud Architect"], headcount_needed: 150, status: "complete", key_highlights: ["UTA produces 580+ CS/SE/DS graduates annually", "Competitive starting salaries $65-68K", "Arlington offers 30% lower office costs"] },
+  { id: "ssp-2", company_name: "MedTech Solutions", industry: "Healthcare Technology", target_roles: ["Biomedical Engineer", "Data Analyst"], headcount_needed: 75, status: "delivered", key_highlights: ["UTA CONHI graduates 520+ nursing/health professionals annually", "Texas Health Resources partnership"] },
+  { id: "ssp-3", company_name: "AeroVista Defense", industry: "Aerospace & Defense", target_roles: ["Systems Engineer", "Aerospace Engineer"], headcount_needed: 200, status: "draft", key_highlights: ["DFW has 28,000 aerospace workers", "Lockheed Martin and Bell provide talent pool"] },
+  { id: "ssp-4", company_name: "DataFlow Analytics", industry: "Data & AI", target_roles: ["ML Engineer", "Data Engineer"], headcount_needed: 80, status: "complete", key_highlights: ["UTA Data Science program fastest-growing", "Strong GenAI/MLOps skills alignment"] },
+];
+
+const MOCK_EMPLOYER_ALERTS = [
+  { id: "ea-1", company_name: "Texas Health Resources", signal_type: "hiring_surge", signal_strength: "strong", title: "30% increase in nursing postings", description: "Job postings for RN positions increased 30% month-over-month across all DFW facilities.", source: "Job posting analysis", is_acknowledged: false, detected_at: "2024-12-20" },
+  { id: "ea-2", company_name: "General Motors Arlington Assembly", signal_type: "expansion", signal_strength: "strong", title: "EV transition creating new roles", description: "GM announcing $500M+ investment in electric vehicle production capabilities. Expected 200+ new technical positions.", source: "Press release", is_acknowledged: false, detected_at: "2024-12-17" },
+  { id: "ea-3", company_name: "Lockheed Martin Aeronautics", signal_type: "hiring_surge", signal_strength: "moderate", title: "F-35 production ramp hiring", description: "Sustained hiring for software engineers and systems engineers. 80+ positions expected in next 6 months.", source: "Job posting analysis", is_acknowledged: false, detected_at: "2024-12-15" },
+  { id: "ea-4", company_name: "Bell Textron", signal_type: "new_facility", signal_strength: "strong", title: "V-280 Valor FLRAA production facility", description: "Bell preparing new production line for V-280 Valor. DFW engineering expansion expected.", source: "Defense contract award", is_acknowledged: false, detected_at: "2024-12-12" },
+  { id: "ea-5", company_name: "D.R. Horton", signal_type: "hiring_surge", signal_strength: "moderate", title: "Expanding DFW operations", description: "Homebuilder expanding project management and sales teams. 30+ positions posted.", source: "Job posting analysis", is_acknowledged: false, detected_at: "2024-12-19" },
+  { id: "ea-6", company_name: "Arlington ISD", signal_type: "contraction", signal_strength: "weak", title: "Budget tightening signals", description: "District facing potential budget constraints. May slow non-essential hiring.", source: "School board meeting", is_acknowledged: false, detected_at: "2024-12-08" },
+];
+
+const MOCK_EMPLOYER_INTELLIGENCE = [
+  { company_name: "Lockheed Martin Aeronautics", industry: "Aerospace & Defense", employee_count: 18000, active_postings: 45, recent_signals: ["F-35 production ramp hiring"], top_skills_needed: ["Systems Engineering", "MATLAB", "Software Development", "DoD Clearance"], uta_programs_aligned: ["Computer Science BS", "Software Engineering BS", "Aerospace Engineering BS"], annual_uta_hires: 25, partnership_types: ["hiring_pipeline", "internship", "advisory_board"] },
+];
+
+const MOCK_BOARD_REPORT = {
+  report_title: "Q4 2024 Board of Regents Report - Program Performance",
+  generated_at: "2024-12-22",
+  summary: { total_programs_scored: 9, healthy_count: 4, watch_count: 2, at_risk_count: 2, critical_count: 0, avg_overall_score: 76.8, avg_employment_rate: 80.1, credential_of_value_count: 5 },
+  top_performers: ["Computer Science BS (88.5)", "Software Engineering BS (86.2)", "Nursing BSN (85.8)"],
+  at_risk_programs: ["Accounting BBA (65.2)", "Biology BS (58.0)"],
+  key_recommendations: ["Allocate resources to at-risk programs", "Establish industry advisory boards", "Invest in career services expansion"],
+};
+
+const MOCK_TALENT_PIPELINE = [
+  { program_name: "Computer Science BS", employer_name: "Lockheed Martin Aeronautics", partnership_type: "hiring_pipeline", annual_hires: 25, median_salary: 68300, employment_rate: 82 },
+  { program_name: "Nursing BSN", employer_name: "Texas Health Resources", partnership_type: "hiring_pipeline", annual_hires: 45, median_salary: 70300, employment_rate: 93 },
+  { program_name: "Mechanical Engineering BS", employer_name: "Bell Textron", partnership_type: "internship", annual_hires: 12, median_salary: 64800, employment_rate: 78 },
+  { program_name: "Aerospace Engineering BS", employer_name: "Bell Textron", partnership_type: "hiring_pipeline", annual_hires: 10, median_salary: 66000, employment_rate: 81 },
+  { program_name: "Data Science BS", employer_name: "Amazon", partnership_type: "hiring_pipeline", annual_hires: 8, median_salary: 65000, employment_rate: 85 },
+];
+
+const MOCK_CAREER_ADVISOR_STATS = {
+  total_sessions: 142,
+  avg_messages_per_session: 11.3,
+  avg_satisfaction: 4.6,
+  session_types: { career_exploration: 58, skill_assessment: 32, salary_negotiation: 22, interview_prep: 18, resume_review: 12 },
+  top_programs_discussed: ["Computer Science", "Nursing", "Data Science", "Software Engineering", "Aerospace Engineering"],
+  top_employers_discussed: ["Lockheed Martin", "Texas Health Resources", "Amazon", "Bell Textron", "GM Arlington"],
+  top_tools_used: ["get_program_outcomes", "get_salary_forecast", "get_employers", "get_emerging_skills", "compare_programs"],
+};
+
+const MOCK_REGIONAL_COMPARISON = [
+  { region: "Fort Worth-Arlington MD", metric: "Total Employment", value: 1212800, unit: "count" },
+  { region: "Fort Worth-Arlington MD", metric: "Avg Weekly Wages", value: 1501, unit: "dollars" },
+  { region: "Fort Worth-Arlington MD", metric: "Unemployment Rate", value: 3.8, unit: "percent" },
+  { region: "Dallas-Plano-Irving MD", metric: "Total Employment", value: 2850000, unit: "count" },
+  { region: "Dallas-Plano-Irving MD", metric: "Avg Weekly Wages", value: 1650, unit: "dollars" },
+  { region: "Dallas-Plano-Irving MD", metric: "Unemployment Rate", value: 4.1, unit: "percent" },
+  { region: "Austin-Round Rock MSA", metric: "Total Employment", value: 1180000, unit: "count" },
+  { region: "Austin-Round Rock MSA", metric: "Avg Weekly Wages", value: 1580, unit: "dollars" },
+  { region: "Austin-Round Rock MSA", metric: "Unemployment Rate", value: 3.5, unit: "percent" },
+];
+
+// ============================================================================
+// EXECUTIVE SUITE QUERY FUNCTIONS
+// ============================================================================
+
+export async function queryProgramScorecards(args: { program_name?: string }) {
+  const sb = getSupabaseClient();
+  let query = sb
+    .from("program_scorecards")
+    .select("*, uta_programs(program_name, degree_type, degree_level, uta_colleges(college_name))")
+    .order("overall_score", { ascending: false });
+  if (args.program_name) {
+    query = query.ilike("uta_programs.program_name", `%${args.program_name}%`);
+  }
+  const { data, error } = await query;
+  if (error) throw error;
+  const results = data && data.length > 0 ? data : MOCK_PROGRAM_SCORECARDS;
+  return truncateResults(results, "program scorecards");
+}
+
+export async function queryAtRiskPrograms() {
+  const sb = getSupabaseClient();
+  const { data, error } = await sb
+    .from("program_scorecards")
+    .select("*, uta_programs(program_name, degree_type, uta_colleges(college_name))")
+    .in("health_status", ["critical", "at_risk"])
+    .order("overall_score", { ascending: true });
+  if (error) throw error;
+  const results = data && data.length > 0 ? data : MOCK_PROGRAM_SCORECARDS.filter(s => s.health_status === "at_risk" || s.health_status === "critical");
+  return truncateResults(results, "at-risk programs");
+}
+
+export async function queryCurriculumGaps(args: { program_name?: string }) {
+  const sb = getSupabaseClient();
+
+  // Get scorecards with low skills alignment
+  let scQuery = sb
+    .from("program_scorecards")
+    .select("*, uta_programs(id, program_name, degree_type)")
+    .lt("skills_alignment_pct", 80)
+    .order("skills_alignment_pct", { ascending: true });
+  const { data: scorecards } = await scQuery;
+
+  // Get skills gaps
+  const programIds = (scorecards || []).map((s: { uta_programs?: { id: string } }) => s.uta_programs?.id).filter(Boolean);
+  let skillsQuery = sb
+    .from("uta_skills_alignment")
+    .select("*, uta_programs(program_name, degree_type), arlington_industries(industry_name)")
+    .eq("gap_status", "gap")
+    .order("demand_level", { ascending: false });
+  if (programIds.length > 0) {
+    skillsQuery = skillsQuery.in("program_id", programIds);
+  }
+  if (args.program_name) {
+    skillsQuery = skillsQuery.ilike("uta_programs.program_name", `%${args.program_name}%`);
+  }
+  const { data: gaps } = await skillsQuery;
+
+  const results = gaps && gaps.length > 0 ? gaps : MOCK_SKILLS.filter(s => s.gap_status === "gap");
+  return truncateResults(results, "curriculum gaps");
+}
+
+export async function queryComplianceReport(args: { program_name?: string; report_type?: string }) {
+  const sb = getSupabaseClient();
+  let query = sb
+    .from("compliance_reports")
+    .select("*, uta_programs(program_name, degree_type)")
+    .order("created_at", { ascending: false });
+  if (args.report_type) query = query.eq("report_type", args.report_type);
+  if (args.program_name) {
+    query = query.ilike("uta_programs.program_name", `%${args.program_name}%`);
+  }
+  const { data, error } = await query;
+  if (error) throw error;
+  const results = data && data.length > 0 ? data : MOCK_COMPLIANCE_REPORTS;
+  return truncateResults(results, "compliance reports");
+}
+
+export async function queryComplianceStatus() {
+  const sb = getSupabaseClient();
+  const { data, error } = await sb
+    .from("compliance_reports")
+    .select("id, report_type, title, status, credential_value_pass, wage_threshold_pass, employment_threshold_pass, created_at, uta_programs(program_name, degree_type)")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  const results = data && data.length > 0 ? data : MOCK_COMPLIANCE_REPORTS.map(r => ({ id: r.id, report_type: r.report_type, title: r.title, status: r.status, credential_value_pass: r.credential_value_pass, wage_threshold_pass: r.wage_threshold_pass, employment_threshold_pass: r.employment_threshold_pass, created_at: r.created_at }));
+  return truncateResults(results, "compliance statuses");
+}
+
+export async function querySiteSelectionPackage(args: { company_name?: string; industry?: string }) {
+  const sb = getSupabaseClient();
+  let query = sb
+    .from("site_selection_packages")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (args.company_name) query = query.ilike("company_name", `%${args.company_name}%`);
+  if (args.industry) query = query.ilike("industry", `%${args.industry}%`);
+  const { data, error } = await query;
+  if (error) throw error;
+  const results = data && data.length > 0 ? data : MOCK_SITE_SELECTION_PACKAGES;
+  return truncateResults(results, "site selection packages");
+}
+
+export async function queryRegionalComparison(args: { regions?: string[]; metric?: string }) {
+  const sb = getSupabaseClient();
+  let query = sb
+    .from("arlington_labor_stats")
+    .select("*")
+    .order("geography")
+    .order("metric_name");
+  if (args.metric) query = query.ilike("metric_name", `%${args.metric}%`);
+  if (args.regions && args.regions.length > 0) {
+    // Filter by multiple geographies
+    const conditions = args.regions.map(r => `geography.ilike.%${r}%`).join(",");
+    query = query.or(conditions);
+  }
+  const { data, error } = await query;
+  if (error) throw error;
+  const results = data && data.length > 0 ? data : MOCK_REGIONAL_COMPARISON;
+  return truncateResults(results, "regional comparisons");
+}
+
+export async function queryEmployerAlerts(args: { signal_type?: string; employer_name?: string }) {
+  const sb = getSupabaseClient();
+  let query = sb
+    .from("employer_monitoring")
+    .select("*, arlington_employers(company_name, industry, employee_count)")
+    .eq("is_acknowledged", false)
+    .order("detected_at", { ascending: false });
+  if (args.signal_type) query = query.eq("signal_type", args.signal_type);
+  const { data, error } = await query;
+  if (error) throw error;
+  let results = data && data.length > 0 ? data : MOCK_EMPLOYER_ALERTS;
+  if (args.employer_name) {
+    results = (results as typeof MOCK_EMPLOYER_ALERTS).filter((a) => {
+      const name = (a as { company_name?: string; arlington_employers?: { company_name?: string } }).company_name || (a as { arlington_employers?: { company_name?: string } }).arlington_employers?.company_name || "";
+      return name.toLowerCase().includes(args.employer_name!.toLowerCase());
+    });
+  }
+  return truncateResults(results, "employer alerts");
+}
+
+export async function queryEmployerIntelligence(args: { employer_name?: string; employer_id?: string }) {
+  const sb = getSupabaseClient();
+
+  // Get employer info
+  let empQuery = sb.from("arlington_employers").select("*");
+  if (args.employer_id) empQuery = empQuery.eq("id", args.employer_id);
+  if (args.employer_name) empQuery = empQuery.ilike("company_name", `%${args.employer_name}%`);
+  const { data: employers } = await empQuery.limit(1);
+
+  if (!employers || employers.length === 0) {
+    return MOCK_EMPLOYER_INTELLIGENCE;
+  }
+
+  const employer = employers[0];
+
+  // Get job openings for this employer
+  const { data: jobs } = await sb
+    .from("arlington_job_openings")
+    .select("*")
+    .eq("employer_id", employer.id)
+    .eq("is_active", true);
+
+  // Get monitoring alerts
+  const { data: alerts } = await sb
+    .from("employer_monitoring")
+    .select("*")
+    .eq("employer_id", employer.id)
+    .order("detected_at", { ascending: false })
+    .limit(5);
+
+  // Get partnerships
+  const { data: partnerships } = await sb
+    .from("uta_employer_partnerships")
+    .select("*, uta_programs(program_name, degree_type)")
+    .eq("employer_id", employer.id);
+
+  return {
+    employer,
+    active_postings: jobs?.length || 0,
+    job_openings: jobs || [],
+    recent_signals: alerts || [],
+    uta_partnerships: partnerships || [],
+  };
+}
+
+export async function queryBoardReportData() {
+  const sb = getSupabaseClient();
+
+  // Get all scorecards
+  const { data: scorecards } = await sb
+    .from("program_scorecards")
+    .select("*, uta_programs(program_name, degree_type, uta_colleges(college_name))")
+    .order("overall_score", { ascending: false });
+
+  if (!scorecards || scorecards.length === 0) {
+    return MOCK_BOARD_REPORT;
+  }
+
+  const healthy = scorecards.filter((s: { health_status: string }) => s.health_status === "healthy");
+  const watch = scorecards.filter((s: { health_status: string }) => s.health_status === "watch");
+  const atRisk = scorecards.filter((s: { health_status: string }) => s.health_status === "at_risk");
+  const critical = scorecards.filter((s: { health_status: string }) => s.health_status === "critical");
+  const avgScore = scorecards.reduce((sum: number, s: { overall_score: number }) => sum + s.overall_score, 0) / scorecards.length;
+  const avgEmployment = scorecards.reduce((sum: number, s: { employment_rate: number }) => sum + (s.employment_rate || 0), 0) / scorecards.length;
+  const covCount = scorecards.filter((s: { credential_of_value: boolean }) => s.credential_of_value).length;
+
+  return {
+    report_title: "Board of Regents Report - Program Performance",
+    generated_at: new Date().toISOString(),
+    summary: {
+      total_programs_scored: scorecards.length,
+      healthy_count: healthy.length,
+      watch_count: watch.length,
+      at_risk_count: atRisk.length,
+      critical_count: critical.length,
+      avg_overall_score: Math.round(avgScore * 10) / 10,
+      avg_employment_rate: Math.round(avgEmployment * 10) / 10,
+      credential_of_value_count: covCount,
+    },
+    scorecards,
+    top_performers: healthy.slice(0, 3),
+    at_risk_programs: [...critical, ...atRisk],
+    key_recommendations: [
+      "Allocate additional resources to at-risk programs",
+      "Establish industry advisory boards for each college",
+      "Invest in career services expansion",
+    ],
+  };
+}
+
+export async function queryTalentPipeline(args: { program_name?: string; employer_name?: string }) {
+  const sb = getSupabaseClient();
+  let query = sb
+    .from("uta_employer_partnerships")
+    .select("*, uta_programs(program_name, degree_type, uta_colleges(college_name)), arlington_employers(company_name, industry, employee_count)")
+    .eq("is_active", true)
+    .order("avg_hires_per_year", { ascending: false });
+  if (args.program_name) {
+    query = query.ilike("uta_programs.program_name", `%${args.program_name}%`);
+  }
+  const { data, error } = await query;
+  if (error) throw error;
+
+  let results = data && data.length > 0 ? data : MOCK_TALENT_PIPELINE;
+  if (args.employer_name) {
+    results = (results as typeof MOCK_TALENT_PIPELINE).filter((r) => {
+      const name = (r as { employer_name?: string; arlington_employers?: { company_name?: string } }).employer_name || (r as { arlington_employers?: { company_name?: string } }).arlington_employers?.company_name || "";
+      return name.toLowerCase().includes(args.employer_name!.toLowerCase());
+    });
+  }
+  return truncateResults(results, "talent pipeline records");
+}
+
+export async function queryCareerAdvisorStats() {
+  const sb = getSupabaseClient();
+  const { data, error } = await sb
+    .from("career_advisor_sessions")
+    .select("*")
+    .order("started_at", { ascending: false });
+  if (error) throw error;
+
+  if (!data || data.length === 0) {
+    return MOCK_CAREER_ADVISOR_STATS;
+  }
+
+  const sessions = data;
+  const totalSessions = sessions.length;
+  const avgMessages = sessions.reduce((s: number, sess: { messages_count: number }) => s + sess.messages_count, 0) / totalSessions;
+  const ratedSessions = sessions.filter((s: { satisfaction_rating?: number }) => s.satisfaction_rating);
+  const avgSatisfaction = ratedSessions.length > 0
+    ? ratedSessions.reduce((s: number, sess: { satisfaction_rating: number }) => s + sess.satisfaction_rating, 0) / ratedSessions.length
+    : 0;
+
+  // Count session types
+  const sessionTypes: Record<string, number> = {};
+  sessions.forEach((s: { session_type: string }) => {
+    sessionTypes[s.session_type] = (sessionTypes[s.session_type] || 0) + 1;
+  });
+
+  // Count program mentions
+  const programCounts: Record<string, number> = {};
+  sessions.forEach((s: { programs_discussed?: string[] }) => {
+    (s.programs_discussed || []).forEach((p: string) => {
+      programCounts[p] = (programCounts[p] || 0) + 1;
+    });
+  });
+
+  return {
+    total_sessions: totalSessions,
+    avg_messages_per_session: Math.round(avgMessages * 10) / 10,
+    avg_satisfaction: Math.round(avgSatisfaction * 10) / 10,
+    session_types: sessionTypes,
+    top_programs_discussed: Object.entries(programCounts).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([name]) => name),
+    recent_sessions: sessions.slice(0, 5),
+  };
+}
+
+export async function logCareerAdvisorSession(args: {
+  student_id?: string;
+  session_type?: string;
+  messages_count?: number;
+  tools_used?: string[];
+  programs_discussed?: string[];
+  employers_discussed?: string[];
+  session_summary?: string;
+}) {
+  const sb = getSupabaseClient();
+  const { data, error } = await sb
+    .from("career_advisor_sessions")
+    .insert({
+      student_id: args.student_id || "anonymous",
+      session_type: args.session_type || "general",
+      messages_count: args.messages_count || 0,
+      tools_used: args.tools_used || [],
+      programs_discussed: args.programs_discussed || [],
+      employers_discussed: args.employers_discussed || [],
+      session_summary: args.session_summary || "",
+      started_at: new Date().toISOString(),
+    })
+    .select();
+  if (error) {
+    return { logged: false, error: error.message };
+  }
+  return { logged: true, session: data?.[0] };
+}
+
 export async function queryProgramComparison(args: { program_ids: string[] }) {
   const sb = getSupabaseClient();
   const ids = args.program_ids;

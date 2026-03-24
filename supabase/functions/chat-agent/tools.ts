@@ -16,6 +16,18 @@ import {
   querySalaryPredictions,
   queryPredictiveSkillsGap,
   queryProgramComparison,
+  queryProgramScorecards,
+  queryAtRiskPrograms,
+  queryCurriculumGaps,
+  queryComplianceReport,
+  queryComplianceStatus,
+  querySiteSelectionPackage,
+  queryRegionalComparison,
+  queryEmployerAlerts,
+  queryEmployerIntelligence,
+  queryBoardReportData,
+  queryTalentPipeline,
+  queryCareerAdvisorStats,
 } from "./queries.ts";
 
 export const TOOL_DEFINITIONS = [
@@ -254,6 +266,184 @@ export const TOOL_DEFINITIONS = [
       required: ["program_ids"],
     },
   },
+  // ============================================================================
+  // EXECUTIVE SUITE TOOLS
+  // ============================================================================
+  {
+    name: "get_program_scorecard",
+    description: "Get program ROI scorecards with overall scores (0-100), health status, employment rates, median salaries, employer demand, skills alignment, HB8 compliance status, and AI recommendations. Use for program evaluation and performance monitoring.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        program_name: {
+          type: "string",
+          description: "Optional program name to filter (partial match). E.g. 'Computer Science', 'Nursing'.",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "get_at_risk_programs",
+    description: "Get programs with 'at_risk' or 'critical' health status that need intervention. Returns programs sorted by lowest score first. Use when asking about struggling programs, programs needing attention, or HB8 non-compliance.",
+    input_schema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "detect_curriculum_gaps",
+    description: "Detect curriculum gaps by combining program scorecards with skills alignment data. Shows skills that industry demands but programs don't teach, with employer demand context. Use for curriculum improvement questions.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        program_name: {
+          type: "string",
+          description: "Optional program name to filter gaps for a specific program.",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "generate_compliance_report",
+    description: "Get or generate HB8 compliance reports. Returns existing reports with status, credential-of-value pass/fail, wage threshold pass/fail, key findings, and recommendations. Filter by program name or report type.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        program_name: {
+          type: "string",
+          description: "Optional program name to filter reports.",
+        },
+        report_type: {
+          type: "string",
+          enum: ["hb8", "board_report", "accreditation", "wioa", "custom"],
+          description: "Optional report type filter.",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "get_compliance_status",
+    description: "Get a quick overview of all compliance report statuses. Returns report titles, types, current status (draft/pending/approved/submitted), and pass/fail indicators. Use for compliance dashboard views.",
+    input_schema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "generate_site_selection_package",
+    description: "Get or generate site selection data packages for EDC use. Returns talent supply data, employer landscape, labor market metrics, and key highlights for companies considering Arlington/DFW. Filter by company or industry.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        company_name: {
+          type: "string",
+          description: "Optional company name to filter packages.",
+        },
+        industry: {
+          type: "string",
+          description: "Optional industry filter (e.g. 'Technology', 'Healthcare', 'Aerospace').",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "compare_regions",
+    description: "Compare labor market metrics across regions (Fort Worth-Arlington, Dallas-Plano-Irving, Austin, Houston, San Antonio). Returns employment, wages, unemployment rates, and other metrics side by side.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        regions: {
+          type: "array",
+          items: { type: "string" },
+          description: "Optional array of region names to compare. Defaults to all available regions.",
+        },
+        metric: {
+          type: "string",
+          description: "Optional specific metric to compare (e.g. 'Employment', 'Wages', 'Unemployment').",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "get_employer_alerts",
+    description: "Get unacknowledged employer monitoring alerts/signals. Returns hiring surges, freezes, expansions, contractions, new facilities, and other employer intelligence signals. Critical for proactive workforce planning.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        signal_type: {
+          type: "string",
+          enum: ["hiring_surge", "hiring_freeze", "expansion", "contraction", "new_facility", "layoff", "partnership"],
+          description: "Optional signal type filter.",
+        },
+        employer_name: {
+          type: "string",
+          description: "Optional employer name to filter alerts.",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "get_employer_intelligence",
+    description: "Get comprehensive employer profile including company details, active job postings, recent monitoring signals, UTA partnerships, and hiring trends. Use for deep-dive employer analysis.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        employer_name: {
+          type: "string",
+          description: "Company name to look up (partial match).",
+        },
+        employer_id: {
+          type: "string",
+          description: "Optional employer UUID for exact lookup.",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "generate_bod_report",
+    description: "Generate a Board of Directors/Regents report summarizing program performance across all scorecards. Returns aggregate stats, top performers, at-risk programs, and strategic recommendations. Use for executive briefings.",
+    input_schema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "get_talent_pipeline",
+    description: "Map the talent pipeline from UTA programs to employers. Shows which programs feed into which companies, annual hire counts, partnership types, and salary outcomes. Use for talent flow analysis and workforce planning.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        program_name: {
+          type: "string",
+          description: "Optional program name to filter pipeline data.",
+        },
+        employer_name: {
+          type: "string",
+          description: "Optional employer name to filter pipeline data.",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "get_career_advisor_stats",
+    description: "Get analytics on AI career advisor usage: total sessions, average messages, satisfaction ratings, popular session types, most-discussed programs and employers. Use for career services reporting.",
+    input_schema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
   {
     name: "generate_visualization",
     description: "Generate a chart visualization. Build a CLEAN data array with short string labels (x_key) and raw numeric values (y_key). Do NOT pass raw database results — reshape them into simple objects first. Limit to 5-8 data items.",
@@ -321,6 +511,19 @@ export const TOOL_EXECUTORS: Record<string, ToolExecutor> = {
   get_salary_forecast: (args) => querySalaryPredictions(args),
   get_predictive_skills_gap: (args) => queryPredictiveSkillsGap(args),
   compare_programs: (args) => queryProgramComparison(args),
+  // Executive Suite tools
+  get_program_scorecard: (args) => queryProgramScorecards(args),
+  get_at_risk_programs: () => queryAtRiskPrograms(),
+  detect_curriculum_gaps: (args) => queryCurriculumGaps(args),
+  generate_compliance_report: (args) => queryComplianceReport(args),
+  get_compliance_status: () => queryComplianceStatus(),
+  generate_site_selection_package: (args) => querySiteSelectionPackage(args),
+  compare_regions: (args) => queryRegionalComparison(args),
+  get_employer_alerts: (args) => queryEmployerAlerts(args),
+  get_employer_intelligence: (args) => queryEmployerIntelligence(args),
+  generate_bod_report: () => queryBoardReportData(),
+  get_talent_pipeline: (args) => queryTalentPipeline(args),
+  get_career_advisor_stats: () => queryCareerAdvisorStats(),
   generate_visualization: (args) =>
     Promise.resolve({ displayed: true, chart_type: args.chart_type, title: args.title }),
 };

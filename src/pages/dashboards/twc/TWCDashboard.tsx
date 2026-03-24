@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import DashboardLayout from '../../../components/dashboard/DashboardLayout'
 import { getStoredUser, supabase } from '../../../lib/supabase'
+import { MOCK_CAREER_PATHWAYS, MOCK_INSTITUTIONS } from '../../../lib/mockData'
+import ComingSoonPage from '../../../components/dashboard/ComingSoonPage'
 
 const NAV_ITEMS = [
-  { label: 'Overview', path: '/dashboard/twc', icon: '📊', category: 'Sponsorship Suite' },
-  { label: 'Apprentice Manual', path: '/dashboard/twc/manual', icon: '📖', category: 'Sponsorship Suite' },
-  { label: 'Work Process', path: '/dashboard/twc/work-process', icon: '⚙️', category: 'Sponsorship Suite' },
-  { label: 'Wage Schedule', path: '/dashboard/twc/wages', icon: '💵', category: 'Sponsorship Suite' },
-  { label: 'RTI Matcher', path: '/dashboard/twc/rti', icon: '🎓', category: 'Sponsorship Suite' },
-  { label: 'Subsidies', path: '/dashboard/twc/subsidies', icon: '💰', category: 'Funding' },
-  { label: 'Tax Credits', path: '/dashboard/twc/tax-credits', icon: '📋', category: 'Funding' },
-  { label: 'Compliance', path: '/dashboard/twc/compliance', icon: '✅', category: 'Funding' },
+  { label: 'Overview', path: '/dashboard/twc', icon: '', category: 'Navigation' },
+]
+
+const QUICK_ACTIONS = [
+  { label: 'Calculate subsidies', question: 'What apprenticeship subsidies and grants are available for my business?' },
+  { label: 'Find RTI providers', question: 'What Related Technical Instruction providers are available in Arlington/DFW area?' },
+  { label: 'Check compliance', question: 'What is the compliance status of all workforce programs?' },
+  { label: 'View tax credits', question: 'What tax credits are available for hiring apprentices?' },
 ]
 
 const SUBSIDY_PROGRAMS = [
@@ -84,12 +87,14 @@ export default function TWCDashboard() {
   const [institutions, setInstitutions] = useState<Institution[]>([])
   const [loading, setLoading] = useState(true)
   const [error, _setError] = useState<string | null>(null)
+  const [dataSource, setDataSource] = useState<'live' | 'fallback'>('fallback')
 
-  // Fetch data from Supabase (live data only)
+  // Fetch data from Supabase with fallback to mock data
   useEffect(() => {
     async function fetchData() {
       try {
         setLoading(true)
+        let usingLiveData = true
 
         // Fetch career pathways for wage data
         let pathwaysQuery = supabase
@@ -115,20 +120,35 @@ export default function TWCDashboard() {
 
         const { data: institutionsData, error: institutionsError } = await institutionsQuery.limit(10)
 
-        if (pathwaysError) {
-          console.error('Supabase career_pathways query failed:', pathwaysError)
-          _setError('Failed to load career pathways from database.')
-          return
+        // Use Supabase data or fall back to mock data
+        if (pathwaysError || !pathwaysData || pathwaysData.length === 0) {
+          console.warn('Supabase career_pathways unavailable, using fallback data')
+          const filtered = user?.countyFips
+            ? MOCK_CAREER_PATHWAYS.filter(p => p.county_fips === user.countyFips)
+            : MOCK_CAREER_PATHWAYS
+          setPathways(filtered.slice(0, 10))
+          usingLiveData = false
+        } else {
+          setPathways(pathwaysData)
         }
-        setPathways(pathwaysData || [])
 
-        if (institutionsError) {
-          console.error('Supabase institutions query failed:', institutionsError)
+        if (institutionsError || !institutionsData || institutionsData.length === 0) {
+          console.warn('Supabase institutions unavailable, using fallback data')
+          const filtered = user?.countyFips
+            ? MOCK_INSTITUTIONS.filter(i => i.county_fips === user.countyFips)
+            : MOCK_INSTITUTIONS
+          setInstitutions(filtered.slice(0, 10))
+          usingLiveData = false
+        } else {
+          setInstitutions(institutionsData)
         }
-        setInstitutions(institutionsData || [])
+
+        setDataSource(usingLiveData ? 'live' : 'fallback')
       } catch (err) {
-        console.error('Supabase query failed:', err)
-        _setError('Unable to connect to database. Please try again later.')
+        console.warn('Supabase query failed, using fallback data:', err)
+        setPathways(MOCK_CAREER_PATHWAYS.slice(0, 10))
+        setInstitutions(MOCK_INSTITUTIONS)
+        setDataSource('fallback')
       } finally {
         setLoading(false)
       }
@@ -149,6 +169,7 @@ export default function TWCDashboard() {
         title="Apprenticeship Sponsorship Suite"
         subtitle="Build Your Workforce Pipeline"
         navItems={NAV_ITEMS}
+        role="twc"
       >
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
@@ -166,6 +187,7 @@ export default function TWCDashboard() {
         title="Apprenticeship Sponsorship Suite"
         subtitle="Build Your Workforce Pipeline"
         navItems={NAV_ITEMS}
+        role="twc"
       >
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
@@ -177,17 +199,13 @@ export default function TWCDashboard() {
     )
   }
 
-  return (
-    <DashboardLayout
-      title="Apprenticeship Sponsorship Suite"
-      subtitle="Build Your Workforce Pipeline"
-      navItems={NAV_ITEMS}
-    >
+  const defaultContent = (
+    <>
       {/* Welcome & Quick Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <div className="lg:col-span-2 card-skeuomorphic rounded-2xl p-6">
           <h2 className="text-h3 text-white mb-2">
-            Welcome, {user?.firstName}! 🏭
+            Welcome, {user?.firstName}
           </h2>
           <p className="text-body text-neutral-400 mb-4">
             Start or expand your registered apprenticeship program in {user?.countyName || 'your'} County.
@@ -203,7 +221,7 @@ export default function TWCDashboard() {
           </div>
         </div>
 
-        <div className="card-skeuomorphic rounded-2xl p-6 border-l-4 border-l-accent">
+        <div className="card-skeuomorphic rounded-2xl p-6">
           <p className="text-neutral-500 text-sm mb-1">Potential Funding</p>
           <p className="text-3xl font-display font-bold text-accent">
             ${estimatedSubsidies.toLocaleString()}
@@ -409,7 +427,6 @@ export default function TWCDashboard() {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <button className="card-skeuomorphic rounded-xl p-5 text-left hover:border-accent/30 transition-all group">
-          <span className="text-2xl mb-2 block">📖</span>
           <p className="text-white font-medium group-hover:text-accent transition-colors">
             Apprentice Manual
           </p>
@@ -418,7 +435,6 @@ export default function TWCDashboard() {
           </p>
         </button>
         <button className="card-skeuomorphic rounded-xl p-5 text-left hover:border-accent/30 transition-all group">
-          <span className="text-2xl mb-2 block">⚙️</span>
           <p className="text-white font-medium group-hover:text-accent transition-colors">
             Work Process Schedule
           </p>
@@ -427,7 +443,6 @@ export default function TWCDashboard() {
           </p>
         </button>
         <button className="card-skeuomorphic rounded-xl p-5 text-left hover:border-accent/30 transition-all group">
-          <span className="text-2xl mb-2 block">🎓</span>
           <p className="text-white font-medium group-hover:text-accent transition-colors">
             RTI Provider Matcher
           </p>
@@ -441,8 +456,8 @@ export default function TWCDashboard() {
       <div className="mt-8 flex items-center justify-between text-xs text-neutral-600 flex-wrap gap-4">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse-dot" />
-            Live data from Supabase
+            <span className={`w-1.5 h-1.5 rounded-full ${dataSource === 'live' ? 'bg-accent animate-pulse-dot' : 'bg-yellow-400'}`} />
+            {dataSource === 'live' ? 'Live data from Supabase' : 'Fallback demo data'}
           </span>
           <span>Source: DOL RAPIDS, TWC</span>
         </div>
@@ -451,6 +466,21 @@ export default function TWCDashboard() {
           <span>→</span>
         </button>
       </div>
+    </>
+  )
+
+  return (
+    <DashboardLayout
+      title="Apprenticeship Sponsorship Suite"
+      subtitle="Build Your Workforce Pipeline"
+      navItems={NAV_ITEMS}
+      role="twc"
+      quickActions={QUICK_ACTIONS}
+    >
+      <Routes>
+        <Route index element={defaultContent} />
+        <Route path="*" element={<ComingSoonPage />} />
+      </Routes>
     </DashboardLayout>
   )
 }

@@ -47,14 +47,14 @@ Build outputs to `dist/`. For Hostinger deployment:
 - `src/components/IRI/` - Investment Readiness Index assessment flow
 - `src/components/Diagnostic/` - Advisor Match diagnostic flow
 - `src/components/tools/` - Interactive tools (equity calculator, investor list, etc.)
-- `src/components/dashboard/` - Shared dashboard layout component
+- `src/components/dashboard/` - Shared dashboard layout, welcome banner, coming soon placeholder
 - `src/config/api.ts` - API endpoint, form type constants, localStorage helpers
 - `src/lib/supabase.ts` - Supabase client, types, and data fetching functions
 - `src/lib/mockData.ts` - Fallback demo data when Supabase tables are empty
 - `src/lib/uta-queries.ts` - UTA workforce intelligence query functions and TypeScript interfaces
 - `src/lib/uta-mock-data.ts` - Fallback demo data for UTA workforce tables
 - `src/lib/agent-api.ts` - SSE client for AI agent Edge Function
-- `sql/uta-workforce/` - SQL files (01-18) for UTA workforce dataset schema, data, and predictive analytics
+- `sql/uta-workforce/` - SQL files (01-20) for UTA workforce dataset schema, data, predictive analytics, executive suite tables, and lead capture
 - `src/hooks/` - Custom React hooks (scroll reveal, useChat)
 - `src/hooks/useChat.ts` - Chat state management hook (messages, streaming, tool activity, visualizations)
 - `src/components/agent/` - AI agent chat UI components
@@ -70,9 +70,9 @@ Build outputs to `dist/`. For Hostinger deployment:
 ```
 # Marketing Pages (with Header/Footer)
 /                      - HomePage
-/solutions             - SolutionsPage (tabbed: EDC, colleges, consultants)
-/preview               - PreviewPage (free preview dashboard)
-/about                 - AboutPage
+/solutions             - SolutionsPage (tabbed: EDC, universities & colleges, consultants)
+/preview               - PreviewPage (lead capture form → demo access)
+/about                 - AboutPage (founder bio, government credentials, "Who We Serve")
 /demo                  - DemoPage (demo request)
 
 # Auth & Dashboards (no Header/Footer)
@@ -88,12 +88,33 @@ Build outputs to `dist/`. For Hostinger deployment:
 Header and Footer are conditionally hidden on `/dashboard/*`, `/demo-login`, `/login`, and `/agent` routes.
 
 ### Dashboard System
-Four role-based dashboards with shared `DashboardLayout` component (sidebar + header). Each dashboard:
+Four role-based dashboards with shared `DashboardLayout` component (sidebar + header + overlay AI chat panel). Each dashboard:
 - Checks auth via `getStoredUser()` from `src/lib/supabase.ts`
 - Falls back to mock data from `src/lib/mockData.ts` when Supabase is empty
 - Has its own `NAV_ITEMS` configuration for sidebar navigation
+- Passes `role` prop to DashboardLayout for role-aware AI chat
+- Pruned nav items: College (3), EDC (3), Student (1 + quick actions), TWC (1 + quick actions)
+- No emoji icons in nav — text-only labels
+- Compact metrics bar replaces 5-card stat grids (no `border-l-4` patterns)
+- Dismissable `WelcomeBanner` per session (stored in `sessionStorage`)
+- Catch-all routes show `ComingSoonPage` placeholder with AI Agent CTA
 
-Demo login provides 8 test accounts (2 per role) stored in `DEMO_USERS` within `src/lib/supabase.ts`. Login falls back to local tokens when Supabase is unavailable. The demo login page also features an AI Agent card that links to `/agent`.
+**Overlay AI Chat Panel** (in `DashboardLayout`):
+- Slides from right as an overlay (not a separate page)
+- Rendered via `createPortal` to `document.body`
+- Drag-to-resize on left edge (min 320px, max 85% viewport)
+- Expand/collapse toggle (384px default ↔ 700px expanded)
+- Mobile: full-width panel
+- Escape key closes, focus management for a11y
+- `AskAgentContext` React context lets sub-pages open the chat panel with pre-filled questions via `useAskAgent()` hook
+
+**Mobile-Responsive Sidebar:**
+- Hidden by default below `lg` (1024px) breakpoint
+- Hamburger button in header opens sidebar as overlay
+- Auto-closes on nav link click
+- 48px touch targets (WCAG minimum)
+
+Demo login provides 8 test accounts (2 per role) stored in `DEMO_USERS` within `src/lib/supabase.ts` with `-2026` token suffix. Login falls back to local tokens when Supabase is unavailable. The demo login page also features an AI Agent card that links to `/agent`. Both LoginPage and DemoLogin use the real `zscale-capital-logo.png` image (same as Header/Footer/DashboardLayout).
 
 ### AI Agent Chat System
 A conversational AI interface at `/agent` powered by Claude Sonnet 4.6 via a Supabase Edge Function. Architecture:
@@ -114,16 +135,16 @@ User toggles "Visualize" → message sent with [VISUALIZE] hint
 ```
 
 **Backend** (`supabase/functions/chat-agent/`):
-- `index.ts` - Main handler: CORS, SSE streaming, tool use loop (up to 8 rounds), visualization SSE events
+- `index.ts` - Main handler: CORS, SSE streaming, tool use loop (up to 8 rounds), visualization SSE events. Accepts `role` from request body and injects into system prompt for role-aware responses.
 - `tools.ts` - 18 tool definitions (JSON schema) + executor map (includes `generate_visualization`)
 - `queries.ts` - Deno-compatible Supabase query functions (port of `uta-queries.ts`) with mock data fallback
 - `system-prompt.ts` - UTA Workforce Intelligence Agent persona, instructions, and visualization guidelines
 
 **Frontend**:
-- `src/lib/agent-api.ts` - SSE client: POST to Edge Function, parse stream events (including `visualization` events), `VisualizationData` type
-- `src/hooks/useChat.ts` - Chat state: messages, streaming, tool activity, visualizations, abort controller
+- `src/lib/agent-api.ts` - SSE client: POST to Edge Function, parse stream events (including `visualization` events), `VisualizationData` type. Accepts optional `role` parameter to send user role context to backend.
+- `src/hooks/useChat.ts` - Chat state: messages, streaming, tool activity, visualizations, abort controller. Accepts optional `role` parameter passed to `streamChat()`.
 - `src/components/agent/ChatMessage.tsx` - Message bubbles with markdown rendering (bold, lists, tables, code) + chart link buttons
-- `src/components/agent/ChatInput.tsx` - Auto-resizing textarea with send/stop buttons + "Visualize data" toggle
+- `src/components/agent/ChatInput.tsx` - Auto-resizing textarea with send/stop buttons + "Visualize data" toggle. Accepts optional `inputRef` for external focus management (used by DashboardLayout chat panel).
 - `src/components/agent/SuggestedQuestions.tsx` - 4 categories of clickable question prompts
 - `src/components/agent/ToolActivityIndicator.tsx` - Animated tool activity pills
 - `src/components/agent/charts/ChartCard.tsx` - Clickable chart link that opens fullscreen modal (via `createPortal`)
@@ -373,7 +394,7 @@ Fallback mock data in `src/lib/uta-mock-data.ts` (5-10 records per table) for de
 
 ### SQL Files
 
-SQL files in `sql/uta-workforce/` are designed to be copy-pasted into Supabase SQL Editor in numbered order (01-18). Files 01-12 create the core workforce dataset. Files 13-18 add predictive analytics (schema, views, crosswalk data, BLS projections, seed predictions, verification). All INSERTs use `ON CONFLICT DO NOTHING` for safe re-runs. Foreign keys use subquery references by name (not hardcoded UUIDs). RLS is enabled with public read policies on all tables.
+SQL files in `sql/uta-workforce/` are designed to be copy-pasted into Supabase SQL Editor in numbered order (01-20). Files 01-12 create the core workforce dataset. Files 13-18 add predictive analytics (schema, views, crosswalk data, BLS projections, seed predictions, verification). File 19 adds executive suite tables (program scorecards, compliance reports, site selection, employer monitoring, career advisor sessions). File 20 adds the `demo_leads` lead capture table. All INSERTs use `ON CONFLICT DO NOTHING` for safe re-runs. All `CREATE POLICY` statements use `DROP POLICY IF EXISTS` before creation. Foreign keys use subquery references by name (not hardcoded UUIDs). RLS is enabled with public read policies on all tables.
 
 ### Predictive Analytics Pipeline
 
@@ -399,3 +420,130 @@ GitHub Actions in `.github/workflows/`: `weekly-data-pipeline.yml` and `monthly-
 | `get_salary_forecast` | Salary trajectory projections (1/3/5/10 year) |
 | `get_predictive_skills_gap` | Future-aware skills gap analysis with emerging/declining context |
 | `compare_programs` | Side-by-side program comparison (2-5 programs) |
+
+### Executive Suite Tables (5 new)
+
+| Table | Purpose | Records |
+|-------|---------|---------|
+| `program_scorecards` | Program ROI scorecards with overall scores, health status, HB8 compliance | ~9 |
+| `compliance_reports` | HB8 and board compliance report tracking with pass/fail indicators | ~5 |
+| `site_selection_packages` | EDC site selection talent/labor packages for relocating companies | ~5 |
+| `employer_monitoring` | Employer hiring signals and alerts (surges, freezes, expansions) | ~6 |
+| `career_advisor_sessions` | Student AI career advisor session tracking and analytics | ~5 |
+
+SQL file: `sql/uta-workforce/19-executive-suite-tables.sql` (safe re-runs with `ON CONFLICT DO NOTHING`)
+
+### Executive Suite AI Agent Tools (12 new)
+
+| Tool | Query Function | Purpose |
+|------|---------------|---------|
+| `get_program_scorecard` | `queryProgramScorecards` | Program ROI scorecards with AI recommendations |
+| `get_at_risk_programs` | `queryAtRiskPrograms` | Programs with critical/at_risk health status |
+| `detect_curriculum_gaps` | `queryCurriculumGaps` | Missing skills that industry demands |
+| `generate_compliance_report` | `queryComplianceReport` | HB8 compliance reports with pass/fail |
+| `get_compliance_status` | `queryComplianceStatus` | Overview of all report statuses |
+| `generate_site_selection_package` | `querySiteSelectionPackage` | Talent packages for relocating companies |
+| `compare_regions` | `queryRegionalComparison` | Side-by-side regional labor market comparison |
+| `get_employer_alerts` | `queryEmployerAlerts` | Unacknowledged employer monitoring signals |
+| `get_employer_intelligence` | `queryEmployerIntelligence` | Deep-dive employer profiles |
+| `generate_bod_report` | `queryBoardReportData` | Board of Directors aggregate performance report |
+| `get_talent_pipeline` | `queryTalentPipeline` | Program-to-employer talent flow mapping |
+| `get_career_advisor_stats` | `queryCareerAdvisorStats` | AI advisor usage analytics |
+
+### Executive Suite Dashboard Sub-Pages
+
+All 4 dashboards now use internal `Routes`/`Route` from React Router for sub-page routing. The existing wildcard routes in `App.tsx` (`/dashboard/college/*`, etc.) handle the top-level routing.
+
+| Dashboard | New Sub-Page | Path | Component |
+|-----------|-------------|------|-----------|
+| College | Program Scorecards | `/dashboard/college/scorecards` | `ProgramScorecards.tsx` |
+| College | Compliance Reports | `/dashboard/college/compliance-reports` | `ComplianceReportsPage.tsx` |
+| EDC | Site Selection | `/dashboard/edc/site-selection` | `SiteSelectionPage.tsx` |
+| EDC | Employer Alerts | `/dashboard/edc/employer-alerts` | `EmployerAlertsPage.tsx` |
+| Student | AI Career Advisor | `/dashboard/student/career-advisor` | `CareerAdvisorPage.tsx` (route removed from StudentDashboard — replaced by overlay chat panel) |
+
+**Shared DashboardLayout** (`src/components/dashboard/DashboardLayout.tsx`) includes an overlay AI chat panel (slide-out from right) with drag-to-resize and expand/collapse toggle. The sidebar "Ask AI Agent" button opens this panel instead of navigating to `/agent`. Exports `useAskAgent()` hook via `AskAgentContext` so sub-pages can open the chat with pre-filled questions. Also includes mobile-responsive sidebar (hamburger menu below `lg` breakpoint).
+
+**Additional Components:**
+- `src/components/dashboard/WelcomeBanner.tsx` - Dismissable per-session welcome banner with role stats and CTA buttons
+- `src/components/dashboard/ComingSoonPage.tsx` - Warm placeholder for catch-all routes with "Ask AI Agent" CTA
+
+**SuggestedQuestions** (`src/components/agent/SuggestedQuestions.tsx`) now accepts an optional `role` prop (`'college' | 'edc' | 'student' | 'twc' | 'general'`) that shows role-specific question categories. Default/general shows the original 5 categories plus a new "Executive Suite" category.
+
+**System Prompt** (`supabase/functions/chat-agent/system-prompt.ts`) now includes Executive Suite capabilities section with role detection, report generation guidelines, HB8 compliance specifics, and proactive intelligence instructions.
+
+### Dashboard Data Sources
+
+Each page uses different data sources. Only main dashboard default views query Supabase and show a live/fallback indicator (pulsing teal or yellow dot in footer). Sub-pages use hardcoded mock data with no Supabase queries.
+
+| Page | Route | Data Source | Live Indicator |
+|------|-------|-------------|----------------|
+| College default (ROI Heatmap) | `/dashboard/college` | Supabase `academic_programs` → fallback `MOCK_PROGRAMS` | Pulsing teal/yellow dot |
+| Program Scorecards | `/dashboard/college/scorecards` | Supabase `program_scorecards` (join `uta_programs`, `uta_colleges`) → fallback `MOCK_SCORECARDS` | Pulsing teal/yellow dot |
+| Compliance Reports | `/dashboard/college/compliance-reports` | Supabase `compliance_reports` (join `uta_programs`) → fallback `MOCK_REPORTS` | Pulsing teal/yellow dot |
+| EDC default (Sectoral Health) | `/dashboard/edc` | Supabase `businesses` → fallback `MOCK_BUSINESSES` | Pulsing teal/yellow dot |
+| Site Selection | `/dashboard/edc/site-selection` | Supabase `site_selection_packages` → fallback `MOCK_PACKAGES` | Pulsing teal/yellow dot |
+| Employer Alerts | `/dashboard/edc/employer-alerts` | Supabase `employer_monitoring` (join `arlington_employers`) → fallback `MOCK_ALERTS` | Pulsing teal/yellow dot |
+| Student default (Career GPS) | `/dashboard/student` | Supabase `career_pathways` → fallback `MOCK_CAREER_PATHWAYS` | Pulsing teal/yellow dot |
+| TWC default (Overview) | `/dashboard/twc` | Supabase `career_pathways` + `institutions` → fallback mocks | Pulsing teal/yellow dot |
+| AI Agent Chat | `/agent` | AI agent via Supabase Edge Function (30+ tools query Supabase) | None |
+
+**Note:** The AI Agent (both standalone `/agent` and the overlay chat panel in dashboards) queries Supabase indirectly through the Edge Function's 30+ tool definitions. The Edge Function's `queries.ts` has its own mock data fallback for each query.
+
+### Lead Capture System
+
+The PreviewPage (`/preview`) gates demo access behind a 4-field lead capture form that stores prospect data in Supabase before redirecting to the demo login.
+
+**Flow:** PreviewPage form → Supabase `demo_leads` insert → `sessionStorage` auth set → redirect to `/demo-login`
+
+**Supabase Table:** `demo_leads` (SQL file: `sql/uta-workforce/20-demo-leads-table.sql`)
+
+| Column | Type | Notes |
+|--------|------|-------|
+| `id` | UUID | Auto-generated primary key |
+| `full_name` | TEXT | Required |
+| `email` | TEXT | Required |
+| `institution` | TEXT | Required |
+| `role_title` | TEXT | Required |
+| `email_domain` | TEXT | Generated column: `split_part(email, '@', 2)` |
+| `is_edu_email` | BOOLEAN | Generated: detects `.edu` domains |
+| `is_gov_email` | BOOLEAN | Generated: detects `.gov` / `.mil` domains |
+| `source` | TEXT | Default `'preview_page'` |
+| `sessions_count` | INTEGER | Default 0 |
+| `last_visited_at` | TIMESTAMPTZ | Nullable |
+| `created_at` | TIMESTAMPTZ | Default `now()` |
+
+**RLS:** Anonymous insert allowed (lead capture uses anon key). Only service role can read/update (admin/analytics). Lead capture failure never blocks demo access — the form gracefully continues on insert error.
+
+### Marketing Pages — SEO & Branding
+
+**SEO** (`index.html`): Meta tags target B2G workforce intelligence keywords (not VC/startup). Title: "zScale Capital | AI-Powered Workforce Intelligence for Universities & EDCs". Keywords include: workforce intelligence platform, labor market analytics, HB8 compliance, program ROI scoring, economic development data.
+
+**Government Credentials** (displayed on AboutPage and trust bars):
+- SAM.gov Registration: Active, UEI `DPKYDLDKEFG9`, CAGE `1A0X9`, expires Mar 2027
+- Business Classification: Women-Owned Small Business, Minority-Owned, Small Business (SBA)
+- NAICS Codes: 541611, 541511, 541512, 541612, 541720, 541910
+- PSC Codes: DA01, B506, B507, R408
+- WOSB (SBA) and WBENC certifications in progress (displayed as footnote, not primary credential)
+- Congressional District: Texas 24
+
+**Brand Consistency:**
+- All pages use `zscale-capital-logo.png` image (no text "Z" placeholders)
+- "Universities & Colleges" (not "Community Colleges") across all pages
+- Trust bars on HomePage and PreviewPage: "Built for Texas Universities & EDCs" (no partnership claims)
+- Copyright: 2026
+- Demo tokens use `-2026` suffix
+
+**HomePage Features:**
+- Animated AI Chat Preview section: IntersectionObserver triggers staggered typewriter animation (user bubble → typing dots → AI response with tool activity pill → data rows slide in one-by-one → live indicator). Uses `ChatPreview` component with step-based state machine.
+- Trust Bar: SAM.gov Registered, Women-Owned Small Business, UEI + CAGE codes
+- Hero with Dallas skyline background, data ticker (Q1 2026)
+
+**AboutPage Design** (institutional B2G pattern):
+- Manifesto hero: "The data exists. Most institutions just can't use it."
+- Borderless stats with `divide-x` separators (no card borders)
+- Founder section: rectangular photo (`rounded-2xl`), company credential pills, fast-scan mini-stats row (`15 yrs`, `$500M+`, `200+`)
+- "Who We Serve" section: 3 audience cards (Universities, EDCs, Workforce Boards)
+- Government credentials formatted as data tables with `divide-y` rows
+- Section labels: `text-xs uppercase tracking-[0.2em]` above every H2
+- Typography: `tracking-[-0.02em]` on headings for institutional feel

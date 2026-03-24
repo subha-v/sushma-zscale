@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 const tickerItems = [
@@ -6,8 +7,132 @@ const tickerItems = [
   { label: 'Counties:', value: '254' },
   { label: 'Manufacturing Companies:', value: '13,000+' },
   { label: 'State Capital:', value: '$753M' },
-  { label: 'Last Update:', value: 'Q4 2025' },
+  { label: 'Last Update:', value: 'Q1 2026' },
 ];
+
+const CHAT_PROGRAMS = [
+  { rank: 1, name: 'Nursing BSN', salary: '$73,200' },
+  { rank: 2, name: 'Computer Science BS', salary: '$71,500' },
+  { rank: 3, name: 'Software Engineering BS', salary: '$70,800' },
+  { rank: 4, name: 'Data Science BS', salary: '$69,500' },
+  { rank: 5, name: 'Aerospace Engineering BS', salary: '$69,000' },
+];
+
+function ChatPreview() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [step, setStep] = useState(0);
+  const hasTriggered = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasTriggered.current) {
+          hasTriggered.current = true;
+          // step 1: user bubble appears
+          setTimeout(() => setStep(1), 300);
+          // step 2: typing dots
+          setTimeout(() => setStep(2), 1200);
+          // step 3: response text
+          setTimeout(() => setStep(3), 2400);
+          // steps 4-8: each data row
+          setTimeout(() => setStep(4), 3000);
+          setTimeout(() => setStep(5), 3300);
+          setTimeout(() => setStep(6), 3600);
+          setTimeout(() => setStep(7), 3900);
+          setTimeout(() => setStep(8), 4200);
+          // step 9: live indicator
+          setTimeout(() => setStep(9), 4600);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className="bg-[#111111] border border-[#1A1A1A] rounded-2xl p-6 md:p-8">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[#1A1A1A]">
+        <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
+          <span className="text-accent text-sm font-bold">Z</span>
+        </div>
+        <div>
+          <p className="text-white text-sm font-medium">zScale Intelligence Agent</p>
+          <p className="text-[#707070] text-xs">Powered by Claude + Supabase</p>
+        </div>
+        <div className="ml-auto flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+          <span className="text-[#707070] text-xs">Online</span>
+        </div>
+      </div>
+
+      <div className="space-y-4 min-h-[280px]">
+        {/* User question */}
+        {step >= 1 && (
+          <div className="flex justify-end" style={{ animation: 'slideInRight 0.4s ease-out' }}>
+            <div className="bg-accent/10 border border-accent/20 rounded-lg rounded-br-sm px-4 py-2.5 max-w-[85%]">
+              <p className="text-sm text-white">What are the highest-paying programs at UTA?</p>
+            </div>
+          </div>
+        )}
+
+        {/* Typing indicator */}
+        {step >= 2 && step < 3 && (
+          <div className="flex justify-start" style={{ animation: 'fadeIn 0.3s ease-out' }}>
+            <div className="bg-[#1A1A1A] rounded-lg rounded-bl-sm px-4 py-3 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#555] animate-bounce" style={{ animationDelay: '0ms' }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#555] animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#555] animate-bounce" style={{ animationDelay: '300ms' }} />
+            </div>
+          </div>
+        )}
+
+        {/* AI response */}
+        {step >= 3 && (
+          <div className="flex justify-start" style={{ animation: 'fadeIn 0.4s ease-out' }}>
+            <div className="bg-[#1A1A1A] rounded-lg rounded-bl-sm px-4 py-3 max-w-[92%]">
+              {/* Tool activity pill */}
+              <div className="flex items-center gap-1.5 mb-2.5 text-xs text-accent/70">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent/60">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+                Queried program_outcomes
+              </div>
+              <p className="text-sm text-[#C0C0C0] leading-relaxed">
+                Based on the latest outcome data, the top 5 highest-paying programs at UTA are:
+              </p>
+              <div className="mt-3 space-y-0">
+                {CHAT_PROGRAMS.map((prog) => (
+                  <div
+                    key={prog.rank}
+                    className="flex justify-between text-[#A0A0A0] text-sm py-1.5 border-b border-[#222] last:border-b-0"
+                    style={{
+                      opacity: step >= 3 + prog.rank ? 1 : 0,
+                      transform: step >= 3 + prog.rank ? 'translateY(0)' : 'translateY(8px)',
+                      transition: 'opacity 0.3s ease-out, transform 0.3s ease-out',
+                    }}
+                  >
+                    <span>{prog.rank}. {prog.name}</span>
+                    <span className="text-accent font-mono font-medium">{prog.salary}</span>
+                  </div>
+                ))}
+              </div>
+              {step >= 9 && (
+                <div className="mt-3 flex items-center gap-1.5" style={{ animation: 'fadeIn 0.4s ease-out' }}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                  <span className="text-xs text-[#707070]">Live data from Supabase</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export const HomePage = () => {
   return (
@@ -28,10 +153,10 @@ export const HomePage = () => {
         <div className="relative z-[2] max-w-[1200px] mx-auto px-6 max-md:px-4 w-full">
           <div className="max-w-[900px] mx-auto text-center">
             <h1 className="text-[32px] md:text-[42px] lg:text-[52px] font-bold text-white leading-[1.15] tracking-tight mb-5 md:mb-6">
-              Market Intelligence Platform for Texas Economic Development
+              Workforce Intelligence That Moves Institutions Forward
             </h1>
             <p className="text-base md:text-lg lg:text-xl text-[#C8C8C8] leading-relaxed mb-7 md:mb-8 max-w-[650px] mx-auto">
-              Track 47,312 businesses, workforce trends, and capital programs across 254 Texas counties. Make data-driven decisions for economic growth.
+              AI-powered labor market analytics for universities, EDCs, and workforce boards. Ask any question — get evidence-based answers in seconds, not weeks.
             </p>
 
             {/* Data Ticker */}
@@ -63,6 +188,40 @@ export const HomePage = () => {
                 See Free Preview
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== TRUST BAR ==================== */}
+      <section className="py-5 bg-[#0D0D0D] border-y border-white/[0.06]">
+        <div className="max-w-[1200px] mx-auto px-6 max-md:px-4">
+          <div className="flex items-center justify-center gap-6 md:gap-10 flex-wrap text-sm text-white/50">
+            <span className="flex items-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              <span>Built for Texas Universities & EDCs</span>
+            </span>
+            <span className="text-white/20">|</span>
+            <span className="flex items-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              <span>SAM.gov Registered</span>
+            </span>
+            <span className="text-white/20">|</span>
+            <span className="flex items-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              <span>Women-Owned Small Business</span>
+            </span>
+            <span className="text-white/20 max-md:hidden">|</span>
+            <span className="flex items-center gap-2 max-md:hidden">
+              <span className="text-white/40 text-xs font-mono">UEI: DPKYDLDKEFG9</span>
+              <span className="text-white/20 mx-1">|</span>
+              <span className="text-white/40 text-xs font-mono">CAGE: 1A0X9</span>
+            </span>
           </div>
         </div>
       </section>
@@ -115,8 +274,8 @@ export const HomePage = () => {
                     <path d="M22 10v6M2 10l10-5 10 5-10 5z M6 12v5c3 3 9 3 12 0v-5"/>
                   </svg>
                 ),
-                title: 'Community Colleges',
-                description: 'Align workforce training programs with actual employer needs. See which skills are in demand across your service region.',
+                title: 'Universities & Colleges',
+                description: 'Align academic programs with employer demand. Track graduate outcomes, HB8 compliance, and skills gaps across your institution.',
               },
               {
                 icon: (
@@ -184,6 +343,52 @@ export const HomePage = () => {
                 <p className="text-base text-[#A0A0A0] leading-[1.7]">{item.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== AI CHAT PREVIEW ==================== */}
+      <section className="py-[100px] bg-[#0D0D0D]" id="ai-agent">
+        <div className="max-w-[1200px] mx-auto px-6 max-md:px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            {/* Left: Description */}
+            <div>
+              <p className="text-sm uppercase tracking-[0.15em] text-accent font-semibold mb-3">
+                AI-Powered
+              </p>
+              <h2 className="text-[28px] md:text-[32px] lg:text-4xl font-bold text-white mb-4 leading-tight">
+                Ask Any Workforce Question
+              </h2>
+              <p className="text-base md:text-lg text-[#A0A0A0] leading-relaxed mb-8">
+                Our AI assistant draws from real-time employer demand data, BLS projections, and institutional outcomes to give you specific, actionable answers — not generic reports.
+              </p>
+              <div className="space-y-3 mb-8">
+                {[
+                  '"What are the top 5 in-demand skills in DFW healthcare?"',
+                  '"Which programs have strongest employer alignment?"',
+                  '"Compare our nursing outcomes to regional job openings."',
+                  '"Generate a site selection package for an aerospace company."',
+                ].map((q) => (
+                  <div key={q} className="flex items-start gap-3 bg-[#111111] border border-[#1A1A1A] rounded-lg px-4 py-3">
+                    <span className="text-accent mt-0.5 shrink-0">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                      </svg>
+                    </span>
+                    <span className="text-sm text-[#C0C0C0]">{q}</span>
+                  </div>
+                ))}
+              </div>
+              <Link
+                to="/demo-login"
+                className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold bg-accent text-black rounded-lg hover:bg-accent-hover hover:-translate-y-0.5 transition-all no-underline"
+              >
+                Try the Live Demo
+              </Link>
+            </div>
+
+            {/* Right: Animated Chat Visual */}
+            <ChatPreview />
           </div>
         </div>
       </section>

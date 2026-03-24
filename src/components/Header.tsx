@@ -79,7 +79,7 @@ export const Header = () => {
                 location.pathname === '/preview' ? 'text-accent' : 'text-[#A0A0A0] hover:text-accent'
               }`}
             >
-              Free Preview
+              Preview
             </Link>
             <Link
               to="/about"
@@ -152,7 +152,7 @@ export const Header = () => {
           How It Works
         </Link>
         <Link to="/preview" onClick={closeMobileMenu} className="block py-4 text-white text-lg font-medium border-b border-[#1A1A1A] no-underline">
-          Free Preview
+          Preview
         </Link>
         <Link to="/about" onClick={closeMobileMenu} className="block py-4 text-white text-lg font-medium border-b border-[#1A1A1A] no-underline">
           About

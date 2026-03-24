@@ -69,8 +69,8 @@ const tabData: Record<TabKey, TabData> = {
     ],
   },
   colleges: {
-    label: 'Community Colleges',
-    title: 'For Community Colleges',
+    label: 'Universities & Colleges',
+    title: 'For Universities & Colleges',
     lead: "Align training programs with real employer demand. Track 50,000+ job openings. Show advisory boards what skills are actually needed in your service region.",
     useCases: [
       {
@@ -168,7 +168,7 @@ const tabData: Record<TabKey, TabData> = {
 
 const tabs: { key: TabKey; label: string }[] = [
   { key: 'edc', label: 'Economic Development' },
-  { key: 'colleges', label: 'Community Colleges' },
+  { key: 'colleges', label: 'Universities & Colleges' },
   { key: 'consultants', label: 'Site Consultants' },
 ];
 

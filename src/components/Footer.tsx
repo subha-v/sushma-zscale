@@ -55,7 +55,7 @@ export const Footer = () => {
                 </li>
                 <li>
                   <Link to="/solutions#college" className="text-sm text-white/60 no-underline hover:text-[#10B981] transition-colors">
-                    Community Colleges
+                    Universities & Colleges
                   </Link>
                 </li>
                 <li>
@@ -88,7 +88,7 @@ export const Footer = () => {
 
         {/* Footer Bottom */}
         <div className="flex justify-between items-center pt-8 border-t border-white/[0.08] max-md:flex-col max-md:gap-4 max-md:text-center">
-          <p className="text-[13px] text-white/40">&copy; 2025 zScale Capital. All rights reserved.</p>
+          <p className="text-[13px] text-white/40">&copy; 2026 zScale Capital. All rights reserved.</p>
           <a
             href="https://www.linkedin.com/in/sushma-vad"
             target="_blank"

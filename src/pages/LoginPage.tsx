@@ -41,13 +41,12 @@ export default function LoginPage() {
       <div className="max-w-md w-full">
         {/* Logo & Header */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
-            <div className="w-12 h-12 bg-accent rounded-xl flex items-center justify-center glow-teal">
-              <span className="text-ink font-bold text-2xl">Z</span>
-            </div>
-            <span className="text-3xl font-display font-bold text-white group-hover:text-accent transition-colors">
-              zScale Capital
-            </span>
+          <Link to="/" className="inline-block mb-6">
+            <img
+              src="/images/zscale-capital-logo.png"
+              alt="zScale Capital"
+              className="h-14 w-auto mx-auto"
+            />
           </Link>
           <h1 className="text-h3 text-white mb-2">
             Platform Access

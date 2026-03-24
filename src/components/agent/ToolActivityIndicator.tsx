@@ -19,6 +19,19 @@ const TOOL_LABELS: Record<string, string> = {
   get_salary_forecast: 'Projecting salary growth',
   get_predictive_skills_gap: 'Analyzing future skills gaps',
   compare_programs: 'Comparing programs',
+  // Executive Suite tools
+  get_program_scorecard: 'Loading program scorecards',
+  get_at_risk_programs: 'Finding at-risk programs',
+  detect_curriculum_gaps: 'Detecting curriculum gaps',
+  generate_compliance_report: 'Generating compliance report',
+  get_compliance_status: 'Checking compliance status',
+  generate_site_selection_package: 'Building site selection package',
+  compare_regions: 'Comparing regional metrics',
+  get_employer_alerts: 'Checking employer alerts',
+  get_employer_intelligence: 'Profiling employer',
+  generate_bod_report: 'Generating board report',
+  get_talent_pipeline: 'Mapping talent pipeline',
+  get_career_advisor_stats: 'Loading advisor analytics',
 }
 
 export function ToolActivityIndicator({ activities }: { activities: ToolActivity[] }) {

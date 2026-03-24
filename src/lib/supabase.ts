@@ -53,7 +53,7 @@ export interface CareerPathway {
 
 // Demo user accounts for login identity (required for dashboard navigation)
 const DEMO_USERS: Record<string, User> = {
-  'DEMO-COLLEGE-DEAN-2024': {
+  'DEMO-COLLEGE-DEAN-2026': {
     id: 'demo-college-dean',
     email: 'dean@demo.zscale.com',
     firstName: 'Dr. Sarah',
@@ -64,7 +64,7 @@ const DEMO_USERS: Record<string, User> = {
     countyName: 'Dallas',
     region: 'North Texas'
   },
-  'DEMO-COLLEGE-FACULTY-2024': {
+  'DEMO-COLLEGE-FACULTY-2026': {
     id: 'demo-college-faculty',
     email: 'faculty@demo.zscale.com',
     firstName: 'Prof. James',
@@ -75,7 +75,7 @@ const DEMO_USERS: Record<string, User> = {
     countyName: 'Collin',
     region: 'North Texas'
   },
-  'DEMO-COLLEGE-REGISTRAR-2024': {
+  'DEMO-COLLEGE-REGISTRAR-2026': {
     id: 'demo-college-registrar',
     email: 'registrar@demo.zscale.com',
     firstName: 'Maria',
@@ -86,7 +86,7 @@ const DEMO_USERS: Record<string, User> = {
     countyName: 'Tarrant',
     region: 'North Texas'
   },
-  'DEMO-EDC-DIRECTOR-2024': {
+  'DEMO-EDC-DIRECTOR-2026': {
     id: 'demo-edc-director',
     email: 'director@demo.zscale.com',
     firstName: 'Michael',
@@ -97,7 +97,7 @@ const DEMO_USERS: Record<string, User> = {
     countyName: 'Dallas',
     region: 'North Texas'
   },
-  'DEMO-EDC-ANALYST-2024': {
+  'DEMO-EDC-ANALYST-2026': {
     id: 'demo-edc-analyst',
     email: 'analyst@demo.zscale.com',
     firstName: 'Emily',
@@ -108,7 +108,7 @@ const DEMO_USERS: Record<string, User> = {
     countyName: 'Collin',
     region: 'North Texas'
   },
-  'DEMO-STUDENT-COUNSELOR-2024': {
+  'DEMO-STUDENT-COUNSELOR-2026': {
     id: 'demo-student-counselor',
     email: 'counselor@demo.zscale.com',
     firstName: 'Lisa',
@@ -119,7 +119,7 @@ const DEMO_USERS: Record<string, User> = {
     countyName: 'Denton',
     region: 'North Texas'
   },
-  'DEMO-STUDENT-STUDENT-2024': {
+  'DEMO-STUDENT-STUDENT-2026': {
     id: 'demo-student-student',
     email: 'student@demo.zscale.com',
     firstName: 'Alex',
@@ -130,7 +130,7 @@ const DEMO_USERS: Record<string, User> = {
     countyName: 'Dallas',
     region: 'North Texas'
   },
-  'DEMO-TWC-OWNER-2024': {
+  'DEMO-TWC-OWNER-2026': {
     id: 'demo-twc-owner',
     email: 'owner@demo.zscale.com',
     firstName: 'Robert',
@@ -141,7 +141,7 @@ const DEMO_USERS: Record<string, User> = {
     countyName: 'Tarrant',
     region: 'North Texas'
   },
-  'DEMO-TWC-HR-2024': {
+  'DEMO-TWC-HR-2026': {
     id: 'demo-twc-hr',
     email: 'hr@demo.zscale.com',
     firstName: 'Jennifer',

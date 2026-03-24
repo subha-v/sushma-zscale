@@ -4,12 +4,20 @@ interface ChatInputProps {
   onSend: (message: string) => void
   onStop: () => void
   isLoading: boolean
+  inputRef?: React.RefObject<HTMLTextAreaElement | null>
 }
 
-export function ChatInput({ onSend, onStop, isLoading }: ChatInputProps) {
+export function ChatInput({ onSend, onStop, isLoading, inputRef }: ChatInputProps) {
   const [value, setValue] = useState('')
   const [visualize, setVisualize] = useState(false)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+
+  const setRef = (el: HTMLTextAreaElement | null) => {
+    textareaRef.current = el
+    if (inputRef && 'current' in inputRef) {
+      (inputRef as React.MutableRefObject<HTMLTextAreaElement | null>).current = el
+    }
+  }
 
   // Auto-resize textarea
   useEffect(() => {
@@ -42,7 +50,7 @@ export function ChatInput({ onSend, onStop, isLoading }: ChatInputProps) {
       <div className="max-w-3xl mx-auto">
         <div className="flex gap-3 items-end">
           <textarea
-            ref={textareaRef}
+            ref={setRef}
             value={value}
             onChange={e => setValue(e.target.value)}
             onKeyDown={handleKeyDown}

@@ -16,7 +16,7 @@ export interface ChatMessage {
   visualizations: VisualizationData[]
 }
 
-export function useChat() {
+export function useChat(role?: string) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -158,7 +158,7 @@ export function useChat() {
     }
 
     try {
-      await streamChat(apiMessages, handleEvent, abortController.signal)
+      await streamChat(apiMessages, handleEvent, abortController.signal, role)
     } catch {
       // Abort errors are expected when user stops streaming
     } finally {

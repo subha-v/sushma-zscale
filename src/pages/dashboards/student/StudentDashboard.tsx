@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import DashboardLayout from '../../../components/dashboard/DashboardLayout'
 import { getStoredUser, supabase } from '../../../lib/supabase'
+import { MOCK_CAREER_PATHWAYS } from '../../../lib/mockData'
+import ComingSoonPage from '../../../components/dashboard/ComingSoonPage'
 
 const NAV_ITEMS = [
-  { label: 'Career Card', path: '/dashboard/student', icon: '🎯', category: 'Career GPS' },
-  { label: 'Path Calculator', path: '/dashboard/student/path', icon: '🧭', category: 'Career GPS' },
-  { label: 'Local Employers', path: '/dashboard/student/employers', icon: '🗺️', category: 'Career GPS' },
-  { label: 'Skill Stack', path: '/dashboard/student/skills', icon: '📚', category: 'Career GPS' },
-  { label: 'Living Wage', path: '/dashboard/student/wage', icon: '💰', category: 'Career GPS' },
-  { label: 'Hidden Market', path: '/dashboard/student/hidden', icon: '🔍', category: 'Hidden Market' },
-  { label: 'Small Giants', path: '/dashboard/student/giants', icon: '🏆', category: 'Hidden Market' },
-  { label: 'Growth Roadmap', path: '/dashboard/student/growth', icon: '📈', category: 'Hidden Market' },
-  { label: 'Walk-In Friendly', path: '/dashboard/student/walkin', icon: '🚶', category: 'Hidden Market' },
+  { label: 'Career GPS', path: '/dashboard/student', icon: '', category: 'Navigation' },
+]
+
+const QUICK_ACTIONS = [
+  { label: 'Compare career paths', question: 'Compare the top career paths available for UTA students by salary and growth rate' },
+  { label: 'Find internships near me', question: 'What internship opportunities are available near Arlington for UTA students?' },
+  { label: 'What skills should I learn?', question: 'What are the most in-demand emerging skills I should learn as a UTA student?' },
+  { label: 'Salary projections for my major', question: 'What are the salary projections for the most popular UTA majors over the next 5 years?' },
 ]
 
 interface CareerPathway {
@@ -77,10 +79,11 @@ export default function StudentDashboard() {
   const [pathways, setPathways] = useState<CareerPathway[]>([])
   const [loading, setLoading] = useState(true)
   const [error, _setError] = useState<string | null>(null)
+  const [dataSource, setDataSource] = useState<'live' | 'fallback'>('fallback')
 
   const livingWage = getLivingWage(user?.countyFips || 'default')
 
-  // Fetch career pathways from Supabase (live data only)
+  // Fetch career pathways from Supabase with fallback to mock data
   useEffect(() => {
     async function fetchPathways() {
       try {
@@ -98,16 +101,21 @@ export default function StudentDashboard() {
 
         const { data, error } = await query.limit(20)
 
-        if (error) {
-          console.error('Supabase career_pathways query failed:', error)
-          _setError('Failed to load career pathways from database.')
-          return
+        if (error || !data || data.length === 0) {
+          console.warn('Supabase career_pathways unavailable, using fallback data')
+          const filtered = user?.countyFips
+            ? MOCK_CAREER_PATHWAYS.filter(p => p.county_fips === user.countyFips)
+            : MOCK_CAREER_PATHWAYS
+          setPathways(filtered)
+          setDataSource('fallback')
+        } else {
+          setPathways(data)
+          setDataSource('live')
         }
-
-        setPathways(data || [])
       } catch (err) {
-        console.error('Supabase query failed:', err)
-        _setError('Unable to connect to database. Please try again later.')
+        console.warn('Supabase query failed, using fallback data:', err)
+        setPathways(MOCK_CAREER_PATHWAYS)
+        setDataSource('fallback')
       } finally {
         setLoading(false)
       }
@@ -130,6 +138,7 @@ export default function StudentDashboard() {
         title="Career GPS"
         subtitle="Your Personalized Career Navigator"
         navItems={NAV_ITEMS}
+        role="student"
       >
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
@@ -147,6 +156,7 @@ export default function StudentDashboard() {
         title="Career GPS"
         subtitle="Your Personalized Career Navigator"
         navItems={NAV_ITEMS}
+        role="student"
       >
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
@@ -158,18 +168,14 @@ export default function StudentDashboard() {
     )
   }
 
-  return (
-    <DashboardLayout
-      title="Career GPS"
-      subtitle="Your Personalized Career Navigator"
-      navItems={NAV_ITEMS}
-    >
+  const defaultContent = (
+    <>
       {/* Welcome Section */}
       <div className="card-skeuomorphic rounded-2xl p-6 mb-8">
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
             <h2 className="text-h3 text-white mb-2">
-              Welcome back, {user?.firstName}! 👋
+              Welcome back, {user?.firstName}
             </h2>
             <p className="text-body text-neutral-400">
               Based on your profile, we've found <span className="text-accent font-semibold">{sortedPathways.length} career pathways</span> in {user?.countyName || 'your'} County.
@@ -325,14 +331,29 @@ export default function StudentDashboard() {
       <div className="mt-8 flex items-center justify-between text-xs text-neutral-600 flex-wrap gap-4">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse-dot" />
-            Live data from Supabase
+            <span className={`w-1.5 h-1.5 rounded-full ${dataSource === 'live' ? 'bg-accent animate-pulse-dot' : 'bg-yellow-400'}`} />
+            {dataSource === 'live' ? 'Live data from Supabase' : 'Fallback demo data'}
           </span>
           <span>Wage data: BLS OES</span>
           <span className="text-neutral-700">|</span>
           <span>Living wage: MIT Calculator</span>
         </div>
       </div>
+    </>
+  )
+
+  return (
+    <DashboardLayout
+      title="Career GPS"
+      subtitle="Your Personalized Career Navigator"
+      navItems={NAV_ITEMS}
+      role="student"
+      quickActions={QUICK_ACTIONS}
+    >
+      <Routes>
+        <Route index element={defaultContent} />
+        <Route path="*" element={<ComingSoonPage />} />
+      </Routes>
     </DashboardLayout>
   )
 }

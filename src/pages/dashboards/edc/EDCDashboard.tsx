@@ -1,18 +1,16 @@
 import { useState, useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import DashboardLayout from '../../../components/dashboard/DashboardLayout'
 import { getStoredUser, supabase } from '../../../lib/supabase'
+import { MOCK_BUSINESSES } from '../../../lib/mockData'
+import SiteSelectionPage from './SiteSelectionPage'
+import EmployerAlertsPage from './EmployerAlertsPage'
+import ComingSoonPage from '../../../components/dashboard/ComingSoonPage'
 
 const NAV_ITEMS = [
-  { label: 'Sectoral Health', path: '/dashboard/edc', icon: '📊', category: 'Sectoral Health' },
-  { label: 'Structural Risk', path: '/dashboard/edc/risk', icon: '⚠️', category: 'Sectoral Health' },
-  { label: 'Supply Chain Map', path: '/dashboard/edc/supply-chain', icon: '🔗', category: 'Sectoral Health' },
-  { label: 'Regen Speed', path: '/dashboard/edc/regen', icon: '🔄', category: 'Sectoral Health' },
-  { label: 'Fiscal Impact', path: '/dashboard/edc/fiscal', icon: '💵', category: 'Sectoral Health' },
-  { label: 'Talent Prospectus', path: '/dashboard/edc/talent', icon: '👥', category: 'City Talent' },
-  { label: 'Skill Proximity', path: '/dashboard/edc/skills', icon: '🎯', category: 'City Talent' },
-  { label: 'Talent Leakage', path: '/dashboard/edc/leakage', icon: '📤', category: 'City Talent' },
-  { label: 'AI Displacement', path: '/dashboard/edc/ai', icon: '🤖', category: 'City Talent' },
-  { label: 'SMB Talent Map', path: '/dashboard/edc/smb', icon: '🗺️', category: 'City Talent' },
+  { label: 'Sectoral Health', path: '/dashboard/edc', icon: '', category: 'Analysis' },
+  { label: 'Site Selection', path: '/dashboard/edc/site-selection', icon: '', category: 'Analysis' },
+  { label: 'Employer Alerts', path: '/dashboard/edc/employer-alerts', icon: '', category: 'Analysis' },
 ]
 
 // NAICS code to sector name mapping
@@ -75,8 +73,9 @@ export default function EDCDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, _setError] = useState<string | null>(null)
   const [, setSelectedSector] = useState<string | null>(null)
+  const [dataSource, setDataSource] = useState<'live' | 'fallback'>('fallback')
 
-  // Fetch businesses from Supabase (live data only)
+  // Fetch businesses from Supabase with fallback to mock data
   useEffect(() => {
     async function fetchBusinesses() {
       try {
@@ -96,16 +95,21 @@ export default function EDCDashboard() {
 
         const { data, error } = await query
 
-        if (error) {
-          console.error('Supabase businesses query failed:', error)
-          _setError('Failed to load business data from database.')
-          return
+        if (error || !data || data.length === 0) {
+          console.warn('Supabase businesses unavailable, using fallback data')
+          const filtered = user?.countyFips
+            ? MOCK_BUSINESSES.filter(b => b.county_fips === user.countyFips)
+            : MOCK_BUSINESSES
+          setBusinesses(filtered)
+          setDataSource('fallback')
+        } else {
+          setBusinesses(data)
+          setDataSource('live')
         }
-
-        setBusinesses(data || [])
       } catch (err) {
-        console.error('Supabase query failed:', err)
-        _setError('Unable to connect to database. Please try again later.')
+        console.warn('Supabase query failed, using fallback data:', err)
+        setBusinesses(MOCK_BUSINESSES)
+        setDataSource('fallback')
       } finally {
         setLoading(false)
       }
@@ -157,6 +161,7 @@ export default function EDCDashboard() {
         title="Sectoral Health Dashboard"
         subtitle="Economic Development Intelligence"
         navItems={NAV_ITEMS}
+        role="edc"
       >
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
@@ -174,6 +179,7 @@ export default function EDCDashboard() {
         title="Sectoral Health Dashboard"
         subtitle="Economic Development Intelligence"
         navItems={NAV_ITEMS}
+        role="edc"
       >
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
@@ -185,39 +191,19 @@ export default function EDCDashboard() {
     )
   }
 
-  return (
-    <DashboardLayout
-      title="Sectoral Health Dashboard"
-      subtitle="Economic Development Intelligence"
-      navItems={NAV_ITEMS}
-    >
-      {/* Overview Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="card-skeuomorphic rounded-xl p-5">
-          <p className="text-neutral-500 text-sm mb-1">Total Businesses</p>
-          <p className="text-3xl font-display font-bold text-white">
-            {totals.businesses.toLocaleString()}
-          </p>
-          <p className="text-xs text-neutral-600 mt-1">{user?.countyName || 'All'} County</p>
-        </div>
-        <div className="card-skeuomorphic rounded-xl p-5">
-          <p className="text-neutral-500 text-sm mb-1">Total Jobs</p>
-          <p className="text-3xl font-display font-bold text-accent">
-            {totals.jobs.toLocaleString()}
-          </p>
-        </div>
-        <div className="card-skeuomorphic rounded-xl p-5">
-          <p className="text-neutral-500 text-sm mb-1">Avg Risk Score</p>
-          <p className={`text-3xl font-display font-bold ${getRiskColor(totals.avgRisk).text}`}>
-            {totals.avgRisk.toFixed(2)}
-          </p>
-          <p className="text-xs text-neutral-600 mt-1">Scale: 0 (low) - 1 (high)</p>
-        </div>
-        <div className="card-skeuomorphic rounded-xl p-5">
-          <p className="text-neutral-500 text-sm mb-1">Open Positions</p>
-          <p className="text-3xl font-display font-bold text-green-400">
-            {totals.openings.toLocaleString()}
-          </p>
+  const defaultContent = (
+    <>
+      {/* Compact Metrics Bar */}
+      <div className="card-skeuomorphic rounded-xl px-5 py-3 mb-8">
+        <div className="flex items-center gap-6 flex-wrap text-sm">
+          <span className="text-neutral-400">{totals.businesses.toLocaleString()} businesses</span>
+          <span className="text-neutral-600">|</span>
+          <span className="text-accent">{totals.jobs.toLocaleString()} jobs</span>
+          <span className="text-neutral-600">|</span>
+          <span className={`${getRiskColor(totals.avgRisk).text}`}>Risk: {totals.avgRisk.toFixed(2)}</span>
+          <span className="text-neutral-600">|</span>
+          <span className="text-green-400">{totals.openings.toLocaleString()} open positions</span>
+          <span className="text-neutral-500 text-xs ml-auto">{user?.countyName || 'All'} County</span>
         </div>
       </div>
 
@@ -365,8 +351,8 @@ export default function EDCDashboard() {
       <div className="mt-6 flex items-center justify-between text-xs text-neutral-600 flex-wrap gap-4">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse-dot" />
-            Live data from Supabase
+            <span className={`w-1.5 h-1.5 rounded-full ${dataSource === 'live' ? 'bg-accent animate-pulse-dot' : 'bg-yellow-400'}`} />
+            {dataSource === 'live' ? 'Live data from Supabase' : 'Fallback demo data'}
           </span>
           <span>Source: TX Comptroller, BLS</span>
         </div>
@@ -375,6 +361,21 @@ export default function EDCDashboard() {
           <span>→</span>
         </button>
       </div>
+    </>
+  )
+
+  return (
+    <DashboardLayout
+      title="Sectoral Health Dashboard"
+      subtitle="Economic Development Intelligence"
+      navItems={NAV_ITEMS}
+    >
+      <Routes>
+        <Route index element={defaultContent} />
+        <Route path="site-selection" element={<SiteSelectionPage />} />
+        <Route path="employer-alerts" element={<EmployerAlertsPage />} />
+        <Route path="*" element={<ComingSoonPage />} />
+      </Routes>
     </DashboardLayout>
   )
 }

@@ -39,6 +39,7 @@ export async function streamChat(
   messages: ChatApiMessage[],
   onEvent: (event: StreamEvent) => void,
   abortSignal?: AbortSignal,
+  role?: string,
 ): Promise<void> {
   const response = await fetch(EDGE_FUNCTION_URL, {
     method: 'POST',
@@ -46,7 +47,7 @@ export async function streamChat(
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
     },
-    body: JSON.stringify({ messages }),
+    body: JSON.stringify({ messages, role }),
     signal: abortSignal,
   })
 

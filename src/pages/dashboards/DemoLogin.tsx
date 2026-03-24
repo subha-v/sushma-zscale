@@ -7,33 +7,33 @@ const DEMO_ACCOUNTS = [
     role: 'College',
     description: 'HB8 Funding & Curriculum Reports',
     accounts: [
-      { label: 'Dean', token: 'DEMO-COLLEGE-DEAN-2024', county: 'Dallas', desc: 'Full access to all reports' },
-      { label: 'Faculty', token: 'DEMO-COLLEGE-FACULTY-2024', county: 'Collin', desc: 'Curriculum alignment view' },
-      { label: 'Registrar', token: 'DEMO-COLLEGE-REGISTRAR-2024', county: 'Tarrant', desc: 'ICLC & Compliance' },
+      { label: 'Dean', token: 'DEMO-COLLEGE-DEAN-2026', county: 'Dallas', desc: 'Full access to all reports' },
+      { label: 'Faculty', token: 'DEMO-COLLEGE-FACULTY-2026', county: 'Collin', desc: 'Curriculum alignment view' },
+      { label: 'Registrar', token: 'DEMO-COLLEGE-REGISTRAR-2026', county: 'Tarrant', desc: 'ICLC & Compliance' },
     ]
   },
   {
     role: 'EDC',
     description: 'Sectoral Health & Talent Analytics',
     accounts: [
-      { label: 'Director', token: 'DEMO-EDC-DIRECTOR-2024', county: 'Dallas', desc: 'Full sectoral reports' },
-      { label: 'Analyst', token: 'DEMO-EDC-ANALYST-2024', county: 'Collin', desc: 'Read-only analysis' },
+      { label: 'Director', token: 'DEMO-EDC-DIRECTOR-2026', county: 'Dallas', desc: 'Full sectoral reports' },
+      { label: 'Analyst', token: 'DEMO-EDC-ANALYST-2026', county: 'Collin', desc: 'Read-only analysis' },
     ]
   },
   {
     role: 'Student',
     description: 'Career GPS & Hidden Market',
     accounts: [
-      { label: 'Counselor', token: 'DEMO-STUDENT-COUNSELOR-2024', county: 'Denton', desc: 'Multi-student guidance' },
-      { label: 'Student', token: 'DEMO-STUDENT-STUDENT-2024', county: 'Dallas', desc: 'Personal career GPS' },
+      { label: 'Counselor', token: 'DEMO-STUDENT-COUNSELOR-2026', county: 'Denton', desc: 'Multi-student guidance' },
+      { label: 'Student', token: 'DEMO-STUDENT-STUDENT-2026', county: 'Dallas', desc: 'Personal career GPS' },
     ]
   },
   {
     role: 'TWC',
     description: 'Apprenticeship Sponsorship Suite',
     accounts: [
-      { label: 'Business Owner', token: 'DEMO-TWC-OWNER-2024', county: 'Tarrant', desc: 'Full sponsorship tools' },
-      { label: 'HR Director', token: 'DEMO-TWC-HR-2024', county: 'Dallas', desc: 'Workforce planning' },
+      { label: 'Business Owner', token: 'DEMO-TWC-OWNER-2026', county: 'Tarrant', desc: 'Full sponsorship tools' },
+      { label: 'HR Director', token: 'DEMO-TWC-HR-2026', county: 'Dallas', desc: 'Workforce planning' },
     ]
   }
 ]
@@ -91,13 +91,12 @@ export default function DemoLogin() {
       <div className="max-w-5xl w-full">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
-            <div className="w-12 h-12 bg-accent rounded-xl flex items-center justify-center glow-teal">
-              <span className="text-ink font-bold text-2xl">Z</span>
-            </div>
-            <span className="text-3xl font-display font-bold text-white group-hover:text-accent transition-colors">
-              zScale Capital
-            </span>
+          <Link to="/" className="inline-block mb-6">
+            <img
+              src="/images/zscale-capital-logo.png"
+              alt="zScale Capital"
+              className="h-14 w-auto mx-auto"
+            />
           </Link>
           <h1 className="text-h2 text-white mb-3">
             Role-Based Intelligence Platform
