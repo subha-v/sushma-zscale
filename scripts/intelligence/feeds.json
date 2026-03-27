@@ -1,0 +1,212 @@
+{
+  "feeds": [
+    {
+      "name": "Dallas Business Journal",
+      "url": "https://www.bizjournals.com/dallas/feed/headlines/rss",
+      "category": "local_dfw",
+      "priority": "high"
+    },
+    {
+      "name": "Dallas Innovates",
+      "url": "https://dallasinnovates.com/feed/",
+      "category": "local_dfw",
+      "priority": "high"
+    },
+    {
+      "name": "D Magazine Business",
+      "url": "https://www.dmagazine.com/feed/",
+      "category": "local_dfw",
+      "priority": "medium"
+    },
+    {
+      "name": "Fort Worth Business Press",
+      "url": "https://www.fortworthbusiness.com/feed/",
+      "category": "local_dfw",
+      "priority": "medium"
+    },
+    {
+      "name": "Fort Worth Star-Telegram Business",
+      "url": "https://www.star-telegram.com/news/business/rss",
+      "category": "local_dfw",
+      "priority": "medium"
+    },
+    {
+      "name": "Texas Tribune - Education",
+      "url": "https://www.texastribune.org/feeds/tag/education/",
+      "category": "texas_state",
+      "priority": "high"
+    },
+    {
+      "name": "Texas Tribune - Economy",
+      "url": "https://www.texastribune.org/feeds/tag/economy-business/",
+      "category": "texas_state",
+      "priority": "high"
+    },
+    {
+      "name": "Texas Comptroller News",
+      "url": "https://comptroller.texas.gov/about/media-center/news/rss.xml",
+      "category": "texas_state",
+      "priority": "medium"
+    },
+    {
+      "name": "Texas Workforce Commission News",
+      "url": "https://www.twc.texas.gov/news/rss.xml",
+      "category": "texas_state",
+      "priority": "high"
+    },
+    {
+      "name": "Inside Higher Ed",
+      "url": "https://www.insidehighered.com/rss/feed",
+      "category": "national_higher_ed",
+      "priority": "high"
+    },
+    {
+      "name": "Chronicle of Higher Education",
+      "url": "https://www.chronicle.com/feed",
+      "category": "national_higher_ed",
+      "priority": "high"
+    },
+    {
+      "name": "EdSurge",
+      "url": "https://www.edsurge.com/articles_rss",
+      "category": "national_higher_ed",
+      "priority": "medium"
+    },
+    {
+      "name": "Community College Daily",
+      "url": "https://www.ccdaily.com/feed/",
+      "category": "national_higher_ed",
+      "priority": "medium"
+    },
+    {
+      "name": "Higher Ed Dive",
+      "url": "https://www.highereddive.com/feeds/news/",
+      "category": "national_higher_ed",
+      "priority": "medium"
+    },
+    {
+      "name": "Route Fifty",
+      "url": "https://www.route-fifty.com/rss/workforce/",
+      "category": "national_workforce",
+      "priority": "high"
+    },
+    {
+      "name": "Governing",
+      "url": "https://www.governing.com/rss/",
+      "category": "national_workforce",
+      "priority": "medium"
+    },
+    {
+      "name": "Brookings - Metro",
+      "url": "https://www.brookings.edu/topic/metropolitan-policy-program/feed/",
+      "category": "national_workforce",
+      "priority": "high"
+    },
+    {
+      "name": "National Skills Coalition",
+      "url": "https://nationalskillscoalition.org/feed/",
+      "category": "national_workforce",
+      "priority": "medium"
+    },
+    {
+      "name": "BLS Latest Releases",
+      "url": "https://www.bls.gov/feed/bls_latest.rss",
+      "category": "data_releases",
+      "priority": "high"
+    },
+    {
+      "name": "BLS Employment Situation",
+      "url": "https://www.bls.gov/feed/ces.rss",
+      "category": "data_releases",
+      "priority": "high"
+    },
+    {
+      "name": "BLS JOLTS",
+      "url": "https://www.bls.gov/feed/jlt.rss",
+      "category": "data_releases",
+      "priority": "medium"
+    },
+    {
+      "name": "Census Economic Indicators",
+      "url": "https://www.census.gov/economic-indicators/indicator.xml",
+      "category": "data_releases",
+      "priority": "medium"
+    },
+    {
+      "name": "Lightcast Blog",
+      "url": "https://lightcast.io/resources/blog/rss.xml",
+      "category": "competitors",
+      "priority": "high"
+    },
+    {
+      "name": "EAB Research",
+      "url": "https://eab.com/resources/feed/",
+      "category": "competitors",
+      "priority": "medium"
+    },
+    {
+      "name": "Burning Glass Institute",
+      "url": "https://www.burningglassinstitute.org/feed",
+      "category": "competitors",
+      "priority": "high"
+    },
+    {
+      "name": "SHRM",
+      "url": "https://www.shrm.org/rss/pages/custom-feed.aspx",
+      "category": "hr_employers",
+      "priority": "high"
+    },
+    {
+      "name": "HR Dive",
+      "url": "https://www.hrdive.com/feeds/news/",
+      "category": "hr_employers",
+      "priority": "medium"
+    },
+    {
+      "name": "LinkedIn Economic Graph",
+      "url": "https://economicgraph.linkedin.com/feed",
+      "category": "hr_employers",
+      "priority": "high"
+    },
+    {
+      "name": "Google Alert - Workforce Intelligence",
+      "url": "PASTE_YOUR_GOOGLE_ALERT_RSS_URL_HERE",
+      "category": "google_alerts",
+      "priority": "medium",
+      "notes": "Create a Google Alert for 'workforce intelligence platform' and paste the RSS URL here"
+    },
+    {
+      "name": "Google Alert - HB8 Texas",
+      "url": "PASTE_YOUR_GOOGLE_ALERT_RSS_URL_HERE",
+      "category": "google_alerts",
+      "priority": "high",
+      "notes": "Create a Google Alert for 'HB8 Texas higher education funding' and paste the RSS URL here"
+    },
+    {
+      "name": "Google Alert - Arlington TX Economic Development",
+      "url": "PASTE_YOUR_GOOGLE_ALERT_RSS_URL_HERE",
+      "category": "google_alerts",
+      "priority": "medium",
+      "notes": "Create a Google Alert for 'Arlington Texas economic development' and paste the RSS URL here"
+    }
+  ],
+  "tag_mapping": {
+    "topic_keywords": {
+      "workforce_development": ["workforce development", "workforce training", "workforce program", "job training", "upskilling", "reskilling", "apprenticeship"],
+      "skills_gap": ["skills gap", "skills shortage", "talent gap", "skills mismatch", "labor shortage", "worker shortage"],
+      "hb8_funding": ["hb8", "hb 8", "house bill 8", "performance funding", "outcomes-based funding", "texas higher ed funding"],
+      "economic_development": ["economic development", "edc", "site selection", "business relocation", "tax incentive", "enterprise zone", "opportunity zone"],
+      "higher_ed": ["higher education", "university", "college", "enrollment", "graduation rate", "student outcomes", "academic program", "degree program"],
+      "ai_technology": ["artificial intelligence", "machine learning", "ai-powered", "generative ai", "chatgpt", "large language model", "automation"],
+      "labor_market": ["labor market", "employment rate", "unemployment", "job openings", "jolts", "bls", "bureau of labor statistics", "wages", "salary trends"],
+      "competitor_intel": ["lightcast", "emsi", "burning glass", "eab", "strada", "postsecondary", "credential engine"]
+    },
+    "audience_keywords": {
+      "university": ["university", "four-year", "4-year", "research institution", "provost", "dean", "faculty"],
+      "community_college": ["community college", "two-year", "2-year", "technical college", "associate degree"],
+      "edc": ["economic development", "edc", "site selection", "chamber of commerce", "business attraction"],
+      "workforce_board": ["workforce board", "twc", "workforce commission", "workforce solutions", "wioa"],
+      "employer_hr": ["employer", "hiring", "talent acquisition", "hr", "human resources", "recruiting"]
+    }
+  }
+}

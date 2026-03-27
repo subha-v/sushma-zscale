@@ -28,6 +28,12 @@ import {
   queryBoardReportData,
   queryTalentPipeline,
   queryCareerAdvisorStats,
+  queryIntelligenceItems,
+  queryContentCalendar,
+  querySpeakingOpportunities,
+  draftLinkedInPost,
+  draftNewsletterBlurb,
+  updateContentStatus,
 } from "./queries.ts";
 
 export const TOOL_DEFINITIONS = [
@@ -444,6 +450,161 @@ export const TOOL_DEFINITIONS = [
       required: [],
     },
   },
+  // ============================================================================
+  // INTELLIGENCE PIPELINE TOOLS
+  // ============================================================================
+  {
+    name: "search_intelligence",
+    description: "Search the intelligence feed for articles, news items, policy updates, and market intel. Returns items with AI-generated summaries and key insights. Use for questions about industry trends, policy changes, or recent news relevant to workforce development.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        topic: {
+          type: "string",
+          description: "Topic tag to filter by (e.g. 'hb8', 'aerospace', 'ai', 'skills', 'edc', 'arlington').",
+        },
+        audience: {
+          type: "string",
+          description: "Audience tag to filter by (e.g. 'universities', 'edcs', 'workforce_boards', 'consultants').",
+        },
+        source_category: {
+          type: "string",
+          description: "Source category filter (e.g. 'policy_regulatory', 'local_dfw', 'higher_ed', 'federal_workforce').",
+        },
+        status: {
+          type: "string",
+          enum: ["new", "reviewed", "used", "archived", "priority"],
+          description: "Filter by item status. 'new' = unenriched, 'reviewed' = AI-summarized, 'priority' = flagged as important.",
+        },
+        relevance: {
+          type: "string",
+          enum: ["high", "medium", "low"],
+          description: "Filter by relevance level.",
+        },
+        days_back: {
+          type: "number",
+          description: "Only return items from the last N days (e.g. 7, 14, 30).",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "get_content_calendar",
+    description: "View the content calendar — LinkedIn posts, newsletter drafts, and scheduled content. Use when the user asks about content pipeline, drafts, or what's scheduled to post.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        platform: {
+          type: "string",
+          enum: ["linkedin", "twitter", "blog", "newsletter"],
+          description: "Filter by content platform.",
+        },
+        status: {
+          type: "string",
+          enum: ["draft", "scheduled", "posted", "skipped"],
+          description: "Filter by content status.",
+        },
+        date_from: {
+          type: "string",
+          description: "Start date for date range filter (YYYY-MM-DD).",
+        },
+        date_to: {
+          type: "string",
+          description: "End date for date range filter (YYYY-MM-DD).",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "get_speaking_opportunities",
+    description: "Track conference speaking opportunities, CFP deadlines, and event submissions. Use when the user asks about conferences, speaking engagements, or upcoming deadlines.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        status: {
+          type: "string",
+          enum: ["researching", "drafting", "submitted", "accepted", "rejected"],
+          description: "Filter by submission status.",
+        },
+        upcoming_deadlines: {
+          type: "boolean",
+          description: "If true, only return opportunities with future CFP deadlines.",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "draft_linkedin_post",
+    description: "Generate a LinkedIn post draft from an intelligence item. Returns the source item and instructions. After generating the post text, use update_content_status to save it to the content calendar.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        intelligence_item_id: {
+          type: "string",
+          description: "UUID of the intelligence item to base the post on.",
+        },
+      },
+      required: ["intelligence_item_id"],
+    },
+  },
+  {
+    name: "draft_newsletter_blurb",
+    description: "Generate a newsletter digest from multiple intelligence items. Returns source items and formatting instructions.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        intelligence_item_ids: {
+          type: "array",
+          items: { type: "string" },
+          description: "Array of intelligence item UUIDs to include in the digest.",
+        },
+      },
+      required: ["intelligence_item_ids"],
+    },
+  },
+  {
+    name: "update_content_status",
+    description: "Update the status of a content calendar entry, speaking opportunity, or intelligence item. Can also create new content calendar entries with draft text.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        id: {
+          type: "string",
+          description: "UUID of the entry to update. Omit when creating a new content calendar entry.",
+        },
+        table: {
+          type: "string",
+          enum: ["content", "speaking", "intelligence"],
+          description: "Which table to update: 'content' (content_calendar), 'speaking' (speaking_opportunities), or 'intelligence' (intelligence_items).",
+        },
+        new_status: {
+          type: "string",
+          description: "New status value (e.g. 'draft', 'scheduled', 'posted' for content; 'submitted', 'accepted' for speaking; 'used', 'priority' for intelligence).",
+        },
+        draft_text: {
+          type: "string",
+          description: "Draft text content (for creating or updating content calendar entries).",
+        },
+        platform: {
+          type: "string",
+          enum: ["linkedin", "twitter", "blog", "newsletter"],
+          description: "Platform for new content calendar entries.",
+        },
+        intelligence_item_id: {
+          type: "string",
+          description: "Link to source intelligence item (for new content calendar entries).",
+        },
+        scheduled_date: {
+          type: "string",
+          description: "Scheduled date (YYYY-MM-DD) for content calendar entries.",
+        },
+      },
+      required: ["table", "new_status"],
+    },
+  },
   {
     name: "generate_visualization",
     description: "Generate a chart visualization. Build a CLEAN data array with short string labels (x_key) and raw numeric values (y_key). Do NOT pass raw database results — reshape them into simple objects first. Limit to 5-8 data items.",
@@ -524,6 +685,13 @@ export const TOOL_EXECUTORS: Record<string, ToolExecutor> = {
   generate_bod_report: () => queryBoardReportData(),
   get_talent_pipeline: (args) => queryTalentPipeline(args),
   get_career_advisor_stats: () => queryCareerAdvisorStats(),
+  // Intelligence Pipeline tools
+  search_intelligence: (args) => queryIntelligenceItems(args),
+  get_content_calendar: (args) => queryContentCalendar(args),
+  get_speaking_opportunities: (args) => querySpeakingOpportunities(args),
+  draft_linkedin_post: (args) => draftLinkedInPost(args),
+  draft_newsletter_blurb: (args) => draftNewsletterBlurb(args),
+  update_content_status: (args) => updateContentStatus(args),
   generate_visualization: (args) =>
     Promise.resolve({ displayed: true, chart_type: args.chart_type, title: args.title }),
 };

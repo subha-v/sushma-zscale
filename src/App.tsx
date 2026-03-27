@@ -14,6 +14,7 @@ import EDCDashboard from './pages/dashboards/edc/EDCDashboard';
 import StudentDashboard from './pages/dashboards/student/StudentDashboard';
 import TWCDashboard from './pages/dashboards/twc/TWCDashboard';
 import AgentChat from './pages/AgentChat';
+import AdminDashboard from './pages/dashboards/admin/AdminDashboard';
 
 function AppContent() {
   const location = useLocation();
@@ -39,6 +40,7 @@ function AppContent() {
           <Route path="/dashboard/edc/*" element={<EDCDashboard />} />
           <Route path="/dashboard/student/*" element={<StudentDashboard />} />
           <Route path="/dashboard/twc/*" element={<TWCDashboard />} />
+          <Route path="/dashboard/admin/*" element={<AdminDashboard />} />
           <Route path="/agent" element={<AgentChat />} />
         </Routes>
       </main>

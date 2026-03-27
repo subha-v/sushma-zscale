@@ -839,3 +839,214 @@ export async function queryProgramComparison(args: { program_ids: string[] }) {
   const results = combined.length > 0 ? combined : MOCK_PROGRAM_COMPARISON;
   return truncateResults(results, "program comparisons");
 }
+
+// ============================================================================
+// INTELLIGENCE PIPELINE MOCK DATA & QUERIES
+// ============================================================================
+
+const MOCK_INTELLIGENCE_ITEMS = [
+  { id: "intel-1", title: "Texas HB8 Implementation Update: Credential of Value Standards Tighten", url: "https://example.com/hb8-update", source: "Texas Higher Ed Coordinator", source_category: "policy_regulatory", published_at: "2026-03-20T12:00:00Z", scraped_at: "2026-03-21T06:30:00Z", summary: "New HB8 guidelines raise the wage threshold for credential-of-value designation. Programs must now demonstrate median wages 10% above regional median within 1 year of graduation.", key_insight: "Universities should audit programs against the new threshold now — non-compliant programs face funding cuts starting FY2027.", relevance: "high", status: "reviewed", topic_tags: ["hb8", "compliance", "workforce"], audience_tags: ["universities", "workforce_boards"] },
+  { id: "intel-2", title: "DFW Aerospace Sector Adds 2,400 Jobs in Q1 2026", url: "https://example.com/dfw-aerospace", source: "Dallas Business Journal", source_category: "local_dfw", published_at: "2026-03-18T09:00:00Z", scraped_at: "2026-03-19T06:30:00Z", summary: "The DFW aerospace and defense sector added 2,400 net new jobs in Q1 2026, driven primarily by Bell Textron's V-280 Valor production ramp and Lockheed Martin F-35 sustainment operations.", key_insight: "EDCs should prepare site selection packages targeting aerospace suppliers — the Tier 2/3 supplier ecosystem is the next growth wave.", relevance: "high", status: "reviewed", topic_tags: ["aerospace", "jobs", "dfw"], audience_tags: ["edcs", "workforce_boards"] },
+  { id: "intel-3", title: "AI Literacy Requirements Expanding Across Texas Community Colleges", url: "https://example.com/ai-literacy", source: "Community College Daily", source_category: "higher_ed", published_at: "2026-03-15T14:00:00Z", scraped_at: "2026-03-16T06:30:00Z", summary: "Texas community colleges are adding AI literacy modules to general education requirements, with 12 institutions piloting programs in Fall 2026.", key_insight: "This creates partnership opportunities for workforce platforms that offer AI skills assessment and training pathway recommendations.", relevance: "medium", status: "reviewed", topic_tags: ["ai", "curriculum", "community_colleges"], audience_tags: ["universities", "consultants"] },
+  { id: "intel-4", title: "Labor Department Releases Updated O*NET Skills Framework", url: "https://example.com/onet-update", source: "DOL Employment & Training", source_category: "federal_workforce", published_at: "2026-03-12T10:00:00Z", scraped_at: "2026-03-13T06:30:00Z", summary: "The Department of Labor updated the O*NET skills framework to include 47 new AI/ML-related competencies and revised 120+ existing occupation profiles.", key_insight: "Programs should map their curriculum against the updated O*NET framework — compliance reports will reference these new competencies starting Q3 2026.", relevance: "high", status: "new", topic_tags: ["skills", "onet", "federal"], audience_tags: ["universities", "workforce_boards"] },
+  { id: "intel-5", title: "Arlington EDC Announces $40M Innovation District Plan", url: "https://example.com/arlington-innovation", source: "Fort Worth Star-Telegram", source_category: "local_dfw", published_at: "2026-03-10T08:00:00Z", scraped_at: "2026-03-11T06:30:00Z", summary: "The Arlington EDC unveiled plans for a $40M innovation district adjacent to UTA, targeting biotech and AI startups with subsidized lab and office space.", key_insight: "This creates a direct pipeline opportunity — UTA programs producing biotech and CS graduates will have immediate local employment pathways.", relevance: "high", status: "priority", topic_tags: ["arlington", "edc", "innovation"], audience_tags: ["edcs", "universities"] },
+  { id: "intel-6", title: "Workforce Innovation Act Reauthorization Moves Forward", url: "https://example.com/wioa-reauth", source: "National Skills Coalition", source_category: "federal_workforce", published_at: "2026-03-08T11:00:00Z", scraped_at: "2026-03-09T06:30:00Z", summary: "The Senate committee advanced WIOA reauthorization with expanded funding for AI skills training and regional workforce partnerships.", key_insight: "TWC should prepare grant applications now — the new funding formula favors regions with documented AI skills gap data and employer partnership records.", relevance: "medium", status: "reviewed", topic_tags: ["wioa", "federal", "funding"], audience_tags: ["workforce_boards"] },
+];
+
+const MOCK_CONTENT_CALENDAR = [
+  { id: "cc-1", platform: "linkedin", content_pillar: "thought_leadership", draft_text: "Texas just raised the bar on what counts as a 'credential of value.' Under updated HB8 guidelines, programs must demonstrate median wages 10% above regional median within 1 year of graduation.\n\nThis isn't just a compliance update — it's a signal. Universities that can't prove ROI will lose funding.\n\nAt zScale, we're helping institutions get ahead of this by scoring every program against live labor market data.\n\n#WorkforceDevelopment #HigherEd #HB8 #Texas", scheduled_date: "2026-03-24", status: "draft", intelligence_item_title: "Texas HB8 Implementation Update", topic_tags: ["hb8", "compliance"] },
+  { id: "cc-2", platform: "linkedin", content_pillar: "market_intel", draft_text: "DFW aerospace just added 2,400 jobs in Q1 2026. Bell's V-280 Valor and Lockheed's F-35 programs are driving a talent surge.\n\nBut here's the real story: Tier 2/3 suppliers are now competing for the same engineers.\n\nEDCs that can package workforce data + talent pipeline = winning site selection pitches.\n\n#AerospaceDFW #EconomicDevelopment #WorkforceIntelligence", scheduled_date: "2026-03-25", status: "scheduled", intelligence_item_title: "DFW Aerospace Sector Adds 2,400 Jobs", topic_tags: ["aerospace", "dfw"] },
+  { id: "cc-3", platform: "newsletter", content_pillar: "weekly_digest", draft_text: "This week in workforce intelligence: HB8 threshold changes, DFW aerospace boom, AI literacy in community colleges, and Arlington's new innovation district.", scheduled_date: "2026-03-28", status: "draft", intelligence_item_title: null, topic_tags: ["digest"] },
+];
+
+const MOCK_SPEAKING_OPPORTUNITIES = [
+  // FREE / LOW-COST LOCAL (prioritized)
+  { id: "sp-10", conference_name: "Rotary Club of Arlington", organizer: "Rotary International", cfp_deadline: null, event_date_start: null, event_date_end: null, location: "Arlington, TX", audience_size: 50, status: "researching", proposal_title: "How AI Is Transforming Workforce Development in Arlington", estimated_cost: 0, topic_tags: ["civic", "local", "ai"] },
+  { id: "sp-11", conference_name: "Workforce Solutions Tarrant County Board Meeting", organizer: "Workforce Solutions Tarrant County", cfp_deadline: null, event_date_start: null, event_date_end: null, location: "Fort Worth, TX", audience_size: 30, status: "researching", proposal_title: "AI-Powered Workforce Intelligence for Regional Planning", estimated_cost: 0, topic_tags: ["workforce", "b2g"] },
+  { id: "sp-12", conference_name: "Arlington EDC Board Meeting", organizer: "Arlington Economic Development Corp", cfp_deadline: null, event_date_start: null, event_date_end: null, location: "Arlington City Hall", audience_size: 20, status: "researching", proposal_title: "Workforce Data to Support Site Selection Decisions", estimated_cost: 0, topic_tags: ["edc", "local"] },
+  { id: "sp-13", conference_name: "Global AI DFW Meetup at UTA", organizer: "Global AI Community", cfp_deadline: null, event_date_start: null, event_date_end: null, location: "UTA SEIR Building, Arlington, TX", audience_size: 60, status: "researching", proposal_title: "Building an AI Agent for Workforce Intelligence with Claude and Supabase", estimated_cost: 0, topic_tags: ["ai", "tech", "uta"] },
+  { id: "sp-14", conference_name: "AI Tinkerers DFW", organizer: "AI Tinkerers", cfp_deadline: null, event_date_start: null, event_date_end: null, location: "DFW, TX", audience_size: 50, status: "researching", proposal_title: "Live Demo: AI Workforce Intelligence Agent", estimated_cost: 0, topic_tags: ["ai", "demo", "tech"] },
+  { id: "sp-15", conference_name: "Cross Timbers APEX Accelerator GPC 2026", organizer: "UTA / APEX Accelerator", cfp_deadline: "2026-05-15", event_date_start: "2026-07-29", event_date_end: "2026-07-29", location: "UTA, Arlington, TX", audience_size: 200, status: "researching", proposal_title: "How AI and Data Analytics Can Win Government Contracts", estimated_cost: 50, topic_tags: ["govcon", "wosb", "uta"] },
+  { id: "sp-16", conference_name: "TWC Texas Conference for Employers", organizer: "Texas Workforce Commission", cfp_deadline: "2026-04-30", event_date_start: null, event_date_end: null, location: "Dallas, TX", audience_size: 200, status: "researching", proposal_title: "AI-Powered Workforce Analytics for Employer Decision-Making", estimated_cost: 0, topic_tags: ["workforce", "employers"] },
+  { id: "sp-17", conference_name: "DFW Startup Week 2026", organizer: "Launch DFW", cfp_deadline: "2026-05-30", event_date_start: "2026-08-17", event_date_end: "2026-08-21", location: "Dallas/Fort Worth, TX", audience_size: 2000, status: "researching", proposal_title: "B2G Startups: Selling AI to Government", estimated_cost: 0, topic_tags: ["startup", "b2g"] },
+  { id: "sp-18", conference_name: "Higher Education Compliance Conference", organizer: "HCCA/SCCE", cfp_deadline: "2026-04-15", event_date_start: "2026-06-07", event_date_end: "2026-06-09", location: "San Antonio, TX", audience_size: 400, status: "researching", proposal_title: "HB8 Compliance Automation Through AI-Powered Program ROI Scoring", estimated_cost: 600, topic_tags: ["hb8", "compliance", "higher_ed"] },
+  { id: "sp-19", conference_name: "TEDC Mid-Year Conference", organizer: "Texas Economic Development Council", cfp_deadline: "2026-04-30", event_date_start: "2026-06-17", event_date_end: "2026-06-19", location: "Plano, TX", audience_size: 300, status: "researching", proposal_title: "Real-Time Talent Pipeline Data for Site Selection", estimated_cost: 500, topic_tags: ["edc", "texas"] },
+  // NATIONAL CONFERENCES (higher cost)
+  { id: "sp-1", conference_name: "Texas Workforce Conference 2026", organizer: "Texas Workforce Commission", cfp_deadline: "2026-04-15", event_date_start: "2026-06-18", event_date_end: "2026-06-20", location: "Austin, TX", audience_size: 800, status: "drafting", proposal_title: "AI-Powered Workforce Intelligence: From Data Silos to Decision Engines", estimated_cost: 1200, topic_tags: ["workforce", "ai", "data"] },
+  { id: "sp-2", conference_name: "NACUBO Annual Meeting", organizer: "National Association of College and University Business Officers", cfp_deadline: "2026-05-01", event_date_start: "2026-07-19", event_date_end: "2026-07-22", location: "Nashville, TN", audience_size: 2500, status: "researching", proposal_title: "Program ROI Scoring: A Data-Driven Approach to HB8 Compliance", estimated_cost: 2800, topic_tags: ["higher_ed", "roi", "compliance"] },
+  { id: "sp-3", conference_name: "IEDC Annual Conference", organizer: "International Economic Development Council", cfp_deadline: "2026-06-01", event_date_start: "2026-09-14", event_date_end: "2026-09-17", location: "Denver, CO", audience_size: 1800, status: "researching", proposal_title: "Site Selection in the AI Era: Real-Time Talent Pipeline Data", estimated_cost: 3200, topic_tags: ["edc", "site_selection", "talent"] },
+  { id: "sp-4", conference_name: "South by Southwest EDU", organizer: "SXSW", cfp_deadline: "2026-08-15", event_date_start: "2027-03-03", event_date_end: "2027-03-06", location: "Austin, TX", audience_size: 5000, status: "researching", proposal_title: null, estimated_cost: 1500, topic_tags: ["edtech", "innovation"] },
+];
+
+// --- Intelligence Query Functions ---
+
+export async function queryIntelligenceItems(args: {
+  topic?: string;
+  audience?: string;
+  source_category?: string;
+  status?: string;
+  relevance?: string;
+  days_back?: number;
+}) {
+  const sb = getSupabaseClient();
+  let query = sb
+    .from("intelligence_items")
+    .select("*")
+    .order("scraped_at", { ascending: false })
+    .limit(50);
+
+  if (args.status) query = query.eq("status", args.status);
+  if (args.relevance) query = query.eq("relevance", args.relevance);
+  if (args.source_category) query = query.eq("source_category", args.source_category);
+  if (args.topic) query = query.contains("topic_tags", [args.topic]);
+  if (args.audience) query = query.contains("audience_tags", [args.audience]);
+  if (args.days_back) {
+    const since = new Date();
+    since.setDate(since.getDate() - args.days_back);
+    query = query.gte("scraped_at", since.toISOString());
+  }
+
+  const { data, error } = await query;
+  if (error) throw error;
+  const results = data && data.length > 0 ? data : MOCK_INTELLIGENCE_ITEMS;
+  return truncateResults(results, "intelligence items");
+}
+
+export async function queryContentCalendar(args: {
+  platform?: string;
+  status?: string;
+  date_from?: string;
+  date_to?: string;
+}) {
+  const sb = getSupabaseClient();
+  let query = sb
+    .from("content_calendar")
+    .select("*, intelligence_items(title)")
+    .order("scheduled_date", { ascending: false })
+    .limit(30);
+
+  if (args.platform) query = query.eq("platform", args.platform);
+  if (args.status) query = query.eq("status", args.status);
+  if (args.date_from) query = query.gte("scheduled_date", args.date_from);
+  if (args.date_to) query = query.lte("scheduled_date", args.date_to);
+
+  const { data, error } = await query;
+  if (error) throw error;
+  const results = data && data.length > 0 ? data : MOCK_CONTENT_CALENDAR;
+  return truncateResults(results, "content calendar entries");
+}
+
+export async function querySpeakingOpportunities(args: {
+  status?: string;
+  upcoming_deadlines?: boolean;
+}) {
+  const sb = getSupabaseClient();
+  let query = sb
+    .from("speaking_opportunities")
+    .select("*")
+    .order("cfp_deadline", { ascending: true });
+
+  if (args.status) query = query.eq("status", args.status);
+  if (args.upcoming_deadlines) {
+    query = query.gte("cfp_deadline", new Date().toISOString().split("T")[0]);
+  }
+
+  const { data, error } = await query;
+  if (error) throw error;
+  const results = data && data.length > 0 ? data : MOCK_SPEAKING_OPPORTUNITIES;
+  return truncateResults(results, "speaking opportunities");
+}
+
+export async function draftLinkedInPost(args: { intelligence_item_id: string }) {
+  const sb = getSupabaseClient();
+
+  // Fetch the intelligence item
+  const { data: item, error: fetchError } = await sb
+    .from("intelligence_items")
+    .select("*")
+    .eq("id", args.intelligence_item_id)
+    .single();
+
+  if (fetchError || !item) {
+    // Try mock data fallback
+    const mockItem = MOCK_INTELLIGENCE_ITEMS.find(i => i.id === args.intelligence_item_id);
+    if (!mockItem) return { error: "Intelligence item not found" };
+    return {
+      source_item: mockItem,
+      instruction: "Generate a LinkedIn post based on this intelligence item. Keep under 1,300 characters. Use the founder's voice: data-driven, direct, actionable. Include 3-4 relevant hashtags. Then call update_content_status to save it.",
+    };
+  }
+
+  return {
+    source_item: item,
+    instruction: "Generate a LinkedIn post based on this intelligence item. Keep under 1,300 characters. Use the founder's voice: data-driven, direct, actionable. Include 3-4 relevant hashtags. Then call update_content_status to save it.",
+  };
+}
+
+export async function draftNewsletterBlurb(args: { intelligence_item_ids: string[] }) {
+  const sb = getSupabaseClient();
+  const { data, error } = await sb
+    .from("intelligence_items")
+    .select("*")
+    .in("id", args.intelligence_item_ids);
+
+  const items = data && data.length > 0
+    ? data
+    : MOCK_INTELLIGENCE_ITEMS.filter(i => args.intelligence_item_ids.includes(i.id));
+
+  if (!items || items.length === 0) {
+    return { error: "No intelligence items found for the given IDs" };
+  }
+
+  return {
+    source_items: items,
+    instruction: "Generate a newsletter digest summarizing these intelligence items. Use concise bullet points with key data. Professional tone. 300-500 words total.",
+  };
+}
+
+export async function updateContentStatus(args: {
+  id?: string;
+  table: string;
+  new_status: string;
+  draft_text?: string;
+  platform?: string;
+  intelligence_item_id?: string;
+  scheduled_date?: string;
+}) {
+  const sb = getSupabaseClient();
+  const tableName = args.table === "content" ? "content_calendar"
+    : args.table === "speaking" ? "speaking_opportunities"
+    : args.table === "intelligence" ? "intelligence_items"
+    : args.table;
+
+  // If creating a new content calendar entry (no id)
+  if (!args.id && tableName === "content_calendar" && args.draft_text) {
+    const { data, error } = await sb
+      .from("content_calendar")
+      .insert({
+        platform: args.platform || "linkedin",
+        draft_text: args.draft_text,
+        status: args.new_status || "draft",
+        intelligence_item_id: args.intelligence_item_id || null,
+        scheduled_date: args.scheduled_date || null,
+      })
+      .select();
+    if (error) return { success: false, error: error.message };
+    return { success: true, action: "created", entry: data?.[0] };
+  }
+
+  // Update existing entry
+  if (!args.id) return { error: "id is required for updates" };
+
+  const updateData: Record<string, unknown> = { status: args.new_status };
+  if (args.draft_text) updateData.draft_text = args.draft_text;
+
+  const { data, error } = await sb
+    .from(tableName)
+    .update(updateData)
+    .eq("id", args.id)
+    .select();
+
+  if (error) return { success: false, error: error.message };
+  return { success: true, action: "updated", entry: data?.[0] };
+}
