@@ -76,7 +76,7 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: "get_employers",
-    description: "Search Arlington/DFW area employers. Returns company name, industry, employee count, Fortune 500 status, and whether they hire UTA graduates. Can filter by industry.",
+    description: "Search Arlington/Grapevine/DFW area employers. Returns company name, industry, employee count, Fortune 500 status, and whether they hire UTA graduates. Can filter by industry.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -90,7 +90,7 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: "get_job_openings",
-    description: "Search active job openings in the Arlington/DFW area. Returns job title, salary range, required/preferred skills, education requirements, and remote options. Can filter by employer.",
+    description: "Search active job openings in the Arlington/Grapevine/DFW area. Returns job title, salary range, required/preferred skills, education requirements, and remote options. Can filter by employer.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -104,7 +104,7 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: "get_development_projects",
-    description: "Get economic development projects in Arlington (e.g. Globe Life Field, GM plant modernization, E-Space HQ). Returns investment amounts, estimated jobs created, and status.",
+    description: "Get economic development projects in Arlington/Grapevine/DFW (e.g. Globe Life Field, GM plant, Kubota HQ, DFW Terminal F). Returns investment amounts, estimated jobs created, and status.",
     input_schema: {
       type: "object" as const,
       properties: {},
@@ -113,7 +113,7 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: "get_industries",
-    description: "Get Arlington/DFW industry sectors with employment counts, average wages, growth rates, location quotients, and key employers. Good for understanding the local economy.",
+    description: "Get Arlington/Grapevine/DFW industry sectors with employment counts, average wages, growth rates, location quotients, and key employers. Good for understanding the local economy.",
     input_schema: {
       type: "object" as const,
       properties: {},
@@ -210,7 +210,7 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: "get_employer_outlook",
-    description: "Get hiring outlook predictions for Arlington/DFW employers. Returns outlook (declining/stable/growing/rapidly_growing), projected openings for 6 and 12 months, industry growth rate, and key factors driving the outlook.",
+    description: "Get hiring outlook predictions for Arlington/Grapevine/DFW employers. Returns outlook (declining/stable/growing/rapidly_growing), projected openings for 6 and 12 months, industry growth rate, and key factors driving the outlook.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -342,7 +342,7 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: "generate_site_selection_package",
-    description: "Get or generate site selection data packages for EDC use. Returns talent supply data, employer landscape, labor market metrics, and key highlights for companies considering Arlington/DFW. Filter by company or industry.",
+    description: "Get or generate site selection data packages for EDC use. Returns talent supply data, employer landscape, labor market metrics, and key highlights for companies considering Arlington, Grapevine, or broader DFW. Filter by company or industry.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -360,7 +360,7 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: "compare_regions",
-    description: "Compare labor market metrics across regions (Fort Worth-Arlington, Dallas-Plano-Irving, Austin, Houston, San Antonio). Returns employment, wages, unemployment rates, and other metrics side by side.",
+    description: "Compare labor market metrics across regions (Grapevine, Southlake, Frisco, Fort Worth-Arlington, Dallas-Plano-Irving, Austin). Returns employment, wages, unemployment rates, and other metrics side by side.",
     input_schema: {
       type: "object" as const,
       properties: {

@@ -54,7 +54,7 @@ Build outputs to `dist/`. For Hostinger deployment:
 - `src/lib/uta-queries.ts` - UTA workforce intelligence query functions and TypeScript interfaces
 - `src/lib/uta-mock-data.ts` - Fallback demo data for UTA workforce tables
 - `src/lib/agent-api.ts` - SSE client for AI agent Edge Function
-- `sql/uta-workforce/` - SQL files (01-20) for UTA workforce dataset schema, data, predictive analytics, executive suite tables, and lead capture
+- `sql/uta-workforce/` - SQL files (01-22) for UTA workforce dataset schema, data, predictive analytics, executive suite tables, lead capture, and Grapevine EDC data
 - `src/hooks/` - Custom React hooks (scroll reveal, useChat)
 - `src/hooks/useChat.ts` - Chat state management hook (messages, streaming, tool activity, visualizations)
 - `src/components/agent/` - AI agent chat UI components
@@ -93,7 +93,7 @@ Four role-based dashboards with shared `DashboardLayout` component (sidebar + he
 - Falls back to mock data from `src/lib/mockData.ts` when Supabase is empty
 - Has its own `NAV_ITEMS` configuration for sidebar navigation
 - Passes `role` prop to DashboardLayout for role-aware AI chat
-- Pruned nav items: College (3), EDC (3), Student (1 + quick actions), TWC (1 + quick actions)
+- Pruned nav items: College (3), EDC (6), Student (1 + quick actions), TWC (1 + quick actions)
 - No emoji icons in nav — text-only labels
 - Compact metrics bar replaces 5-card stat grids (no `border-l-4` patterns)
 - Dismissable `WelcomeBanner` per session (stored in `sessionStorage`)
@@ -114,7 +114,7 @@ Four role-based dashboards with shared `DashboardLayout` component (sidebar + he
 - Auto-closes on nav link click
 - 48px touch targets (WCAG minimum)
 
-Demo login provides 8 test accounts (2 per role) stored in `DEMO_USERS` within `src/lib/supabase.ts` with `-2026` token suffix. Login falls back to local tokens when Supabase is unavailable. The demo login page also features an AI Agent card that links to `/agent`. Both LoginPage and DemoLogin use the real `zscale-capital-logo.png` image (same as Header/Footer/DashboardLayout).
+Demo login provides 10 test accounts (3 college, 3 EDC incl. Grapevine, 2 student, 2 TWC) stored in `DEMO_USERS` within `src/lib/supabase.ts` with `-2026` token suffix. Login falls back to local tokens when Supabase is unavailable. The demo login page also features an AI Agent card that links to `/agent`. Both LoginPage and DemoLogin use the real `zscale-capital-logo.png` image (same as Header/Footer/DashboardLayout).
 
 ### AI Agent Chat System
 A conversational AI interface at `/agent` powered by Claude Sonnet 4.6 via a Supabase Edge Function. Architecture:
@@ -122,7 +122,7 @@ A conversational AI interface at `/agent` powered by Claude Sonnet 4.6 via a Sup
 ```
 Browser (React SPA) → POST /functions/v1/chat-agent (SSE stream)
   → Supabase Edge Function (Deno)
-    ├── Calls Anthropic Messages API with 18 tool definitions
+    ├── Calls Anthropic Messages API with 30+ tool definitions
     ├── Executes Supabase queries when Claude uses tools
     ├── Emits visualization SSE events when Claude calls generate_visualization
     └── Streams text deltas back as Server-Sent Events
@@ -136,9 +136,9 @@ User toggles "Visualize" → message sent with [VISUALIZE] hint
 
 **Backend** (`supabase/functions/chat-agent/`):
 - `index.ts` - Main handler: CORS, SSE streaming, tool use loop (up to 8 rounds), visualization SSE events. Accepts `role` from request body and injects into system prompt for role-aware responses.
-- `tools.ts` - 18 tool definitions (JSON schema) + executor map (includes `generate_visualization`)
-- `queries.ts` - Deno-compatible Supabase query functions (port of `uta-queries.ts`) with mock data fallback
-- `system-prompt.ts` - UTA Workforce Intelligence Agent persona, instructions, and visualization guidelines
+- `tools.ts` - 30+ tool definitions (JSON schema) + executor map (includes `generate_visualization`)
+- `queries.ts` - Deno-compatible Supabase query functions (port of `uta-queries.ts`) with mock data fallback (includes Arlington + Grapevine data)
+- `system-prompt.ts` - UTA Workforce Intelligence Agent persona, instructions, visualization guidelines, and Grapevine key facts
 
 **Frontend**:
 - `src/lib/agent-api.ts` - SSE client: POST to Edge Function, parse stream events (including `visualization` events), `VisualizationData` type. Accepts optional `role` parameter to send user role context to backend.
@@ -336,13 +336,13 @@ Custom colors defined in `tailwind.config.js`:
 
 8. **Demo Login with Fallback** - `demoLogin()` tries Supabase first, falls back to local `DEMO_USERS` tokens for offline/demo scenarios
 
-9. **AI Agent via Supabase Edge Function** - Conversational AI chat uses a Supabase Edge Function (Deno) that calls the Anthropic Claude API with 18 tool definitions mapped to UTA workforce Supabase queries. SSE streaming sends text deltas, tool activity, and visualization events to the React frontend. Deployed with `--no-verify-jwt` for public access. Mock data fallback ensures the agent works even when Supabase tables are empty.
+9. **AI Agent via Supabase Edge Function** - Conversational AI chat uses a Supabase Edge Function (Deno) that calls the Anthropic Claude API with 30+ tool definitions mapped to UTA workforce Supabase queries (Arlington + Grapevine + regional data). SSE streaming sends text deltas, tool activity, and visualization events to the React frontend. Deployed with `--no-verify-jwt` for public access. Mock data fallback ensures the agent works even when Supabase tables are empty.
 
 10. **Dynamic Chart Visualizations** - The AI agent can generate charts via the `generate_visualization` tool. Charts render using recharts in a fullscreen modal (via `createPortal`). Supports bar, horizontal bar, pie, donut, and line charts with a distinct 10-color palette. The "Visualize data" toggle in ChatInput prepends a `[VISUALIZE]` hint to messages. Data is normalized client-side (`normalizeChartData`) to handle string-formatted numbers. `ResponsiveContainer` uses fixed pixel height (350px) — percentage heights don't work in flex/portal modal layouts.
 
 ## UTA Workforce Intelligence Dataset
 
-A comprehensive Supabase dataset for a personalized AI agent serving UT Arlington's career center and workforce staff. Populated with real research data about UTA programs, Arlington employers, labor market statistics, and skills alignment.
+A comprehensive Supabase dataset for a personalized AI agent serving UT Arlington's career center and workforce staff. Populated with real research data about UTA programs, Arlington/Grapevine/DFW employers, labor market statistics, and skills alignment.
 
 ### Supabase Tables (18 tables)
 
@@ -351,13 +351,13 @@ A comprehensive Supabase dataset for a personalized AI agent serving UT Arlingto
 | `uta_colleges` | UTA's 10 colleges/schools with enrollment, deans, URLs | ~10 |
 | `uta_programs` | All academic programs (BS, BA, MS, PhD, etc.) across all colleges | ~180 |
 | `uta_program_outcomes` | Graduation rates, starting salaries, employment rates, top employers per program | ~30 |
-| `arlington_employers` | Arlington/DFW area employers with industry, size, UTA hiring flag | ~55 |
-| `arlington_job_openings` | Representative job postings with salaries, skills, education requirements | ~80 |
-| `arlington_development` | Economic development projects (Globe Life Field, GM plant, E-Space HQ, etc.) | ~15 |
-| `arlington_industries` | Industry sectors with employment counts, wages, growth rates | ~18 |
+| `arlington_employers` | Arlington/Grapevine/DFW area employers with industry, size, UTA hiring flag | ~65 |
+| `arlington_job_openings` | Representative job postings with salaries, skills, education requirements | ~90 |
+| `arlington_development` | Economic development projects (Globe Life Field, GM plant, Kubota HQ, DFW Terminal F, etc.) | ~21 |
+| `arlington_industries` | Industry sectors with employment counts, wages, growth rates (incl. Grapevine) | ~25 |
 | `uta_employer_partnerships` | Program-to-employer links (internships, co-ops, hiring pipelines, advisory boards) | ~50 |
 | `uta_skills_alignment` | Skills gap analysis mapping program curricula to industry demands | ~90 |
-| `arlington_labor_stats` | BLS/TWC labor market metrics (employment, wages, education, demographics) | ~60 |
+| `arlington_labor_stats` | BLS/TWC labor market metrics (employment, wages, education, demographics) incl. Grapevine, Southlake, Frisco | ~75 |
 | `cip_soc_crosswalk` | Maps CIP codes (programs) to SOC codes (BLS occupations) | ~45 |
 | `bls_occupation_projections` | BLS 10-year employment projections (2022-2032) | ~35 |
 | `skills_catalog` | Normalized skill dictionary with emerging/declining flags | ~30 |
@@ -370,8 +370,10 @@ A comprehensive Supabase dataset for a personalized AI agent serving UT Arlingto
 ### Key Data Points
 - **UTA Facts:** 44,956 students, 9 colleges, 180+ programs, 54% 6-yr graduation rate, 75%+ employment within 6 months
 - **Starting Salaries:** Nursing BSN $70,300, CS BS $68,300, SE BS $67,500, CompE BS $66,700, AeroE BS $66,000
-- **Top Employers:** GM Assembly (5,200), Texas Health Resources (29,000 DFW), Lockheed Martin (18,000), Arlington ISD (8,400), Bell Textron (7,500), D.R. Horton (Fortune 500 HQ)
+- **Top Employers (Arlington):** GM Assembly (5,200), Texas Health Resources (29,000 DFW), Lockheed Martin (18,000), Arlington ISD (8,400), Bell Textron (7,500), D.R. Horton (Fortune 500 HQ)
+- **Top Employers (Grapevine):** Gaylord Texan (2,000), BSW Grapevine (2,000), Grapevine Mills (2,000), GCISD (1,861), DFW Airport (1,500), Paycom (1,000), Kubota NA HQ (500), GameStop HQ (500)
 - **Labor Market:** Fort Worth-Arlington employment 1,212,800 (May 2025), Tarrant County avg weekly wages $1,501
+- **Grapevine Facts:** Pop 51,320, median HH income $112K, unemployment 3.4%, $2B+ EDC investment since 2014, adjacent to DFW Airport
 
 ### TypeScript Integration
 
@@ -390,11 +392,11 @@ getArlingtonLaborStats(category?)         // Labor market statistics by category
 getUTADashboardSummary()                  // Aggregated summary across all tables
 ```
 
-Fallback mock data in `src/lib/uta-mock-data.ts` (5-10 records per table) for dev/demo when Supabase is unavailable.
+Fallback mock data in `src/lib/uta-mock-data.ts` (5-15 records per table, including Grapevine) for dev/demo when Supabase is unavailable.
 
 ### SQL Files
 
-SQL files in `sql/uta-workforce/` are designed to be copy-pasted into Supabase SQL Editor in numbered order (01-20). Files 01-12 create the core workforce dataset. Files 13-18 add predictive analytics (schema, views, crosswalk data, BLS projections, seed predictions, verification). File 19 adds executive suite tables (program scorecards, compliance reports, site selection, employer monitoring, career advisor sessions). File 20 adds the `demo_leads` lead capture table. All INSERTs use `ON CONFLICT DO NOTHING` for safe re-runs. All `CREATE POLICY` statements use `DROP POLICY IF EXISTS` before creation. Foreign keys use subquery references by name (not hardcoded UUIDs). RLS is enabled with public read policies on all tables.
+SQL files in `sql/uta-workforce/` are designed to be copy-pasted into Supabase SQL Editor in numbered order (01-22). Files 01-12 create the core workforce dataset. Files 13-18 add predictive analytics (schema, views, crosswalk data, BLS projections, seed predictions, verification). File 19 adds executive suite tables (program scorecards, compliance reports, site selection, employer monitoring, career advisor sessions). File 20 adds the `demo_leads` lead capture table. File 21 adds intelligence pipeline tables. File 22 adds Grapevine EDC data (10 employers, 10 jobs, 6 dev projects, 7 industries, 8 labor stats, 2 site selection packages, 4 employer alerts, 6 regional comparison stats, 8 businesses). All INSERTs use `ON CONFLICT DO NOTHING` for safe re-runs. All `CREATE POLICY` statements use `DROP POLICY IF EXISTS` before creation. Foreign keys use subquery references by name (not hardcoded UUIDs). RLS is enabled with public read policies on all tables.
 
 ### Predictive Analytics Pipeline
 
@@ -427,8 +429,8 @@ GitHub Actions in `.github/workflows/`: `weekly-data-pipeline.yml` and `monthly-
 |-------|---------|---------|
 | `program_scorecards` | Program ROI scorecards with overall scores, health status, HB8 compliance | ~9 |
 | `compliance_reports` | HB8 and board compliance report tracking with pass/fail indicators | ~5 |
-| `site_selection_packages` | EDC site selection talent/labor packages for relocating companies | ~5 |
-| `employer_monitoring` | Employer hiring signals and alerts (surges, freezes, expansions) | ~6 |
+| `site_selection_packages` | EDC site selection talent/labor packages for relocating companies (Arlington + Grapevine) | ~7 |
+| `employer_monitoring` | Employer hiring signals and alerts (surges, freezes, expansions) incl. Grapevine | ~10 |
 | `career_advisor_sessions` | Student AI career advisor session tracking and analytics | ~5 |
 
 SQL file: `sql/uta-workforce/19-executive-suite-tables.sql` (safe re-runs with `ON CONFLICT DO NOTHING`)
@@ -458,8 +460,11 @@ All 4 dashboards now use internal `Routes`/`Route` from React Router for sub-pag
 |-----------|-------------|------|-----------|
 | College | Program Scorecards | `/dashboard/college/scorecards` | `ProgramScorecards.tsx` |
 | College | Compliance Reports | `/dashboard/college/compliance-reports` | `ComplianceReportsPage.tsx` |
+| EDC | Skills Demand | `/dashboard/edc/skills-demand` | `SkillsDemandPage.tsx` |
+| EDC | Talent Pipeline | `/dashboard/edc/talent-pipeline` | `TalentPipelinePage.tsx` |
 | EDC | Site Selection | `/dashboard/edc/site-selection` | `SiteSelectionPage.tsx` |
 | EDC | Employer Alerts | `/dashboard/edc/employer-alerts` | `EmployerAlertsPage.tsx` |
+| EDC | Regional Comparison | `/dashboard/edc/regional-comparison` | `RegionalComparisonPage.tsx` |
 | Student | AI Career Advisor | `/dashboard/student/career-advisor` | `CareerAdvisorPage.tsx` (route removed from StudentDashboard — replaced by overlay chat panel) |
 
 **Shared DashboardLayout** (`src/components/dashboard/DashboardLayout.tsx`) includes an overlay AI chat panel (slide-out from right) with drag-to-resize and expand/collapse toggle. The sidebar "Ask AI Agent" button opens this panel instead of navigating to `/agent`. Exports `useAskAgent()` hook via `AskAgentContext` so sub-pages can open the chat with pre-filled questions. Also includes mobile-responsive sidebar (hamburger menu below `lg` breakpoint).
@@ -468,7 +473,7 @@ All 4 dashboards now use internal `Routes`/`Route` from React Router for sub-pag
 - `src/components/dashboard/WelcomeBanner.tsx` - Dismissable per-session welcome banner with role stats and CTA buttons
 - `src/components/dashboard/ComingSoonPage.tsx` - Warm placeholder for catch-all routes with "Ask AI Agent" CTA
 
-**SuggestedQuestions** (`src/components/agent/SuggestedQuestions.tsx`) now accepts an optional `role` prop (`'college' | 'edc' | 'student' | 'twc' | 'general'`) that shows role-specific question categories. Default/general shows the original 5 categories plus a new "Executive Suite" category.
+**SuggestedQuestions** (`src/components/agent/SuggestedQuestions.tsx`) now accepts an optional `role` prop (`'college' | 'edc' | 'student' | 'twc' | 'general'`) that shows role-specific question categories. Default/general shows the original 5 categories plus a new "Executive Suite" category. EDC role with Grapevine county (`countyFips === '48439'`) shows a tailored `edc-grapevine` variant with 4 categories covering 5 demo moments: Site Selection, Employer Intelligence, Skills & Talent, and Regional & Board.
 
 **System Prompt** (`supabase/functions/chat-agent/system-prompt.ts`) now includes Executive Suite capabilities section with role detection, report generation guidelines, HB8 compliance specifics, and proactive intelligence instructions.
 
@@ -482,8 +487,11 @@ Each page uses different data sources. Only main dashboard default views query S
 | Program Scorecards | `/dashboard/college/scorecards` | Supabase `program_scorecards` (join `uta_programs`, `uta_colleges`) → fallback `MOCK_SCORECARDS` | Pulsing teal/yellow dot |
 | Compliance Reports | `/dashboard/college/compliance-reports` | Supabase `compliance_reports` (join `uta_programs`) → fallback `MOCK_REPORTS` | Pulsing teal/yellow dot |
 | EDC default (Sectoral Health) | `/dashboard/edc` | Supabase `businesses` → fallback `MOCK_BUSINESSES` | Pulsing teal/yellow dot |
+| Skills Demand | `/dashboard/edc/skills-demand` | Supabase `skills_catalog` (emerging/declining) + `uta_skills_alignment` (join `uta_programs`) → fallback `MOCK_EMERGING_SKILLS`, `MOCK_DECLINING_SKILLS`, `MOCK_SKILLS_GAP` | Pulsing teal/yellow dot |
+| Talent Pipeline | `/dashboard/edc/talent-pipeline` | Supabase `uta_employer_partnerships` (join `uta_programs`, `uta_colleges`, `arlington_employers`) → fallback `MOCK_PIPELINE` | Pulsing teal/yellow dot |
 | Site Selection | `/dashboard/edc/site-selection` | Supabase `site_selection_packages` → fallback `MOCK_PACKAGES` | Pulsing teal/yellow dot |
 | Employer Alerts | `/dashboard/edc/employer-alerts` | Supabase `employer_monitoring` (join `arlington_employers`) → fallback `MOCK_ALERTS` | Pulsing teal/yellow dot |
+| Regional Comparison | `/dashboard/edc/regional-comparison` | Supabase `arlington_labor_stats` (Grapevine/Southlake/Frisco/Colleyville) → fallback `MOCK_CITIES` | Pulsing teal/yellow dot |
 | Student default (Career GPS) | `/dashboard/student` | Supabase `career_pathways` → fallback `MOCK_CAREER_PATHWAYS` | Pulsing teal/yellow dot |
 | TWC default (Overview) | `/dashboard/twc` | Supabase `career_pathways` + `institutions` → fallback mocks | Pulsing teal/yellow dot |
 | AI Agent Chat | `/agent` | AI agent via Supabase Edge Function (30+ tools query Supabase) | None |
@@ -514,6 +522,30 @@ The PreviewPage (`/preview`) gates demo access behind a 4-field lead capture for
 | `created_at` | TIMESTAMPTZ | Default `now()` |
 
 **RLS:** Anonymous insert allowed (lead capture uses anon key). Only service role can read/update (admin/analytics). Lead capture failure never blocks demo access — the form gracefully continues on insert error.
+
+### Grapevine EDC Data (Multi-City Support)
+
+The platform now supports data for multiple cities beyond Arlington. File `sql/uta-workforce/22-grapevine-data.sql` adds Grapevine, TX data into existing tables (no new tables created). All records use `city='Grapevine'` to distinguish from Arlington data.
+
+**Grapevine Key Facts:**
+- Population: 51,320 | Median HH Income: $112,000 | Unemployment: ~3.4%
+- $2B+ total investment since 2014 (Grapevine EDC)
+- Adjacent to DFW International Airport (4th busiest US airport)
+- Target industries: Corporate HQ, Hospitality/Tourism, Retail, Entertainment
+
+**Data added to existing tables:**
+- `arlington_employers`: 10 Grapevine employers (DFW Airport, Kubota NA HQ, Paycom, GameStop HQ, Gaylord Texan, Great Wolf Lodge, BSW Grapevine, GCISD, Hilton DFW Lakes, Grapevine Mills)
+- `arlington_job_openings`: 10 Grapevine job postings
+- `arlington_development`: 6 projects (Kubota HQ $51M, DFW Terminal F $4B, TEXRail TOD $114M, Gaylord expansion $174M, SH-114 $99M, Hotel Vin $40M)
+- `arlington_industries`: 7 Grapevine industries with "(Grapevine)" suffix
+- `arlington_labor_stats`: 8 Grapevine stats + 6 regional comparison stats (Southlake, Frisco)
+- `site_selection_packages`: 2 Grapevine packages (Corporate HQ, Hospitality expansion)
+- `employer_monitoring`: 4 Grapevine alerts (Kubota expansion, Paycom hiring, Gaylord renovation, DFW Terminal F)
+- `businesses`: 8 Grapevine businesses for EDC dashboard
+
+**Mock data updated in:** `queries.ts` (Edge Function), `uta-mock-data.ts` (frontend), `mockData.ts` (EDC dashboard)
+
+**AI Agent updates:** System prompt includes Grapevine key facts. Tool descriptions reference "Arlington/Grapevine/DFW". Suggested questions include Grapevine-specific prompts for EDC role. Regional comparisons include Grapevine, Southlake, Frisco.
 
 ### Marketing Pages — SEO & Branding
 

@@ -188,6 +188,15 @@ export const MOCK_BUSINESSES = [
   { id: 'biz-13', company_name: 'DFW Airport Hotels Group', county_fips: '48113', naics_code: '721110', company_size: 'medium', employee_count: 820, city: 'Irving', structural_risk_score: 0.45, open_positions: 68 },
   { id: 'biz-14', company_name: 'North Texas Food Bank', county_fips: '48113', naics_code: '624210', company_size: 'small', employee_count: 340, city: 'Plano', structural_risk_score: 0.10, open_positions: 15 },
   { id: 'biz-15', company_name: 'Dallas Digital Solutions', county_fips: '48113', naics_code: '541511', company_size: 'small', employee_count: 180, city: 'Dallas', structural_risk_score: 0.20, open_positions: 22 },
+  // Grapevine businesses
+  { id: 'biz-16', company_name: 'Gaylord Texan Resort', county_fips: '48439', naics_code: '721110', company_size: 'large', employee_count: 2000, city: 'Grapevine', structural_risk_score: 0.10, open_positions: 85 },
+  { id: 'biz-17', company_name: 'Baylor Scott & White - Grapevine', county_fips: '48439', naics_code: '622110', company_size: 'large', employee_count: 2000, city: 'Grapevine', structural_risk_score: 0.08, open_positions: 120 },
+  { id: 'biz-18', company_name: 'Grapevine Mills Mall (Simon)', county_fips: '48439', naics_code: '531120', company_size: 'large', employee_count: 2000, city: 'Grapevine', structural_risk_score: 0.15, open_positions: 95 },
+  { id: 'biz-19', company_name: 'Grapevine-Colleyville ISD', county_fips: '48439', naics_code: '611110', company_size: 'large', employee_count: 1861, city: 'Grapevine', structural_risk_score: 0.22, open_positions: 45 },
+  { id: 'biz-20', company_name: 'DFW Airport (Grapevine)', county_fips: '48439', naics_code: '488119', company_size: 'large', employee_count: 1500, city: 'Grapevine', structural_risk_score: 0.05, open_positions: 65 },
+  { id: 'biz-21', company_name: 'Paycom Grapevine', county_fips: '48439', naics_code: '511210', company_size: 'large', employee_count: 1000, city: 'Grapevine', structural_risk_score: 0.08, open_positions: 42 },
+  { id: 'biz-22', company_name: 'Kubota NA HQ', county_fips: '48439', naics_code: '333111', company_size: 'medium', employee_count: 500, city: 'Grapevine', structural_risk_score: 0.12, open_positions: 28 },
+  { id: 'biz-23', company_name: 'Great Wolf Lodge Grapevine', county_fips: '48439', naics_code: '721110', company_size: 'medium', employee_count: 500, city: 'Grapevine', structural_risk_score: 0.18, open_positions: 35 },
 ]
 
 // Student Dashboard - Career Pathways

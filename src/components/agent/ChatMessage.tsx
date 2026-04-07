@@ -2,7 +2,18 @@ import type { ChatMessage as ChatMessageType } from '../../hooks/useChat'
 import { ToolActivityIndicator } from './ToolActivityIndicator'
 import { ChartCard } from './charts/ChartCard'
 
+function sanitizeContent(text: string): string {
+  // Remove raw API error JSON that may leak into streamed content
+  return text
+    .replace(/\d{3}\s*\{"type":"error".*$/s, '')
+    .replace(/\{"type":"error","error":\{.*?\}\}/g, '')
+    .trim()
+}
+
 function renderMarkdown(text: string) {
+  if (!text) return null
+
+  text = sanitizeContent(text)
   if (!text) return null
 
   // Split into lines and process

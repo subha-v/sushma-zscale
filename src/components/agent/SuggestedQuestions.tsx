@@ -22,7 +22,7 @@ const CATEGORIES = [
     questions: [
       'Which Fortune 500 companies hire UTA grads?',
       'What aerospace & defense employers are in the area?',
-      'Which employers have the most job openings right now?',
+      'What employers are in Grapevine, TX?',
     ],
   },
   {
@@ -35,7 +35,7 @@ const CATEGORIES = [
     questions: [
       'What is the unemployment rate in Fort Worth-Arlington?',
       'Which industries are growing fastest in DFW?',
-      'What major development projects are underway in Arlington?',
+      'What major development projects are underway in Grapevine?',
     ],
   },
   {
@@ -146,7 +146,7 @@ const ROLE_CATEGORIES: Record<string, typeof CATEGORIES> = {
       questions: [
         'Show me site selection packages for tech companies',
         'What talent pipeline exists for aerospace employers?',
-        'Compare Arlington vs Dallas vs Austin labor markets',
+        'Generate a site selection package for a corporate HQ in Arlington',
       ],
     },
     {
@@ -170,9 +170,64 @@ const ROLE_CATEGORIES: Record<string, typeof CATEGORIES> = {
         </svg>
       ),
       questions: [
-        'Compare Fort Worth-Arlington with Dallas metro wages',
+        'Compare Arlington vs Dallas vs Fort Worth labor markets',
         'What industries are growing fastest in DFW?',
-        'Show me the employer landscape for healthcare',
+        'Show me the employer landscape for aerospace in Arlington',
+      ],
+    },
+  ],
+  'edc-grapevine': [
+    {
+      title: 'Site Selection',
+      icon: (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+        </svg>
+      ),
+      questions: [
+        'What is the talent pipeline for technology companies considering Grapevine?',
+        'Generate a site selection package for a corporate HQ in Grapevine',
+        'What makes Grapevine attractive for corporate relocations?',
+      ],
+    },
+    {
+      title: 'Employer Intelligence',
+      icon: (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+        </svg>
+      ),
+      questions: [
+        'Which employers in Grapevine are showing expansion signals?',
+        'Which Grapevine employers are most at risk of leaving?',
+        'Get detailed intelligence on Kubota North America expansion',
+      ],
+    },
+    {
+      title: 'Skills & Talent',
+      icon: (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+        </svg>
+      ),
+      questions: [
+        'What skills are emerging in DFW that Grapevine employers will need?',
+        'What skills gaps exist between UTA programs and Grapevine employer needs?',
+        'Show me the UTA talent pipeline to Grapevine employers',
+      ],
+    },
+    {
+      title: 'Regional & Board',
+      icon: (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+        </svg>
+      ),
+      questions: [
+        'Compare Grapevine vs Southlake vs Frisco for a corporate HQ relocation',
+        'Generate a board report on Grapevine\'s economic health',
+        'What industries are growing fastest in Grapevine?',
       ],
     },
   ],
@@ -264,10 +319,13 @@ interface SuggestedQuestionsProps {
   onSelect: (question: string) => void
   isLoading: boolean
   role?: 'college' | 'edc' | 'student' | 'twc' | 'general'
+  countyFips?: string
 }
 
-export function SuggestedQuestions({ onSelect, isLoading, role }: SuggestedQuestionsProps) {
-  const categories = (role && role !== 'general' && ROLE_CATEGORIES[role]) || CATEGORIES
+export function SuggestedQuestions({ onSelect, isLoading, role, countyFips }: SuggestedQuestionsProps) {
+  // Grapevine EDC users (Tarrant County 48439) get Grapevine-specific questions
+  const roleKey = role === 'edc' && countyFips === '48439' ? 'edc-grapevine' : role
+  const categories = (roleKey && roleKey !== 'general' && ROLE_CATEGORIES[roleKey]) || CATEGORIES
 
   return (
     <div className="space-y-4">

@@ -362,7 +362,7 @@ export default function DashboardLayout({
         <div className="flex-1 overflow-y-auto" role="log" aria-live="polite">
           {!hasMessages ? (
             <div className="p-4">
-              <SuggestedQuestions onSelect={handleQuestionSelect} isLoading={isLoading} role={role} />
+              <SuggestedQuestions onSelect={handleQuestionSelect} isLoading={isLoading} role={role} countyFips={user.countyFips} />
             </div>
           ) : (
             <div className="p-4">
@@ -388,7 +388,16 @@ export default function DashboardLayout({
         </div>
 
         {/* Chat Input */}
-        <ChatInput onSend={sendMessage} onStop={stopStreaming} isLoading={isLoading} inputRef={chatInputRef} />
+        <ChatInput
+          onSend={sendMessage}
+          onStop={stopStreaming}
+          isLoading={isLoading}
+          inputRef={chatInputRef}
+          placeholder={role === 'edc' && user.countyFips === '48439'
+            ? 'Ask about Grapevine employers, hiring trends, site selection...'
+            : undefined
+          }
+        />
       </aside>
     </>,
     document.body

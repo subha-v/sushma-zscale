@@ -9,6 +9,7 @@ import { getStoredUser } from '../lib/supabase'
 export default function AgentChat() {
   const user = getStoredUser()
   const userRole = user?.role as 'college' | 'edc' | 'student' | 'twc' | undefined
+  const isGrapevine = userRole === 'edc' && user?.countyFips === '48439'
   const { messages, isLoading, error, sendMessage, stopStreaming, clearMessages } = useChat(userRole)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -48,7 +49,7 @@ export default function AgentChat() {
           </Link>
         </div>
         <div className="flex-1 overflow-y-auto p-4">
-          <SuggestedQuestions onSelect={handleQuestionSelect} isLoading={isLoading} role={userRole} />
+          <SuggestedQuestions onSelect={handleQuestionSelect} isLoading={isLoading} role={userRole} countyFips={user?.countyFips} />
         </div>
       </aside>
 
@@ -68,7 +69,7 @@ export default function AgentChat() {
             </button>
 
             <div>
-              <h1 className="text-sm font-semibold text-white">UTA Workforce Intelligence Agent</h1>
+              <h1 className="text-sm font-semibold text-white">{isGrapevine ? 'Grapevine EDC Intelligence Agent' : 'UTA Workforce Intelligence Agent'}</h1>
               <p className="text-xs text-neutral-500">Powered by Claude + Supabase</p>
             </div>
           </div>
@@ -103,19 +104,26 @@ export default function AgentChat() {
                   </svg>
                 </div>
                 <h2 className="text-2xl font-display font-bold text-white mb-3">
-                  UTA Workforce Intelligence
+                  {isGrapevine ? 'Grapevine EDC Intelligence' : 'UTA Workforce Intelligence'}
                 </h2>
                 <p className="text-neutral-400 text-sm leading-relaxed mb-6">
-                  Ask me anything about UTA's 180+ academic programs, Arlington/DFW employers,
-                  job openings, starting salaries, skills gaps, and labor market trends.
+                  {isGrapevine
+                    ? 'Ask me anything about Grapevine employers, hiring trends, site selection packages, employer alerts, and competitive analysis vs neighboring cities.'
+                    : 'Ask me anything about UTA\'s 180+ academic programs, Arlington/DFW employers, job openings, starting salaries, skills gaps, and labor market trends.'
+                  }
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {[
+                  {(isGrapevine ? [
+                    'What employers are in Grapevine?',
+                    'What employer alerts are active in Grapevine?',
+                    'Compare Grapevine vs Southlake vs Frisco',
+                    'Generate a site selection package for Grapevine',
+                  ] : [
                     'What are the highest-paying programs?',
                     'Which employers hire the most UTA grads?',
                     'What jobs are available in aerospace?',
                     'Show me skills gaps for CS students',
-                  ].map(q => (
+                  ]).map(q => (
                     <button
                       key={q}
                       onClick={() => sendMessage(q)}
@@ -149,7 +157,12 @@ export default function AgentChat() {
         </div>
 
         {/* Input */}
-        <ChatInput onSend={sendMessage} onStop={stopStreaming} isLoading={isLoading} />
+        <ChatInput
+          onSend={sendMessage}
+          onStop={stopStreaming}
+          isLoading={isLoading}
+          placeholder={isGrapevine ? 'Ask about Grapevine employers, hiring trends, site selection...' : undefined}
+        />
       </div>
     </div>
   )

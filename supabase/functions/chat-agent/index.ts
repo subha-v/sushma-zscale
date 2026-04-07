@@ -141,7 +141,17 @@ Deno.serve(async (req) => {
 
           sendEvent("done", {});
         } catch (err) {
-          const errMsg = err instanceof Error ? err.message : "Internal error";
+          let errMsg = "Something went wrong. Please try again in a moment.";
+          if (err instanceof Error) {
+            const msg = err.message || "";
+            if (msg.includes("rate_limit") || msg.includes("429") || msg.includes("rate limit")) {
+              errMsg = "The AI is temporarily busy. Please wait a few seconds and try again.";
+            } else if (msg.includes("overloaded") || msg.includes("529")) {
+              errMsg = "The AI service is experiencing high demand. Please try again shortly.";
+            } else if (msg.includes("authentication") || msg.includes("401")) {
+              errMsg = "API authentication error. Please contact support.";
+            }
+          }
           sendEvent("error", { message: errMsg });
         } finally {
           controller.close();

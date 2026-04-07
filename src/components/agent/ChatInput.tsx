@@ -5,9 +5,10 @@ interface ChatInputProps {
   onStop: () => void
   isLoading: boolean
   inputRef?: React.RefObject<HTMLTextAreaElement | null>
+  placeholder?: string
 }
 
-export function ChatInput({ onSend, onStop, isLoading, inputRef }: ChatInputProps) {
+export function ChatInput({ onSend, onStop, isLoading, inputRef, placeholder }: ChatInputProps) {
   const [value, setValue] = useState('')
   const [visualize, setVisualize] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
@@ -54,7 +55,7 @@ export function ChatInput({ onSend, onStop, isLoading, inputRef }: ChatInputProp
             value={value}
             onChange={e => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about UTA programs, employers, salaries, job openings..."
+            placeholder={placeholder || "Ask about UTA programs, employers, salaries, job openings..."}
             rows={1}
             className="flex-1 bg-ink-light border border-ink-border rounded-xl px-4 py-3 text-sm text-white placeholder:text-neutral-500 resize-none focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/25 transition-colors"
           />

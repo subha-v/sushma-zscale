@@ -108,6 +108,17 @@ const DEMO_USERS: Record<string, User> = {
     countyName: 'Collin',
     region: 'North Texas'
   },
+  'DEMO-EDC-GRAPEVINE-2026': {
+    id: 'demo-edc-grapevine',
+    email: 'grapevine@demo.zscale.com',
+    firstName: 'Dallas',
+    lastName: 'Snow',
+    role: 'edc',
+    subRole: 'Commercial Outreach Manager',
+    countyFips: '48439',
+    countyName: 'Tarrant',
+    region: 'North Texas'
+  },
   'DEMO-STUDENT-COUNSELOR-2026': {
     id: 'demo-student-counselor',
     email: 'counselor@demo.zscale.com',

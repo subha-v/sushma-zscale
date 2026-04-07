@@ -5,13 +5,29 @@ import { getStoredUser, supabase } from '../../../lib/supabase'
 import { MOCK_BUSINESSES } from '../../../lib/mockData'
 import SiteSelectionPage from './SiteSelectionPage'
 import EmployerAlertsPage from './EmployerAlertsPage'
+import RegionalComparisonPage from './RegionalComparisonPage'
+import SkillsDemandPage from './SkillsDemandPage'
+import TalentPipelinePage from './TalentPipelinePage'
 import ComingSoonPage from '../../../components/dashboard/ComingSoonPage'
 
 const NAV_ITEMS = [
   { label: 'Sectoral Health', path: '/dashboard/edc', icon: '', category: 'Analysis' },
+  { label: 'Skills Demand', path: '/dashboard/edc/skills-demand', icon: '', category: 'Analysis' },
+  { label: 'Talent Pipeline', path: '/dashboard/edc/talent-pipeline', icon: '', category: 'Analysis' },
   { label: 'Site Selection', path: '/dashboard/edc/site-selection', icon: '', category: 'Analysis' },
   { label: 'Employer Alerts', path: '/dashboard/edc/employer-alerts', icon: '', category: 'Analysis' },
+  { label: 'Regional Comparison', path: '/dashboard/edc/regional-comparison', icon: '', category: 'Analysis' },
 ]
+
+function InfoIcon() {
+  return (
+    <svg className="w-3.5 h-3.5 text-neutral-600 group-hover:text-neutral-400 transition-colors ml-1.5 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <circle cx="8" cy="8" r="6.5" />
+      <line x1="8" y1="7" x2="8" y2="11.5" strokeLinecap="round" />
+      <circle cx="8" cy="5" r="0.75" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
 
 // NAICS code to sector name mapping
 const NAICS_TO_SECTOR: Record<string, string> = {
@@ -155,43 +171,21 @@ export default function EDCDashboard() {
     return { bg: 'bg-red-500/20', text: 'text-red-400' }
   }
 
-  if (loading) {
-    return (
-      <DashboardLayout
-        title="Sectoral Health Dashboard"
-        subtitle="Economic Development Intelligence"
-        navItems={NAV_ITEMS}
-        role="edc"
-      >
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-neutral-400">Loading business data...</p>
-          </div>
-        </div>
-      </DashboardLayout>
-    )
-  }
-
-  if (error) {
-    return (
-      <DashboardLayout
-        title="Sectoral Health Dashboard"
-        subtitle="Economic Development Intelligence"
-        navItems={NAV_ITEMS}
-        role="edc"
-      >
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <p className="text-red-400 mb-2">Error loading data</p>
-            <p className="text-neutral-500 text-sm">{error}</p>
-          </div>
-        </div>
-      </DashboardLayout>
-    )
-  }
-
-  const defaultContent = (
+  const defaultContent = loading ? (
+    <div className="flex items-center justify-center h-64">
+      <div className="text-center">
+        <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-neutral-400">Loading business data...</p>
+      </div>
+    </div>
+  ) : error ? (
+    <div className="flex items-center justify-center h-64">
+      <div className="text-center">
+        <p className="text-red-400 mb-2">Error loading data</p>
+        <p className="text-neutral-500 text-sm">{error}</p>
+      </div>
+    </div>
+  ) : (
     <>
       {/* Compact Metrics Bar */}
       <div className="card-skeuomorphic rounded-xl px-5 py-3 mb-8">
@@ -296,7 +290,13 @@ export default function EDCDashboard() {
       {/* Top Employers Table */}
       <div className="card-skeuomorphic rounded-2xl overflow-hidden">
         <div className="p-4 border-b border-ink-border flex items-center justify-between">
-          <h3 className="text-h4 text-white">Top Employers</h3>
+          <div className="relative group flex items-center">
+            <h3 className="text-h4 text-white">Top Employers</h3>
+            <InfoIcon />
+            <div className="absolute left-0 top-full mt-2 bg-ink-card border border-ink-border rounded-lg shadow-lg text-xs text-neutral-300 p-3 w-72 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              Largest employers in your region ranked by total headcount. Sources: TX Comptroller QCEW, BLS, and EDC filings.
+            </div>
+          </div>
           <span className="text-caption text-neutral-500">By employee count</span>
         </div>
         <div className="overflow-x-auto">
@@ -308,7 +308,20 @@ export default function EDCDashboard() {
                 <th className="text-left p-4 text-neutral-500 text-sm font-medium">City</th>
                 <th className="text-right p-4 text-neutral-500 text-sm font-medium">Employees</th>
                 <th className="text-right p-4 text-neutral-500 text-sm font-medium">Openings</th>
-                <th className="text-right p-4 text-neutral-500 text-sm font-medium">Risk</th>
+                <th className="text-right p-4 text-neutral-500 text-sm font-medium">
+                  <div className="relative group inline-flex items-center justify-end">
+                    <span>Risk</span>
+                    <InfoIcon />
+                    <div className="absolute right-0 top-full mt-2 bg-ink-card border border-ink-border rounded-lg shadow-lg text-xs text-neutral-300 p-3 w-72 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-left font-normal">
+                      <p className="mb-2">Structural Risk Score (0.00–1.00) — Composite measure of employer vulnerability based on industry volatility, revenue concentration, regulatory exposure, and workforce turnover.</p>
+                      <div className="space-y-1">
+                        <p><span className="text-green-400 font-medium">Green</span> &lt; 0.20 = Low risk</p>
+                        <p><span className="text-yellow-400 font-medium">Yellow</span> 0.20–0.35 = Moderate</p>
+                        <p><span className="text-red-400 font-medium">Red</span> &gt; 0.35 = Elevated</p>
+                      </div>
+                    </div>
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -369,11 +382,15 @@ export default function EDCDashboard() {
       title="Sectoral Health Dashboard"
       subtitle="Economic Development Intelligence"
       navItems={NAV_ITEMS}
+      role="edc"
     >
       <Routes>
         <Route index element={defaultContent} />
+        <Route path="skills-demand" element={<SkillsDemandPage />} />
+        <Route path="talent-pipeline" element={<TalentPipelinePage />} />
         <Route path="site-selection" element={<SiteSelectionPage />} />
         <Route path="employer-alerts" element={<EmployerAlertsPage />} />
+        <Route path="regional-comparison" element={<RegionalComparisonPage />} />
         <Route path="*" element={<ComingSoonPage />} />
       </Routes>
     </DashboardLayout>

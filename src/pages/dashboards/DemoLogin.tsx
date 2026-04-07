@@ -18,6 +18,7 @@ const DEMO_ACCOUNTS = [
     accounts: [
       { label: 'Director', token: 'DEMO-EDC-DIRECTOR-2026', county: 'Dallas', desc: 'Full sectoral reports' },
       { label: 'Analyst', token: 'DEMO-EDC-ANALYST-2026', county: 'Collin', desc: 'Read-only analysis' },
+      { label: 'Grapevine EDC', token: 'DEMO-EDC-GRAPEVINE-2026', county: 'Tarrant', desc: 'Grapevine employer intelligence' },
     ]
   },
   {
@@ -194,7 +195,7 @@ export default function DemoLogin() {
                     </span>
                   </div>
                   <p className="text-caption text-neutral-400">
-                    Ask anything about UTA programs, Arlington jobs, employer partnerships, or career outcomes
+                    Ask anything about UTA programs, Arlington/Grapevine jobs, employer partnerships, or career outcomes
                   </p>
                 </div>
               </div>
