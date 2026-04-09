@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAskAgent } from '../../../components/dashboard/DashboardLayout'
 import { supabase } from '../../../lib/supabase'
+import InfoTooltip from '../../../components/dashboard/InfoTooltip'
 
 interface CityData {
   city: string
@@ -146,13 +147,13 @@ export default function RegionalComparisonPage() {
       {/* Comparison Table */}
       <div className="card-skeuomorphic rounded-2xl overflow-hidden mb-8">
         <div className="p-4 border-b border-ink-border">
-          <h3 className="text-h4 text-white">City-by-City Comparison</h3>
+          <h3 className="text-h4 text-white inline-flex items-center">City-by-City Comparison<InfoTooltip align="left" text={<><p className="mb-1.5">Side-by-side economic indicators for competitive DFW cities. <span className="text-green-400">Green values</span> indicate best-in-class for that metric.</p><p>For unemployment rate, lowest is best. For all other numeric metrics, highest is best. Grapevine column highlighted in teal.</p></>} /></h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-ink-border bg-ink-medium/50">
-                <th className="text-left p-4 text-neutral-500 text-sm font-medium w-44">Metric</th>
+                <th className="text-left p-4 text-neutral-500 text-sm font-medium w-44"><span className="inline-flex items-center">Metric<InfoTooltip align="left" text="Data sourced from Census Bureau (ACS), BLS Quarterly Census of Employment & Wages (QCEW), Texas Comptroller, and EDC filings." /></span></th>
                 {cities.map(city => (
                   <th
                     key={city.city}

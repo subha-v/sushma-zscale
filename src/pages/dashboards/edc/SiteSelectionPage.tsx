@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAskAgent } from '../../../components/dashboard/DashboardLayout'
 import { supabase } from '../../../lib/supabase'
+import InfoTooltip from '../../../components/dashboard/InfoTooltip'
 
 interface SitePackage {
   id: string
@@ -102,11 +103,11 @@ export default function SiteSelectionPage() {
           <p className="text-3xl font-display font-bold text-white">{packages.length}</p>
         </div>
         <div className="card-skeuomorphic rounded-xl p-5">
-          <p className="text-neutral-500 text-sm mb-1">Delivered</p>
+          <p className="text-neutral-500 text-sm mb-1 inline-flex items-center">Delivered<InfoTooltip align="left" text="Packages completed and sent to company stakeholders for their site selection evaluation." /></p>
           <p className="text-3xl font-display font-bold text-accent">{packages.filter(p => p.status === 'delivered').length}</p>
         </div>
         <div className="card-skeuomorphic rounded-xl p-5">
-          <p className="text-neutral-500 text-sm mb-1">Total Headcount</p>
+          <p className="text-neutral-500 text-sm mb-1 inline-flex items-center">Total Headcount<InfoTooltip align="center" text="Sum of all positions needed across all site selection packages. Represents total hiring demand from active prospects." /></p>
           <p className="text-3xl font-display font-bold text-green-400">{packages.reduce((s, p) => s + p.headcount_needed, 0).toLocaleString()}</p>
         </div>
         <div className="card-skeuomorphic rounded-xl p-5">
@@ -131,8 +132,9 @@ export default function SiteSelectionPage() {
                       <span className="text-accent text-sm font-medium">{pkg.headcount_needed} positions</span>
                     </div>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${status.bg} ${status.text}`}>
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center ${status.bg} ${status.text}`}>
                     {status.label}
+                    <InfoTooltip className="w-64" text={<><p><span className="text-neutral-400">Draft</span> — In preparation. <span className="text-green-400">Complete</span> — Ready to deliver. <span className="text-accent">Delivered</span> — Sent to prospect. <span className="text-neutral-500">Archived</span> — Closed/inactive.</p></>} />
                   </span>
                 </div>
 

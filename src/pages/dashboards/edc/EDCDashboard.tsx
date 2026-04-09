@@ -9,6 +9,7 @@ import RegionalComparisonPage from './RegionalComparisonPage'
 import SkillsDemandPage from './SkillsDemandPage'
 import TalentPipelinePage from './TalentPipelinePage'
 import ComingSoonPage from '../../../components/dashboard/ComingSoonPage'
+import InfoTooltip from '../../../components/dashboard/InfoTooltip'
 
 const NAV_ITEMS = [
   { label: 'Sectoral Health', path: '/dashboard/edc', icon: '', category: 'Analysis' },
@@ -194,7 +195,7 @@ export default function EDCDashboard() {
           <span className="text-neutral-600">|</span>
           <span className="text-accent">{totals.jobs.toLocaleString()} jobs</span>
           <span className="text-neutral-600">|</span>
-          <span className={`${getRiskColor(totals.avgRisk).text}`}>Risk: {totals.avgRisk.toFixed(2)}</span>
+          <span className={`${getRiskColor(totals.avgRisk).text} inline-flex items-center`}>Risk: {totals.avgRisk.toFixed(2)}<InfoTooltip align="center" text={<><p className="mb-2">Structural Risk Score (0.00–1.00) — Composite measure of employer vulnerability based on industry volatility, revenue concentration, regulatory exposure, and workforce turnover.</p><div className="space-y-1"><p><span className="text-green-400 font-medium">Green</span> &lt; 0.20 = Low risk</p><p><span className="text-yellow-400 font-medium">Yellow</span> 0.20–0.35 = Moderate</p><p><span className="text-red-400 font-medium">Red</span> &gt; 0.35 = Elevated</p></div></>} /></span>
           <span className="text-neutral-600">|</span>
           <span className="text-green-400">{totals.openings.toLocaleString()} open positions</span>
           <span className="text-neutral-500 text-xs ml-auto">{user?.countyName || 'All'} County</span>
@@ -203,7 +204,7 @@ export default function EDCDashboard() {
 
       {/* Risk Distribution Visual */}
       <div className="card-skeuomorphic rounded-2xl p-6 mb-8">
-        <h3 className="text-h4 text-white mb-4">Risk Distribution by Sector</h3>
+        <h3 className="text-h4 text-white mb-4 inline-flex items-center">Risk Distribution by Sector<InfoTooltip align="left" text="Average structural risk score per sector. Longer bar = higher vulnerability. Based on industry volatility, revenue concentration, regulatory exposure, and workforce turnover." /></h3>
         <div className="space-y-3">
           {sectorData.slice(0, 8).map((sector) => {
             const colors = getRiskColor(sector.avgRisk)
@@ -242,7 +243,7 @@ export default function EDCDashboard() {
                 <th className="text-right p-4 text-neutral-500 text-sm font-medium">Businesses</th>
                 <th className="text-right p-4 text-neutral-500 text-sm font-medium">Jobs</th>
                 <th className="text-right p-4 text-neutral-500 text-sm font-medium">Open Positions</th>
-                <th className="text-right p-4 text-neutral-500 text-sm font-medium">Avg Risk</th>
+                <th className="text-right p-4 text-neutral-500 text-sm font-medium"><span className="inline-flex items-center justify-end">Avg Risk<InfoTooltip text="Average Structural Risk Score across all businesses in this sector. Weighted by employee count. Lower is better." /></span></th>
               </tr>
             </thead>
             <tbody>

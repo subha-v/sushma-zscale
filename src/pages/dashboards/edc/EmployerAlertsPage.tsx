@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAskAgent } from '../../../components/dashboard/DashboardLayout'
 import { supabase } from '../../../lib/supabase'
+import InfoTooltip from '../../../components/dashboard/InfoTooltip'
 
 interface EmployerAlert {
   id: string
@@ -113,7 +114,7 @@ export default function EmployerAlertsPage() {
       {/* Compact Metrics Bar */}
       <div className="card-skeuomorphic rounded-xl px-5 py-3 mb-6">
         <div className="flex items-center gap-6 flex-wrap text-sm">
-          <span className="text-neutral-400">{alerts.length} active alerts</span>
+          <span className="text-neutral-400 inline-flex items-center">{alerts.length} active alerts<InfoTooltip align="left" text={<><p className="mb-1.5">Signals detected from job posting analysis, SEC filings, press releases, and public records.</p><p className="mb-1.5"><span className="text-green-400">Hiring Surge</span> — Rapid increase in job postings. <span className="text-accent">Expansion</span> — Facility or team growth. <span className="text-purple-400">New Facility</span> — Greenfield project.</p><p><span className="text-red-400">Contraction</span> — Headcount reduction. <span className="text-red-400">Layoff</span> — Workforce reduction event.</p></>} /></span>
           <span className="text-neutral-600">|</span>
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-green-400" />
@@ -172,7 +173,7 @@ export default function EmployerAlertsPage() {
                       <div className="flex items-center gap-2 mt-1">
                         <span className={`text-sm font-medium ${signal.color}`}>{alert.company_name}</span>
                         <span className="text-neutral-600">|</span>
-                        <span className={`text-xs ${strength.color}`}>{strength.label} signal</span>
+                        <span className={`text-xs ${strength.color} inline-flex items-center`}>{strength.label} signal<InfoTooltip text={<><p className="mb-1.5">Signal strength indicates confidence level based on source quality and data volume.</p><p><span className="text-neutral-400">Weak</span> = single source, low volume. <span className="text-yellow-400">Moderate</span> = multiple indicators. <span className="text-green-400">Strong</span> = high confidence, corroborated. <span className="text-red-400">Critical</span> = urgent, high-impact event.</p></>} /></span>
                       </div>
                     </div>
                     <span className="text-neutral-500 text-xs shrink-0">

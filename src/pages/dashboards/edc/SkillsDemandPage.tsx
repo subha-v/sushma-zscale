@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAskAgent } from '../../../components/dashboard/DashboardLayout'
 import { supabase } from '../../../lib/supabase'
+import InfoTooltip from '../../../components/dashboard/InfoTooltip'
 
 interface EmergingSkill {
   skill_name: string
@@ -205,7 +206,7 @@ export default function SkillsDemandPage() {
       <div className="card-skeuomorphic rounded-2xl overflow-hidden mb-8">
         <div className="p-4 border-b border-ink-border flex items-center justify-between">
           <h3 className="text-h4 text-white">Emerging Skills in DFW</h3>
-          <span className="text-caption text-neutral-500">By job posting share</span>
+          <span className="text-caption text-neutral-500 inline-flex items-center">By job posting share<InfoTooltip text="Percentage of all DFW job postings that mention this skill. Bar width is normalized to the top skill." /></span>
         </div>
         <div className="p-6 space-y-4">
           {emerging.map((skill) => {
@@ -252,9 +253,9 @@ export default function SkillsDemandPage() {
               <tr className="border-b border-ink-border bg-ink-medium/50">
                 <th className="text-left p-4 text-neutral-500 text-sm font-medium">Skill</th>
                 <th className="text-left p-4 text-neutral-500 text-sm font-medium">Program</th>
-                <th className="text-center p-4 text-neutral-500 text-sm font-medium">Status</th>
-                <th className="text-center p-4 text-neutral-500 text-sm font-medium">Demand</th>
-                <th className="text-center p-4 text-neutral-500 text-sm font-medium">Trend</th>
+                <th className="text-center p-4 text-neutral-500 text-sm font-medium"><span className="inline-flex items-center justify-center">Status<InfoTooltip align="center" text={<><p className="mb-1.5"><span className="text-red-400 font-medium">Gap</span> — Skill in demand by employers but not taught in the program curriculum.</p><p className="mb-1.5"><span className="text-green-400 font-medium">Aligned</span> — Program teaches this skill and employers demand it.</p><p><span className="text-blue-400 font-medium">Surplus</span> — Program teaches this skill but employer demand is low.</p></>} /></span></th>
+                <th className="text-center p-4 text-neutral-500 text-sm font-medium"><span className="inline-flex items-center justify-center">Demand<InfoTooltip align="center" text={<><p><span className="text-red-400 font-medium">High</span> — Skill appears in 20%+ of relevant DFW job postings.</p><p><span className="text-yellow-400 font-medium">Medium</span> — Skill appears in 10–20% of postings.</p><p><span className="text-neutral-400 font-medium">Low</span> — Skill appears in fewer than 10% of postings.</p></>} /></span></th>
+                <th className="text-center p-4 text-neutral-500 text-sm font-medium"><span className="inline-flex items-center justify-center">Trend<InfoTooltip align="right" text="Rising = skill is growing in market demand based on 12-week job posting trend analysis. Stable = consistent baseline demand with no significant change." /></span></th>
               </tr>
             </thead>
             <tbody>

@@ -47,7 +47,7 @@ Build outputs to `dist/`. For Hostinger deployment:
 - `src/components/IRI/` - Investment Readiness Index assessment flow
 - `src/components/Diagnostic/` - Advisor Match diagnostic flow
 - `src/components/tools/` - Interactive tools (equity calculator, investor list, etc.)
-- `src/components/dashboard/` - Shared dashboard layout, welcome banner, coming soon placeholder
+- `src/components/dashboard/` - Shared dashboard layout, welcome banner, coming soon placeholder, info tooltip
 - `src/config/api.ts` - API endpoint, form type constants, localStorage helpers
 - `src/lib/supabase.ts` - Supabase client, types, and data fetching functions
 - `src/lib/mockData.ts` - Fallback demo data when Supabase tables are empty
@@ -472,6 +472,7 @@ All 4 dashboards now use internal `Routes`/`Route` from React Router for sub-pag
 **Additional Components:**
 - `src/components/dashboard/WelcomeBanner.tsx` - Dismissable per-session welcome banner with role stats and CTA buttons
 - `src/components/dashboard/ComingSoonPage.tsx` - Warm placeholder for catch-all routes with "Ask AI Agent" CTA
+- `src/components/dashboard/InfoTooltip.tsx` - Shared hover tooltip for table column headers and metric labels. Renders an info icon (ℹ) with a hover-activated popover. Props: `text` (string or JSX), `align` ('left' | 'right' | 'center'), `className` (width override). Uses `group-hover/tip` for scoped hover targeting. Used across all 6 EDC dashboard pages to explain calculated metrics (Risk scores, Status/Demand/Trend columns, Signal Strength, partnership types, etc.).
 
 **SuggestedQuestions** (`src/components/agent/SuggestedQuestions.tsx`) now accepts an optional `role` prop (`'college' | 'edc' | 'student' | 'twc' | 'general'`) that shows role-specific question categories. Default/general shows the original 5 categories plus a new "Executive Suite" category. EDC role with Grapevine county (`countyFips === '48439'`) shows a tailored `edc-grapevine` variant with 4 categories covering 5 demo moments: Site Selection, Employer Intelligence, Skills & Talent, and Regional & Board.
 

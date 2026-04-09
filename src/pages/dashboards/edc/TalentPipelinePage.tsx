@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAskAgent } from '../../../components/dashboard/DashboardLayout'
 import { supabase } from '../../../lib/supabase'
+import InfoTooltip from '../../../components/dashboard/InfoTooltip'
 
 interface PipelineRecord {
   program_name: string
@@ -236,9 +237,9 @@ export default function TalentPipelinePage() {
               <tr className="border-b border-ink-border bg-ink-medium/50">
                 <th className="text-left p-4 text-neutral-500 text-sm font-medium">Program</th>
                 <th className="text-left p-4 text-neutral-500 text-sm font-medium">Employer</th>
-                <th className="text-center p-4 text-neutral-500 text-sm font-medium">Type</th>
-                <th className="text-right p-4 text-neutral-500 text-sm font-medium">Hires/Yr</th>
-                <th className="text-right p-4 text-neutral-500 text-sm font-medium">Avg Salary</th>
+                <th className="text-center p-4 text-neutral-500 text-sm font-medium"><span className="inline-flex items-center justify-center">Type<InfoTooltip align="center" text={<><p className="mb-1.5"><span className="text-green-400 font-medium">Hiring Pipeline</span> — Direct graduate recruitment pathway from UTA to employer.</p><p className="mb-1.5"><span className="text-blue-400 font-medium">Internship</span> — Paid or unpaid internship program with potential full-time conversion.</p><p className="mb-1.5"><span className="text-purple-400 font-medium">Co-Op</span> — Alternating semesters of coursework and full-time employment.</p><p className="mb-1.5"><span className="text-yellow-400 font-medium">Advisory Board</span> — Employer sits on program's industry advisory board.</p><p><span className="text-cyan-400 font-medium">Research</span> — Sponsored research collaboration between UTA and employer.</p></>} /></span></th>
+                <th className="text-right p-4 text-neutral-500 text-sm font-medium"><span className="inline-flex items-center justify-end">Hires/Yr<InfoTooltip text="Average number of UTA graduates or interns hired annually by this employer from this program. Based on 3–5 year rolling average from career center data." /></span></th>
+                <th className="text-right p-4 text-neutral-500 text-sm font-medium"><span className="inline-flex items-center justify-end">Avg Salary<InfoTooltip text="Average starting salary for graduates or interns entering this partnership. Based on career center post-graduation surveys and employer-reported data." /></span></th>
               </tr>
             </thead>
             <tbody>
