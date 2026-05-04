@@ -167,8 +167,8 @@ export default function DashboardLayout({
       <div className="h-16 px-4 border-b border-ink-border flex items-center">
         <Link to="/" className="flex items-center">
           <img
-            src="/images/zscale-capital-logo.png"
-            alt="zScale Capital"
+            src="/images/zscale-logo.png"
+            alt="zScale"
             className={`${!sidebarCollapsed ? 'h-10 w-auto' : 'h-8 w-auto'} object-contain transition-all duration-300`}
           />
         </Link>

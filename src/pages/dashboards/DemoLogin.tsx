@@ -94,8 +94,8 @@ export default function DemoLogin() {
         <div className="text-center mb-8">
           <Link to="/" className="inline-block mb-6">
             <img
-              src="/images/zscale-capital-logo.png"
-              alt="zScale Capital"
+              src="/images/zscale-logo.png"
+              alt="zScale"
               className="h-14 w-auto mx-auto"
             />
           </Link>

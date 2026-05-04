@@ -54,12 +54,22 @@ Build outputs to `dist/`. For Hostinger deployment:
 - `src/lib/uta-queries.ts` - UTA workforce intelligence query functions and TypeScript interfaces
 - `src/lib/uta-mock-data.ts` - Fallback demo data for UTA workforce tables
 - `src/lib/agent-api.ts` - SSE client for AI agent Edge Function
-- `sql/uta-workforce/` - SQL files (01-22) for UTA workforce dataset schema, data, predictive analytics, executive suite tables, lead capture, and Grapevine EDC data
+- `src/components/tracker/` - Texas Talent Pipeline Tracker components (TrackerCard, TrackerFilters, TrackerSubscribeForm, TrackerClaimForm, TrackerHeroStats, CitedBySection)
+- `src/lib/tracker-types.ts` - Tracker TypeScript types and category metadata
+- `src/lib/tracker-queries.ts` - Tracker Supabase query functions with mock data fallback
+- `src/lib/tracker-mock-data.ts` - Fallback demo data for tracker tables
+- `sql/uta-workforce/` - SQL files (01-25) for UTA workforce dataset schema, data, predictive analytics, executive suite tables, lead capture, Grapevine EDC data, intelligence pipeline, tracker tables, and tool waitlist
 - `src/hooks/` - Custom React hooks (scroll reveal, useChat)
 - `src/hooks/useChat.ts` - Chat state management hook (messages, streaming, tool activity, visualizations)
 - `src/components/agent/` - AI agent chat UI components
 - `src/components/agent/charts/` - Recharts-based chart components (bar, horizontal bar, pie, donut, line)
+- `src/components/intelligence/` - Workforce Intelligence Brief newsletter components (subscribe form, reading progress bar, author byline/bio, share button)
+- `src/data/intelligence-issues/` - Static newsletter issue data (types, issue-1 through issue-3, index)
+- `src/data/tool-definitions.ts` - TOOL_DEFINITIONS constant with metadata for 4 upcoming tool pages
 - `src/data/` - Static data (investors, checklist questions, equity benchmarks)
+- `src/styles/wib-issue.css` - Cream reading theme for newsletter issue pages (scoped under `.wib-issue-scope`)
+- `src/lib/intelligence-queries.ts` - Newsletter subscribe and view count functions (Supabase + Google Apps Script)
+- `src/lib/tool-waitlist.ts` - Tool waitlist signup function (Supabase + Google Apps Script fallback)
 - `supabase/functions/chat-agent/` - Supabase Edge Function for AI agent (Deno)
 - `scripts/` - Python data pipeline scripts (job scraping, skill trends, predictions)
 - `.github/workflows/` - GitHub Actions CI/CD (weekly data pipeline, monthly predictions)
@@ -72,8 +82,16 @@ Build outputs to `dist/`. For Hostinger deployment:
 /                      - HomePage
 /solutions             - SolutionsPage (tabbed: EDC, universities & colleges, consultants)
 /preview               - PreviewPage (lead capture form → demo access)
-/about                 - AboutPage (founder bio, government credentials, "Who We Serve")
+/about                 - AboutPage (story, founder, credentials, publications)
 /demo                  - DemoPage (demo request)
+/intelligence          - IntelligenceArchivePage (newsletter archive)
+/intelligence/:slug    - IntelligenceIssuePage (individual issue reading page)
+/tracker               - TrackerPage (Texas Talent Pipeline Tracker — public list)
+/tracker/:slug         - TrackerEntryPage (individual tracker entry detail)
+/tools/region-comparison    - ToolPlaceholderPage (region comparison waitlist)
+/tools/expansion-readiness  - ToolPlaceholderPage (expansion readiness scorecard waitlist)
+/tools/edc-directory        - ToolPlaceholderPage (EDC directory waitlist)
+/tools/talent-source-finder - ToolPlaceholderPage (talent source finder waitlist)
 
 # Auth & Dashboards (no Header/Footer)
 /login                 - LoginPage (demo/zscale credentials)
@@ -86,6 +104,17 @@ Build outputs to `dist/`. For Hostinger deployment:
 ```
 
 Header and Footer are conditionally hidden on `/dashboard/*`, `/demo-login`, `/login`, and `/agent` routes.
+
+### Header Navigation
+7-item desktop nav: Solutions, Tracker, Tools (hover dropdown), The Brief, About, Login. "Request Demo" CTA button at right.
+
+**Tools Dropdown** (hover, 150ms fade-in/out):
+- Region Comparison → `/tools/region-comparison`
+- Expansion Readiness Scorecard → `/tools/expansion-readiness`
+- EDC Directory → `/tools/edc-directory`
+- Talent Source Finder → `/tools/talent-source-finder`
+
+Dropdown panel: `bg-ink-card border border-ink-border rounded-xl`, left-aligned below "Tools" label. Active state on any `/tools/*` path. "Tracker" is top-level link to `/tracker`. "The Brief" is top-level link to `/intelligence`. Mobile menu shows Tools items expanded inline. Login uses `text-zinc-400` for de-emphasis.
 
 ### Dashboard System
 Four role-based dashboards with shared `DashboardLayout` component (sidebar + header + overlay AI chat panel). Each dashboard:
@@ -114,7 +143,7 @@ Four role-based dashboards with shared `DashboardLayout` component (sidebar + he
 - Auto-closes on nav link click
 - 48px touch targets (WCAG minimum)
 
-Demo login provides 10 test accounts (3 college, 3 EDC incl. Grapevine, 2 student, 2 TWC) stored in `DEMO_USERS` within `src/lib/supabase.ts` with `-2026` token suffix. Login falls back to local tokens when Supabase is unavailable. The demo login page also features an AI Agent card that links to `/agent`. Both LoginPage and DemoLogin use the real `zscale-capital-logo.png` image (same as Header/Footer/DashboardLayout).
+Demo login provides 10 test accounts (3 college, 3 EDC incl. Grapevine, 2 student, 2 TWC) stored in `DEMO_USERS` within `src/lib/supabase.ts` with `-2026` token suffix. Login falls back to local tokens when Supabase is unavailable. The demo login page also features an AI Agent card that links to `/agent`. Both LoginPage and DemoLogin use the `zscale-logo.png` image (same as Header/Footer/DashboardLayout).
 
 ### AI Agent Chat System
 A conversational AI interface at `/agent` powered by Claude Sonnet 4.6 via a Supabase Edge Function. Architecture:
@@ -196,7 +225,7 @@ Custom colors defined in `tailwind.config.js`:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                           zScale Capital Architecture                            │
+│                              zScale Architecture                                 │
 └─────────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────────┐
@@ -210,11 +239,11 @@ Custom colors defined in `tailwind.config.js`:
 │  │  Marketing Pages (with Header/Footer):                                      │ │
 │  │  ┌─────────────┐  ┌───────────────────────────────────┐  ┌─────────────┐   │ │
 │  │  │   Header    │  │           <Routes>                 │  │   Footer    │   │ │
-│  │  │  (Nav/Menu) │  │  /           → HomePage            │  │  Links      │   │ │
-│  │  │             │  │  /solutions  → SolutionsPage       │  │  Newsletter │   │ │
-│  │  │  Modal      │  │  /preview    → PreviewPage         │  │  Social     │   │ │
-│  │  │  Triggers   │  │  /about      → AboutPage           │  │             │   │ │
-│  │  │             │  │  /demo       → DemoPage            │  │             │   │ │
+│  │  │  (Nav/Menu) │  │  /           → HomePage            │  │  4-col grid │   │ │
+│  │  │   Tools     │  │  /solutions  → SolutionsPage       │  │  Credentials│   │ │
+│  │  │  Dropdown   │  │  /preview    → PreviewPage         │  │  LinkedIn   │   │ │
+│  │  │             │  │  /about      → AboutPage           │  │             │   │ │
+│  │  │             │  │  /tracker    → TrackerPage         │  │             │   │ │
 │  │  └─────────────┘  └───────────────────────────────────┘  └─────────────┘   │ │
 │  │                                                                             │ │
 │  │  Dashboard Pages (no Header/Footer):                                        │ │
@@ -396,7 +425,7 @@ Fallback mock data in `src/lib/uta-mock-data.ts` (5-15 records per table, includ
 
 ### SQL Files
 
-SQL files in `sql/uta-workforce/` are designed to be copy-pasted into Supabase SQL Editor in numbered order (01-22). Files 01-12 create the core workforce dataset. Files 13-18 add predictive analytics (schema, views, crosswalk data, BLS projections, seed predictions, verification). File 19 adds executive suite tables (program scorecards, compliance reports, site selection, employer monitoring, career advisor sessions). File 20 adds the `demo_leads` lead capture table. File 21 adds intelligence pipeline tables. File 22 adds Grapevine EDC data (10 employers, 10 jobs, 6 dev projects, 7 industries, 8 labor stats, 2 site selection packages, 4 employer alerts, 6 regional comparison stats, 8 businesses). All INSERTs use `ON CONFLICT DO NOTHING` for safe re-runs. All `CREATE POLICY` statements use `DROP POLICY IF EXISTS` before creation. Foreign keys use subquery references by name (not hardcoded UUIDs). RLS is enabled with public read policies on all tables.
+SQL files in `sql/uta-workforce/` are designed to be copy-pasted into Supabase SQL Editor in numbered order (01-25). Files 01-12 create the core workforce dataset. Files 13-18 add predictive analytics (schema, views, crosswalk data, BLS projections, seed predictions, verification). File 19 adds executive suite tables (program scorecards, compliance reports, site selection, employer monitoring, career advisor sessions). File 20 adds the `demo_leads` lead capture table. File 21 adds intelligence pipeline tables. File 22 adds Grapevine EDC data (10 employers, 10 jobs, 6 dev projects, 7 industries, 8 labor stats, 2 site selection packages, 4 employer alerts, 6 regional comparison stats, 8 businesses). File 23 adds newsletter tables. File 24 adds Texas Talent Pipeline Tracker tables (tracker_entries, tracker_claims, tracker_subscribers, tracker_citations, pilot_pipeline) with 2 triggers (auto-create pilot_pipeline from claims and edu/gov subscribers), RLS policies, and 5 seed entries. File 25 adds the `tool_waitlist` table for upcoming tool page email signups. All INSERTs use `ON CONFLICT DO NOTHING` for safe re-runs. All `CREATE POLICY` statements use `DROP POLICY IF EXISTS` before creation. Foreign keys use subquery references by name (not hardcoded UUIDs). RLS is enabled with public read policies on all tables.
 
 ### Predictive Analytics Pipeline
 
@@ -550,33 +579,239 @@ The platform now supports data for multiple cities beyond Arlington. File `sql/u
 
 ### Marketing Pages — SEO & Branding
 
-**SEO** (`index.html`): Meta tags target B2G workforce intelligence keywords (not VC/startup). Title: "zScale Capital | AI-Powered Workforce Intelligence for Universities & EDCs". Keywords include: workforce intelligence platform, labor market analytics, HB8 compliance, program ROI scoring, economic development data.
+**SEO** (`index.html`): Comprehensive structured data and meta tags for AI search and traditional search engines.
+- **Title:** "zScale | Economic Intelligence for Regions Building the AI Economy"
+- **Description:** Real-time data on businesses, jobs, capital flows and talent pipelines for universities, EDCs, employers and workforce boards
+- **OG title:** "zScale | Economic Intelligence for Regions Building the AI Economy"
+- **OG description:** "Real-time data on businesses, jobs, capital flows and talent pipelines. Universities, EDCs, employers and workforce boards run on the same numbers."
+- **Keywords:** economic intelligence, talent pipeline intelligence, Texas workforce data, labor market analytics, regional economic development, HB8 compliance, program ROI scoring, employer demand analytics, EDC data platform, skills gap analysis, site selection data, career outcomes tracking, AI economy, workforce intelligence
+- **Robots:** `index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1`
+- **Canonical:** `https://zscalecapital.com/`
+- **Organization JSON-LD:** Schema.org structured data with founder (Sushma Vadlamannati), contact (sales), areaServed (Texas), knowsAbout (7 topics)
+- **WebSite JSON-LD:** For Google sitelinks search box
+- **Social card:** `/images/zscale-social-card.png` (1200x1200 square with text)
+- **Favicon:** `/favicon.png` (Z monogram), cache-busted with `?v=7.0`
 
-**Government Credentials** (displayed on AboutPage and trust bars):
+**Logo & Image Assets** (`public/images/`):
+- `zscale-logo.png` — Wide banner logo used in Header (h-20/80px desktop, h-14/56px mobile), Footer (h-16/64px), LoginPage, DemoLogin, DashboardLayout, AdminDashboard. Alt text: "zScale"
+- `zscale-social-card.png` — Square logo with text used for OG/Twitter social card images and Schema.org publisher logo
+- `sushma-headshot.png` — Founder photo used on AboutPage (280px portrait). Newsletter issue pages still reference the legacy `sushma-headshot.jpg`
+- `favicon.png` — Z monogram used as site favicon and apple-touch-icon (at `/public/favicon.png`)
+
+**Government Credentials** (displayed on AboutPage "Credentials and compliance" section and small Footer credentials line only):
 - SAM.gov Registration: Active, UEI `DPKYDLDKEFG9`, CAGE `1A0X9`, expires Mar 2027
-- Business Classification: Women-Owned Small Business, Minority-Owned, Small Business (SBA)
 - NAICS Codes: 541611, 541511, 541512, 541612, 541720, 541910
-- PSC Codes: DA01, B506, B507, R408
-- WOSB (SBA) and WBENC certifications in progress (displayed as footnote, not primary credential)
-- Congressional District: Texas 24
+- Legal entity: zScale Capital LLC (Texas)
+- NO WOSB, Women-Owned Small Business, Minority-Owned, PSC codes, or business classification on homepage, header, or footer brand areas
 
 **Brand Consistency:**
-- All pages use `zscale-capital-logo.png` image (no text "Z" placeholders)
+- All pages use `zscale-logo.png` image (not the old `zscale-capital-logo.png`)
+- Public-facing alt text: "zScale" (not "zScale Capital")
 - "Universities & Colleges" (not "Community Colleges") across all pages
-- Trust bars on HomePage and PreviewPage: "Built for Texas Universities & EDCs" (no partnership claims)
+- No em-dashes anywhere in new copy
+- No Oxford commas (no comma before "and"/"or" in lists)
+- Sentence case headings (not Title Case)
+- Footer tagline: "Talent pipeline intelligence for Texas institutions"
+- Footer credentials line: "SAM.gov Registered · UEI DPKYDLDKEFG9 · CAGE 1A0X9" (text-xs text-white/30)
+- Footer columns: Platform, Solutions, Company, Legal (no subscribe form)
 - Copyright: 2026
 - Demo tokens use `-2026` suffix
 
 **HomePage Features:**
-- Animated AI Chat Preview section: IntersectionObserver triggers staggered typewriter animation (user bubble → typing dots → AI response with tool activity pill → data rows slide in one-by-one → live indicator). Uses `ChatPreview` component with step-based state machine.
-- Trust Bar: SAM.gov Registered, Women-Owned Small Business, UEI + CAGE codes
-- Hero with Dallas skyline background, data ticker (Q1 2026)
+- H1: "The economic intelligence layer for regions building the AI economy"
+- Hero with Dallas skyline background, data ticker (Q2 2026)
+- Trust strip: "SAM.gov registered" + "Serves 4 Texas regions" + "Updated weekly" (no WOSB, no UEI/CAGE)
+- 4-card audience grid: Universities and colleges, EDCs, Workforce boards, Site selection consultants
+- 2-row feature blocks: "Talent pipeline tracking" (text + pipeline visual) and "AI question layer" (text + ChatPreview)
+- ChatPreview: IntersectionObserver triggers staggered typewriter animation (user bubble, typing dots, AI response with tool activity pill, data rows slide in one-by-one, live indicator)
+- Tracker section (conditional on featured entries)
+- Published research section (2 latest issues + subscribe form)
+- Final CTA: "See your region's pipeline"
+- Schema.org SoftwareApplication JSON-LD via Helmet
 
-**AboutPage Design** (institutional B2G pattern):
-- Manifesto hero: "The data exists. Most institutions just can't use it."
-- Borderless stats with `divide-x` separators (no card borders)
-- Founder section: rectangular photo (`rounded-2xl`), company credential pills, fast-scan mini-stats row (`15 yrs`, `$500M+`, `200+`)
-- "Who We Serve" section: 3 audience cards (Universities, EDCs, Workforce Boards)
-- Government credentials formatted as data tables with `divide-y` rows
+**AboutPage Design** (institutional pattern, Stripe/Linear-inspired):
+- Structurally distinct from HomePage (no duplicated content)
 - Section labels: `text-xs uppercase tracking-[0.2em]` above every H2
 - Typography: `tracking-[-0.02em]` on headings for institutional feel
+- 7 sections (top to bottom):
+  1. **Hero** — Left-aligned (not centered), max-w-[720px], label "About", H1 "We map how talent moves from classrooms to employers across Texas", lead paragraph
+  2. **The Story** — Two-column grid: label + H2 "Why we built this" on left, 3 editorial paragraphs on right. No stats strip, no cards.
+  3. **How We Work** — 3-column principles grid with numbered labels (01/02/03): "Start with public data", "Make it legible", "Let the numbers argue"
+  4. **Founder** — 2-column: `lg:grid-cols-[280px_1fr]` (280px photo on desktop, 200px centered on mobile). Photo: `sushma-headshot.png`, rounded-2xl, `bg-ink-card`, `object-cover object-center`, no decorative circle/ring/white background. Bio: name, title, 2 body paragraphs, credentials data row (15 yrs experience / $500M+ budget / 200+ reports), LinkedIn button. No employer pills, no "Grapevine, Texas"
+  5. **What We Publish** — 3 cards: The Workforce Intelligence Brief, Texas Talent Pipeline Tracker, Interactive Tools. Each links to its respective route.
+  6. **Credentials and Compliance** — Data table with `divide-y` rows: SAM.gov, UEI, CAGE, NAICS, Legal entity, State. No WOSB.
+  7. **Get In Touch** — Minimal section with email + 2 CTA buttons (Request a demo, Explore the platform)
+- Meta tags via react-helmet-async (title: "About | zScale")
+
+### Workforce Intelligence Brief (Newsletter)
+
+A bi-weekly newsletter published at `/intelligence` with individual issue pages at `/intelligence/:slug`. Three issues published so far. Content is stored as static TypeScript data in `src/data/intelligence-issues/`.
+
+**Routes:**
+- `/intelligence` → `IntelligenceArchivePage` — newsletter archive with issue cards, subscribe forms, tag filters
+- `/intelligence/:slug` → `IntelligenceIssuePage` — individual issue reading experience
+
+**Data Model** (`src/data/intelligence-issues/types.ts`):
+```typescript
+interface IntelligenceIssue {
+  slug: string;
+  issueNumber: number;
+  title: string;
+  subtitle: string;
+  summary: string;
+  publishedAt: string;
+  readTimeMinutes: number;
+  tags: string[];
+  ogImage?: string;
+  linkedinUrl?: string;
+  bodyHtml: string;          // Raw HTML rendered via dangerouslySetInnerHTML
+  heroImage?: string;        // Future: real hero photo
+  heroGradient?: string;     // Future: custom gradient
+  authorName?: string;       // Default: Sushma Vadlamannati
+  authorTitle?: string;      // Default: Founder & CEO, zScale Capital
+  authorPhoto?: string;      // Default: /images/sushma-headshot.jpg
+  authorLinkedIn?: string;   // Default: LinkedIn profile URL
+  wordCount?: number;        // For Schema.org JSON-LD
+}
+```
+
+**Published Issues:**
+| Issue | Slug | Topic | Read Time |
+|-------|------|-------|-----------|
+| #1 | `issue-1-graduate-underemployment` | 52% graduate underemployment + OBBBA earnings test | 7 min |
+| #2 | `issue-2-degree-safety-net` | Degree as safety net collapse + Texas apprenticeship response | 10 min |
+| #3 | `issue-3-jobs-coming` | AI infrastructure spending + 5.25M worker shortfall | 12 min |
+
+**Issue Page Layout** (`IntelligenceIssuePage.tsx`, top to bottom):
+1. **Reading Progress Bar** — 3px accent-colored bar fixed at viewport top (z-1001), tracks scroll position
+2. **Dark Hero Section** — Full-width `bg-[#050505]` with teal grid pattern, back link, issue meta (number, date, read time), title (Cormorant Garamond serif), subtitle, tag pills. Ends with a **hard edge** (no gradient fade).
+3. **Cream Reading Surface** — Full-width `#f9f8f5` background (`.wib-reading-surface`), constrained content at 740px (`.wib-reading-container`). Hard color transition from dark hero above.
+   - **Author Byline** (`.wib-author-byline`) — Photo (48px) + name + title + ShareButton, inside cream surface
+   - **Article Body** (`.wib-issue-scope`) — 680px max-width, 18px body text, Cormorant Garamond headings, `#0F6E56` accent color, `dangerouslySetInnerHTML`
+   - **Mid-Article Subscribe CTA** — Portal-rendered into `<div id="wib-mid-subscribe">` using `cream-inline` variant
+   - **End-of-Article Mark** — Decorative SVG divider with horizontal lines
+   - **Author Bio** (`.wib-author-bio`) — White card with photo (72px), bio paragraph, LinkedIn link
+   - **Subscribe CTA** (`.wib-subscribe-cta`) — "Stay ahead of the data" with `cream-inline` subscribe form
+   - **Share Button** (`.wib-bottom-share`) — Centered LinkedIn share
+4. **Related Issues Section** — Back to dark `bg-[#050505]` with `border-t border-[#1a1a1a]`, 3-column card grid. Hard color transition from cream above.
+
+**Mid-Article Subscribe Portal Pattern:**
+Since `bodyHtml` is rendered via `dangerouslySetInnerHTML`, React components can't be embedded directly. Each issue's bodyHtml includes `<div id="wib-mid-subscribe"></div>` at the ~800-word mark. After render, a `useEffect` finds this DOM element and `createPortal` renders the `IntelligenceSubscribeForm variant="mid-article"` into it.
+
+**Components** (`src/components/intelligence/`):
+- `ReadingProgressBar.tsx` — 3px scroll-tracking bar, fixed at viewport top
+- `AuthorByline.tsx` — Photo + name + title + ShareButton row
+- `AuthorBioBox.tsx` — End-of-article author card with bio and LinkedIn link
+- `ShareButton.tsx` — LinkedIn share link (opens new window)
+- `IntelligenceSubscribeForm.tsx` — 5 variants: `inline-large` (archive hero), `inline-small` (bottom CTA), `compact` (footer), `mid-article` (cream-themed card for inside article), `cream-inline` (form-only, no card wrapper, for use inside cream-themed containers like subscribe CTA and mid-article portal)
+
+**CSS** (`src/styles/wib-issue.css`):
+- Full-width cream reading surface: `.wib-reading-surface` (`#f9f8f5` bg), `.wib-reading-container` (740px max, centered)
+- Article body scoped under `.wib-issue-scope` (680px max, 18px/1.125rem body text, 1.75 line-height)
+- Layout components: `.wib-author-byline`, `.wib-divider`, `.wib-end-mark`, `.wib-author-bio`, `.wib-subscribe-cta`, `.wib-bottom-share`
+- Cream reading theme (`#f9f8f5` background, `#1a1a1a` text, Cormorant Garamond headings, forest green `#0F6E56` accents)
+- Chart components: `.wib-chart`, `.wib-bar-*`, `.wib-line-*`, `.wib-stat-card`
+- Drop-cap on first paragraph after stat cards (`.wib-stats + p::first-letter`)
+- Chart captions (`.wib-chart-caption`): italic, smaller, gray
+- Mid-subscribe portal target (`#wib-mid-subscribe`): margin spacing
+- Callout boxes (`.wib-callout`): green gradient CTA blocks
+- **Design rule:** Hard color transitions between dark hero / cream surface / dark related-issues. No gradient fades between zones.
+
+**SEO:**
+- `react-helmet-async` for per-issue meta tags (og:title, og:description, og:type=article, canonical URL)
+- Schema.org `NewsArticle` JSON-LD in `<script type="application/ld+json">` via Helmet
+- JSON-LD includes: headline, description, datePublished, author (Person), publisher (Organization), wordCount, keywords, isAccessibleForFree
+
+**Subscribe System:**
+- Subscribes via `subscribeToIntelligence()` from `src/lib/intelligence-queries.ts` (Supabase + Google Apps Script)
+- Subscription state persisted in `localStorage` via `STORAGE_KEYS.WIB_SUBSCRIBED`
+- Honeypot field for bot protection
+- 5 source types tracked: `archive_page`, `issue_inline`, `homepage_footer`, `network_page`, `mid_article`
+
+**Editorial Style Rules** (for future issues):
+- No em-dashes — use commas or periods instead
+- No Oxford commas — no comma before "and"/"or" in lists
+- No formulaic section headers like "The Data Point", "The Insight", "The Question"
+- Each chart should have a 1-2 sentence caption (`<p class="wib-chart-caption">`)
+- Include `<div id="wib-mid-subscribe"></div>` at ~800-word mark
+- Keep `wib-callout` blocks for zScale CTAs
+- Keep legitimate external quotes in blockquotes
+- Author info flows from issue data fields (authorName, authorPhoto, etc.)
+
+### Texas Talent Pipeline Tracker
+
+A public-facing tracker at `/tracker` that maps talent flows from Texas universities/colleges to the employers and industries that hire them, plus institutional expansions, corporate moves, innovation programs and site selection signals.
+
+**Routes:**
+- `/tracker` → `TrackerPage` — hero, stats strip, 5-tab filter (Pipelines default), entry card grid, subscribe form
+- `/tracker/:slug` → `TrackerEntryPage` — entry detail with analysis callout, key metrics, citations, claim form, related entries
+
+**Supabase Tables** (SQL: `sql/uta-workforce/24-tracker-tables.sql`):
+
+| Table | Purpose | RLS |
+|-------|---------|-----|
+| `tracker_entries` | Core tracked events (pipeline, institution, company, innovation, site_selection) | anon SELECT where status='published' |
+| `tracker_claims` | "Claim this entry" form submissions | anon INSERT |
+| `tracker_subscribers` | Email subscribers to tracker digest | anon INSERT |
+| `tracker_citations` | Press citations of tracker entries | anon SELECT |
+| `pilot_pipeline` | Private CRM for conversion tracking | service_role only (NO anon) |
+
+**Triggers:**
+- `auto_create_pilot_from_claim()` — On INSERT to `tracker_claims` → creates `pilot_pipeline` row at stage `warm`
+- `auto_create_pilot_from_subscriber()` — On INSERT to `tracker_subscribers` WHERE `is_edu_email` or `is_gov_email` → creates `pilot_pipeline` row at stage `cold`
+
+**TypeScript Types** (`src/lib/tracker-types.ts`):
+- `TrackerEntry`, `TrackerCategory` ('pipeline' | 'institution' | 'company' | 'innovation' | 'site_selection'), `TrackerClaim`, `TrackerCitation`, `PilotPipelineEntry`
+- `TRACKER_CATEGORIES` — category metadata (label, color, bgColor)
+- `PIPELINE_STAGES` and `PIPELINE_STAGE_LABELS` — CRM stage constants
+
+**Query Functions** (`src/lib/tracker-queries.ts`):
+```typescript
+getTrackerEntries(category?, search?, limit?, offset?) → TrackerEntry[]
+getTrackerEntryBySlug(slug) → TrackerEntry | null
+getFeaturedEntries(limit = 3) → TrackerEntry[]
+getTrackerStats() → { total, byCategory, lastUpdated }
+submitTrackerClaim(claim) → { success, error }
+submitTrackerSubscription(sub) → { success, error }
+getCitationsForEntry(entryId) → TrackerCitation[]
+getRecentCitations(limit = 10) → TrackerCitation[]
+getPipelineEntries(stage?) → PilotPipelineEntry[]
+updatePipelineEntry(id, updates) → { success, error }
+getRecentTrackerEntries(days = 14) → TrackerEntry[]
+```
+
+**Components** (`src/components/tracker/`):
+- `TrackerCard.tsx` — Entry card with category pill, hero stat badge, analysis callout (3px teal left border), supports `compact` prop for homepage
+- `TrackerFilters.tsx` — 5-tab filter bar (Pipelines default), count badges, search input
+- `TrackerSubscribeForm.tsx` — Email subscribe with inline/compact variants, honeypot bot protection
+- `TrackerClaimForm.tsx` — Claim modal using shared Modal component
+- `TrackerHeroStats.tsx` — Stats strip (total entries, categories, active pipelines, last updated)
+- `CitedBySection.tsx` — Press citations display with publication links
+
+**Admin Pages** (inside existing `AdminDashboard`, PIN-gated):
+- `PipelineCRM.tsx` (`/dashboard/admin/pipeline`) — Stage counts, sortable table, inline stage dropdown, expandable notes, overdue date highlighting
+- `NewsletterDraft.tsx` (`/dashboard/admin/newsletter-draft`) — Read-only markdown builder from last 14 days entries, grouped by category, copy-to-clipboard
+
+**Homepage Integration:**
+- Featured tracker section between feature blocks and published research
+- Shows 3 `is_featured=true` entries using `TrackerCard compact` variant
+- "Explore the full tracker" link to `/tracker`
+
+**Form Types** added to `src/config/api.ts`:
+- `FORM_TYPES.TRACKER_CLAIM` — tracker claim submissions
+- `FORM_TYPES.TRACKER_SUBSCRIBE` — tracker digest subscriptions
+- `FORM_TYPES.TOOL_WAITLIST` — tool waitlist signups
+
+### Tool Placeholder Pages
+
+4 upcoming tool pages at `/tools/*` sharing a single `ToolPlaceholderPage` component. Each displays a hero with title, subtitle, feature list, "Coming soon" badge, and email waitlist form.
+
+**Tool definitions** (`src/data/tool-definitions.ts`):
+- `region-comparison` — Compare talent pipelines across Texas MSAs (Q3 2026)
+- `expansion-readiness` — 12-factor county readiness scoring (Q3 2026)
+- `edc-directory` — Searchable directory of every Texas EDC (Q4 2026)
+- `talent-source-finder` — Match job titles/SOC codes to producing institutions (Q4 2026)
+
+**Waitlist system:**
+- `src/lib/tool-waitlist.ts` — `joinToolWaitlist(email, toolKey)` inserts into Supabase `tool_waitlist` table + Google Apps Script fallback
+- `sql/uta-workforce/25-tool-waitlist.sql` — Table with generated `email_domain`, `is_edu_email`, `is_gov_email` columns, `UNIQUE(email, tool_key)`, anon INSERT RLS

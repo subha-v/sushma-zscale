@@ -15,6 +15,11 @@ import StudentDashboard from './pages/dashboards/student/StudentDashboard';
 import TWCDashboard from './pages/dashboards/twc/TWCDashboard';
 import AgentChat from './pages/AgentChat';
 import AdminDashboard from './pages/dashboards/admin/AdminDashboard';
+import IntelligenceArchivePage from './pages/IntelligenceArchivePage';
+import IntelligenceIssuePage from './pages/IntelligenceIssuePage';
+import TrackerPage from './pages/TrackerPage';
+import TrackerEntryPage from './pages/TrackerEntryPage';
+import ToolPlaceholderPage from './pages/ToolPlaceholderPage';
 
 function AppContent() {
   const location = useLocation();
@@ -31,7 +36,17 @@ function AppContent() {
           <Route path="/solutions" element={<SolutionsPage />} />
           <Route path="/preview" element={<PreviewPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/intelligence" element={<IntelligenceArchivePage />} />
+          <Route path="/intelligence/:slug" element={<IntelligenceIssuePage />} />
+          <Route path="/tracker" element={<TrackerPage />} />
+          <Route path="/tracker/:slug" element={<TrackerEntryPage />} />
           <Route path="/demo" element={<DemoPage />} />
+
+          {/* Tool Placeholder Pages */}
+          <Route path="/tools/region-comparison" element={<ToolPlaceholderPage toolKey="region-comparison" />} />
+          <Route path="/tools/expansion-readiness" element={<ToolPlaceholderPage toolKey="expansion-readiness" />} />
+          <Route path="/tools/edc-directory" element={<ToolPlaceholderPage toolKey="edc-directory" />} />
+          <Route path="/tools/talent-source-finder" element={<ToolPlaceholderPage toolKey="talent-source-finder" />} />
 
           {/* Auth & Dashboards */}
           <Route path="/login" element={<LoginPage />} />

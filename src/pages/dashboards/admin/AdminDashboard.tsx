@@ -5,12 +5,16 @@ import { getStoredUser, storeUser } from '../../../lib/supabase'
 import IntelligenceFeed from './IntelligenceFeed'
 import ContentCalendarPage from './ContentCalendarPage'
 import SpeakingOpsPage from './SpeakingOpsPage'
+import PipelineCRM from './PipelineCRM'
+import NewsletterDraft from './NewsletterDraft'
 import ComingSoonPage from '../../../components/dashboard/ComingSoonPage'
 
 const NAV_ITEMS = [
   { label: 'Intelligence Feed', path: '/dashboard/admin', icon: '', category: 'Intelligence' },
   { label: 'Content Calendar', path: '/dashboard/admin/content', icon: '', category: 'Content' },
   { label: 'Speaking Opps', path: '/dashboard/admin/speaking', icon: '', category: 'Outreach' },
+  { label: 'Pipeline CRM', path: '/dashboard/admin/pipeline', icon: '', category: 'Tracker' },
+  { label: 'Newsletter Draft', path: '/dashboard/admin/newsletter-draft', icon: '', category: 'Tracker' },
 ]
 
 const ADMIN_PIN = 'zscale2026'
@@ -55,8 +59,8 @@ function AdminLogin({ onAuth }: { onAuth: () => void }) {
         <div className="text-center mb-8">
           <Link to="/" className="inline-block mb-6">
             <img
-              src="/images/zscale-capital-logo.png"
-              alt="zScale Capital"
+              src="/images/zscale-logo.png"
+              alt="zScale"
               className="h-14 w-auto mx-auto"
             />
           </Link>
@@ -124,6 +128,8 @@ export default function AdminDashboard() {
         <Route index element={<IntelligenceFeed />} />
         <Route path="content" element={<ContentCalendarPage />} />
         <Route path="speaking" element={<SpeakingOpsPage />} />
+        <Route path="pipeline" element={<PipelineCRM />} />
+        <Route path="newsletter-draft" element={<NewsletterDraft />} />
         <Route path="*" element={<ComingSoonPage />} />
       </Routes>
     </DashboardLayout>

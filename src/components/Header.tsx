@@ -1,9 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+
+const TOOLS_ITEMS = [
+  { label: 'Region Comparison', to: '/tools/region-comparison', description: 'Side-by-side MSA talent data' },
+  { label: 'Expansion Readiness Scorecard', to: '/tools/expansion-readiness', description: '12-factor county scoring' },
+  { label: 'EDC Directory', to: '/tools/edc-directory', description: 'Every Texas EDC, searchable' },
+  { label: 'Talent Source Finder', to: '/tools/talent-source-finder', description: 'Match roles to institutions' },
+];
 
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isToolsOpen, setIsToolsOpen] = useState(false);
+  const toolsTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -13,6 +22,11 @@ export const Header = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close dropdown on route change
+  useEffect(() => {
+    setIsToolsOpen(false);
+  }, [location.pathname]);
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
@@ -24,18 +38,16 @@ export const Header = () => {
     document.body.style.overflow = !isMobileMenuOpen ? 'hidden' : '';
   };
 
-  const handleHashClick = (e: React.MouseEvent, hash: string) => {
-    closeMobileMenu();
-    if (location.pathname === '/') {
-      e.preventDefault();
-      const el = document.querySelector(hash);
-      if (el) {
-        const headerHeight = 72;
-        const top = el.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
-        window.scrollTo({ top, behavior: 'smooth' });
-      }
-    }
+  const handleToolsEnter = () => {
+    if (toolsTimeout.current) clearTimeout(toolsTimeout.current);
+    setIsToolsOpen(true);
   };
+
+  const handleToolsLeave = () => {
+    toolsTimeout.current = setTimeout(() => setIsToolsOpen(false), 150);
+  };
+
+  const isToolsActive = location.pathname.startsWith('/tools');
 
   return (
     <>
@@ -50,9 +62,9 @@ export const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img
-              src="/images/zscale-capital-logo.png"
-              alt="zScale Capital"
-              className="h-16 w-auto max-w-[280px] max-md:h-12 max-md:max-w-[200px]"
+              src="/images/zscale-logo.png"
+              alt="zScale"
+              className="h-20 w-auto max-w-[320px] max-md:h-14 max-md:max-w-[240px]"
             />
           </Link>
 
@@ -66,21 +78,79 @@ export const Header = () => {
             >
               Solutions
             </Link>
+
             <Link
-              to="/#how-it-works"
-              onClick={(e) => handleHashClick(e, '#how-it-works')}
-              className="text-sm font-medium text-[#A0A0A0] hover:text-accent transition-colors no-underline"
-            >
-              How It Works
-            </Link>
-            <Link
-              to="/preview"
+              to="/tracker"
               className={`text-sm font-medium transition-colors no-underline ${
-                location.pathname === '/preview' ? 'text-accent' : 'text-[#A0A0A0] hover:text-accent'
+                location.pathname.startsWith('/tracker') ? 'text-accent' : 'text-[#A0A0A0] hover:text-accent'
               }`}
             >
-              Preview
+              Tracker
             </Link>
+
+            {/* Tools Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={handleToolsEnter}
+              onMouseLeave={handleToolsLeave}
+            >
+              <button
+                className={`flex items-center gap-1 text-sm font-medium transition-colors bg-transparent border-none cursor-pointer ${
+                  isToolsActive ? 'text-accent' : 'text-[#A0A0A0] hover:text-accent'
+                }`}
+              >
+                Tools
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  className={`transition-transform duration-150 ${isToolsOpen ? 'rotate-180' : ''}`}
+                >
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
+
+              {/* Dropdown Panel */}
+              <div
+                className={`absolute top-full left-0 pt-2 transition-all duration-150 ${
+                  isToolsOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'
+                }`}
+              >
+                <div className="w-[280px] bg-ink-card border border-ink-border rounded-xl shadow-2xl overflow-hidden">
+                  {TOOLS_ITEMS.map((item) => (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      className={`block px-4 py-3 no-underline transition-colors ${
+                        location.pathname === item.to
+                          ? 'bg-accent/5'
+                          : 'hover:bg-white/[0.03]'
+                      }`}
+                    >
+                      <span className={`block text-sm font-medium ${
+                        location.pathname === item.to ? 'text-accent' : 'text-white'
+                      }`}>
+                        {item.label}
+                      </span>
+                      <span className="block text-xs text-neutral-500 mt-0.5">{item.description}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <Link
+              to="/intelligence"
+              className={`text-sm font-medium transition-colors no-underline ${
+                location.pathname.startsWith('/intelligence') ? 'text-accent' : 'text-[#A0A0A0] hover:text-accent'
+              }`}
+            >
+              The Brief
+            </Link>
+
             <Link
               to="/about"
               className={`text-sm font-medium transition-colors no-underline ${
@@ -89,16 +159,18 @@ export const Header = () => {
             >
               About
             </Link>
-          </nav>
-
-          {/* Desktop Actions */}
-          <div className="flex items-center gap-6 max-md:hidden">
             <Link
               to="/login"
-              className="text-sm font-medium text-[#A0A0A0] hover:text-white transition-colors no-underline"
+              className={`text-sm font-medium transition-colors no-underline ${
+                location.pathname === '/login' ? 'text-accent' : 'text-zinc-400 hover:text-white'
+              }`}
             >
               Login
             </Link>
+          </nav>
+
+          {/* Desktop CTA */}
+          <div className="flex items-center max-md:hidden">
             <Link
               to="/demo"
               className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold bg-accent text-black rounded-lg hover:bg-accent-hover hover:-translate-y-0.5 transition-all no-underline"
@@ -135,7 +207,7 @@ export const Header = () => {
 
       {/* Mobile Nav */}
       <nav
-        className={`fixed top-[72px] left-0 right-0 bottom-0 bg-black z-[999] flex-col gap-4 p-6 transition-all duration-300 hidden max-md:flex ${
+        className={`fixed top-[72px] left-0 right-0 bottom-0 bg-black z-[999] flex-col gap-4 p-6 transition-all duration-300 hidden max-md:flex overflow-y-auto ${
           isMobileMenuOpen
             ? 'opacity-100 visible translate-y-0'
             : 'opacity-0 invisible -translate-y-2.5'
@@ -144,21 +216,37 @@ export const Header = () => {
         <Link to="/solutions" onClick={closeMobileMenu} className="block py-4 text-white text-lg font-medium border-b border-[#1A1A1A] no-underline">
           Solutions
         </Link>
-        <Link
-          to="/#how-it-works"
-          onClick={(e) => handleHashClick(e, '#how-it-works')}
-          className="block py-4 text-white text-lg font-medium border-b border-[#1A1A1A] no-underline"
-        >
-          How It Works
+
+        <Link to="/tracker" onClick={closeMobileMenu} className="block py-4 text-white text-lg font-medium border-b border-[#1A1A1A] no-underline">
+          Tracker
         </Link>
-        <Link to="/preview" onClick={closeMobileMenu} className="block py-4 text-white text-lg font-medium border-b border-[#1A1A1A] no-underline">
-          Preview
+
+        {/* Tools section — expanded inline */}
+        <div className="border-b border-[#1A1A1A]">
+          <p className="py-4 text-white text-lg font-medium">Tools</p>
+          <div className="pb-4 pl-4 space-y-1">
+            {TOOLS_ITEMS.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={closeMobileMenu}
+                className="block py-3 no-underline"
+              >
+                <span className="block text-base text-white/80">{item.label}</span>
+                <span className="block text-xs text-neutral-500 mt-0.5">{item.description}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <Link to="/intelligence" onClick={closeMobileMenu} className="block py-4 text-white text-lg font-medium border-b border-[#1A1A1A] no-underline">
+          The Brief
         </Link>
         <Link to="/about" onClick={closeMobileMenu} className="block py-4 text-white text-lg font-medium border-b border-[#1A1A1A] no-underline">
           About
         </Link>
         <div className="h-px bg-[#1A1A1A] my-2" />
-        <Link to="/login" onClick={closeMobileMenu} className="block py-4 text-white text-lg font-medium border-b border-[#1A1A1A] no-underline">
+        <Link to="/login" onClick={closeMobileMenu} className="block py-4 text-zinc-400 text-lg font-medium border-b border-[#1A1A1A] no-underline">
           Login
         </Link>
         <Link

@@ -21,6 +21,9 @@ export const FORM_TYPES = {
   ASSET_INTERACTION: 'asset_interaction', // Asset click/download tracking -> Asset_Interactions column in Master_Registry
   VENTURE_BENCHMARKS: 'venture_benchmarks', // Venture Benchmarks PDF -> Venture_Benchmarks tab
   BUILD_APPLICATION: 'build_application', // Build with zScale application -> Build_Applications tab
+  TRACKER_CLAIM: 'tracker_claim',        // Tracker entry claim -> Tracker_Claims tab
+  TRACKER_SUBSCRIBE: 'tracker_subscribe', // Tracker digest subscribe -> Tracker_Subscribers tab
+  TOOL_WAITLIST: 'tool_waitlist',          // Tool waitlist signup -> Tool_Waitlist tab
 } as const;
 
 // ============================================================================
@@ -35,6 +38,7 @@ export const STORAGE_KEYS = {
   USER_COMPANY: 'zscale_user_company',
   USER_SECTOR: 'zscale_user_sector',
   IS_PREMIUM: 'zscale_is_premium',  // Alpha Tier membership flag
+  WIB_SUBSCRIBED: 'zscale_wib_subscribed',
 } as const;
 
 // ============================================================================

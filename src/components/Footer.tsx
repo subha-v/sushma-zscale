@@ -11,28 +11,37 @@ export const Footer = () => {
             <div className="mb-2">
               <Link to="/" className="inline-block no-underline hover:opacity-80 transition-opacity">
                 <img
-                  src="/images/zscale-capital-logo.png"
-                  alt="zScale Capital"
-                  className="h-12 w-auto object-contain"
+                  src="/images/zscale-logo.png"
+                  alt="zScale"
+                  className="h-16 w-auto object-contain"
                 />
               </Link>
             </div>
             <p className="text-[15px] leading-relaxed text-white/60 max-w-[320px]">
-              Texas Market Intelligence Platform for<br />
-              Economic Development Professionals
+              Talent pipeline intelligence for Texas institutions
             </p>
           </div>
 
           {/* Right: Navigation Columns */}
-          <div className="grid grid-cols-3 max-md:grid-cols-1 gap-10 max-md:gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 max-md:grid-cols-2 gap-10 max-md:gap-8">
             <div>
               <h4 className="text-xs font-bold text-white/90 tracking-[1.5px] uppercase mb-4">
                 Platform
               </h4>
               <ul className="list-none space-y-3">
                 <li>
-                  <Link to="/preview" className="text-sm text-white/60 no-underline hover:text-[#10B981] transition-colors">
-                    Free Preview
+                  <Link to="/tracker" className="text-sm text-white/60 no-underline hover:text-[#10B981] transition-colors">
+                    Tracker
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/tools/region-comparison" className="text-sm text-white/60 no-underline hover:text-[#10B981] transition-colors">
+                    Tools
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/intelligence" className="text-sm text-white/60 no-underline hover:text-[#10B981] transition-colors">
+                    The Brief
                   </Link>
                 </li>
                 <li>
@@ -49,18 +58,18 @@ export const Footer = () => {
               </h4>
               <ul className="list-none space-y-3">
                 <li>
-                  <Link to="/solutions#edc" className="text-sm text-white/60 no-underline hover:text-[#10B981] transition-colors">
-                    Economic Development
-                  </Link>
-                </li>
-                <li>
                   <Link to="/solutions#college" className="text-sm text-white/60 no-underline hover:text-[#10B981] transition-colors">
                     Universities & Colleges
                   </Link>
                 </li>
                 <li>
+                  <Link to="/solutions#edc" className="text-sm text-white/60 no-underline hover:text-[#10B981] transition-colors">
+                    Economic Development
+                  </Link>
+                </li>
+                <li>
                   <Link to="/solutions#consultant" className="text-sm text-white/60 no-underline hover:text-[#10B981] transition-colors">
-                    Site Consultants
+                    Workforce Boards
                   </Link>
                 </li>
               </ul>
@@ -83,7 +92,32 @@ export const Footer = () => {
                 </li>
               </ul>
             </div>
+
+            <div>
+              <h4 className="text-xs font-bold text-white/90 tracking-[1.5px] uppercase mb-4">
+                Legal
+              </h4>
+              <ul className="list-none space-y-3">
+                <li>
+                  <Link to="/about" className="text-sm text-white/60 no-underline hover:text-[#10B981] transition-colors">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/about" className="text-sm text-white/60 no-underline hover:text-[#10B981] transition-colors">
+                    Terms of Service
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
+        </div>
+
+        {/* Credentials Line */}
+        <div className="text-center pb-6">
+          <p className="text-xs text-white/30">
+            SAM.gov Registered &middot; UEI DPKYDLDKEFG9 &middot; CAGE 1A0X9
+          </p>
         </div>
 
         {/* Footer Bottom */}
